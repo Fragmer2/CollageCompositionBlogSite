@@ -551,7 +551,19 @@
             <div class="contact-card">
                 <h3>Get in Touch</h3>
                 <div class="contact-links">
-                    <a href="mailto:bohdan.stepantsov@westernchristianhs.com" class="contact-link">
+                    <a href="#" onclick="copyEmail(event)" class="contact-link">
+  bohdan.stepantsov@westernchristianhs.com
+</a>
+
+<script>
+function copyEmail(e) {
+  e.preventDefault();
+  const email = 'bohdan.stepantsov@westernchristianhs.com';
+  navigator.clipboard.writeText(email).then(() => {
+    alert('Email скопирован: ' + email);
+  });
+}
+</script>
                         Email Me
                     </a>
                     <a href="https://boda-server.infy.uk/?i=1" target="_blank" class="contact-link">
