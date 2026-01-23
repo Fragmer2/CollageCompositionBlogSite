@@ -551,16 +551,24 @@
             <div class="contact-card">
                 <h3>Get in Touch</h3>
                 <div class="contact-links">
-                    <a href="#" onclick="copyEmail(event)" class="contact-link">
+<a href="#" onclick="copyEmail(event)" class="contact-link">
   bohdan.stepantsov@westernchristianhs.com
 </a>
+
+<div id="copyNotification" style="display: none; position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 15px 25px; border-radius: 5px; z-index: 9999; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+  ✓ Email скопирован!
+</div>
 
 <script>
 function copyEmail(e) {
   e.preventDefault();
   const email = 'bohdan.stepantsov@westernchristianhs.com';
   navigator.clipboard.writeText(email).then(() => {
-    alert('Email скопирован: ' + email);
+    const notification = document.getElementById('copyNotification');
+    notification.style.display = 'block';
+    setTimeout(() => {
+      notification.style.display = 'none';
+    }, 2000);
   });
 }
 </script>
