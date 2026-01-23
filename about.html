@@ -546,41 +546,64 @@
             </div>
         </section>
 
-        <!-- Contact -->
-        <section class="bio-section">
-            <div class="contact-card">
-                <h3>Get in Touch</h3>
-                <div class="contact-links">
-<a href="#" onclick="copyEmail(event)" class="contact-link">
-  bohdan.stepantsov@westernchristianhs.com
-</a>
+<!-- Contact -->
+<section class="bio-section">
+    <div class="contact-card">
+        <h3>Get in Touch</h3>
+        <div class="contact-links">
+            <a href="#" onclick="copyEmail(event)" class="contact-link">
+                📧 Copy My Email
+            </a>
+            <a href="https://boda-server.infy.uk/?i=1" target="_blank" class="contact-link">
+                🎮 My Minecraft Server 1.20.6
+            </a>
+        </div>
+    </div>
+</section>
 
-<div id="copyNotification" style="display: none; position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 15px 25px; border-radius: 5px; z-index: 9999; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
-  ✓ Email скопирован!
+<!-- Copy notification -->
+<div id="copyNotification">
+    ✓ Email copied to clipboard!
 </div>
 
 <script>
 function copyEmail(e) {
-  e.preventDefault();
-  const email = 'bohdan.stepantsov@westernchristianhs.com';
-  navigator.clipboard.writeText(email).then(() => {
-    const notification = document.getElementById('copyNotification');
-    notification.style.display = 'block';
-    setTimeout(() => {
-      notification.style.display = 'none';
-    }, 2000);
-  });
+    e.preventDefault();
+    const email = 'bohdan.stepantsov@westernchristianhs.com';
+    navigator.clipboard.writeText(email).then(() => {
+        const notification = document.getElementById('copyNotification');
+        notification.classList.add('show');
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 2500);
+    });
 }
 </script>
-                        Email Me
-                    </a>
-                    <a href="https://boda-server.infy.uk/?i=1" target="_blank" class="contact-link">
-                        My Minecraft Server 1.20.6
-                    </a>
-                </div>
-            </div>
-        </section>
-    </main>
+
+<style>
+#copyNotification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 16px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+#copyNotification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+</style>
 
     <!-- Footer -->
     <footer>
