@@ -3,886 +3,389 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learn — CodeLab</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-main: #0a0a0a;
-            --bg-card: #111111;
-            --bg-editor: #0d0d0d;
-            --accent: #00d9ff;
-            --accent-secondary: #a855f7;
-            --success: #10b981;
-            --text: #e5e5e5;
-            --text-dim: #888;
-            --border: #222;
-            --sidebar-width: 260px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Nunito', sans-serif;
-            background: var(--bg-main);
-            color: var(--text);
-            min-height: 100vh;
-        }
-
-        /* Top Navigation */
-        .top-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            padding: 0 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border);
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 1.2rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: var(--text);
-        }
-
-        .logo span {
-            color: var(--accent);
-        }
-
-        .logo-icon {
-        width: 32px;
-        height: 32px;
-        background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        color: var(--bg-card);
-    }
-
-        .nav-links {
-            display: flex;
-            gap: 24px;
-        }
-
-        .nav-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: var(--accent);
-        }
-
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 60px;
-            width: var(--sidebar-width);
-            height: calc(100vh - 60px);
-            background: var(--bg-card);
-            border-right: 1px solid var(--border);
-            overflow-y: auto;
-            padding: 16px 0;
-        }
-
-        .nav-section {
-            padding: 8px 12px;
-        }
-
-        .nav-section h3 {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-dim);
-            margin-bottom: 12px;
-            padding: 0 12px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-        }
-
-        .nav-item:hover {
-            background: rgba(0, 217, 255, 0.1);
-        }
-
-        .nav-item.active {
-            background: rgba(0, 217, 255, 0.15);
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        .nav-item .num {
-            width: 24px;
-            height: 24px;
-            background: var(--border);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        .nav-item.active .num {
-            background: var(--accent);
-            color: var(--bg-main);
-        }
-
-        /* Main content */
-        .main {
-            margin-left: var(--sidebar-width);
-            margin-top: 60px;
-            min-height: calc(100vh - 60px);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .lesson-header {
-            padding: 24px 32px;
-            border-bottom: 1px solid var(--border);
-            background: var(--bg-card);
-        }
-
-        .lesson-header h2 {
-            font-size: 1.5rem;
-            margin-bottom: 4px;
-        }
-
-        .lesson-header p {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-        }
-
-        .lesson-content {
-            flex: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
-
-        /* Theory panel */
-        .theory-panel {
-            padding: 28px 32px;
-            overflow-y: auto;
-            max-height: calc(100vh - 160px);
-            border-right: 1px solid var(--border);
-        }
-
-        .theory-panel h3 {
-            font-size: 1.1rem;
-            margin-bottom: 16px;
-            color: var(--accent);
-        }
-
-        .theory-panel p {
-            line-height: 1.7;
-            margin-bottom: 16px;
-            color: var(--text);
-        }
-
-        .code-example {
-            background: var(--bg-editor);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px;
-            margin: 16px 0;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            overflow-x: auto;
-            line-height: 1.6;
-        }
-
-        .code-example .tag { color: #ff79c6; }
-        .code-example .attr { color: #50fa7b; }
-        .code-example .value { color: #f1fa8c; }
-        .code-example .comment { color: #6272a4; }
-
-        .tip {
-            background: rgba(0, 217, 255, 0.1);
-            border-left: 3px solid var(--accent);
-            padding: 12px 16px;
-            border-radius: 0 8px 8px 0;
-            margin: 16px 0;
-        }
-
-        .tip-title {
-            font-weight: 600;
-            color: var(--accent);
-            margin-bottom: 4px;
-            font-size: 0.85rem;
-        }
-
-        .task-box {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 8px;
-            padding: 16px;
-            margin-top: 24px;
-        }
-
-        .task-box h4 {
-            color: var(--success);
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-
-        .task-box p {
-            margin: 0;
-            font-size: 0.95rem;
-        }
-
-        /* Practice panel */
-        .practice-panel {
-            display: flex;
-            flex-direction: column;
-            background: var(--bg-card);
-        }
-
-        .panel-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--border);
-            background: var(--bg-main);
-        }
-
-        .panel-tab {
-            padding: 10px 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            font-family: 'JetBrains Mono', monospace;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-            color: var(--text-dim);
-        }
-
-        .panel-tab:hover {
-            color: var(--text);
-        }
-
-        .panel-tab.active {
-            color: var(--accent);
-            border-bottom-color: var(--accent);
-        }
-
-        .editor-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .code-editor {
-            flex: 1;
-            min-height: 180px;
-            background: var(--bg-editor);
-            border: none;
-            padding: 16px 20px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: var(--text);
-            resize: none;
-            outline: none;
-            line-height: 1.6;
-        }
-
-        .code-editor::placeholder {
-            color: var(--text-dim);
-        }
-
-        .editor-actions {
-            padding: 10px 16px;
-            display: flex;
-            gap: 8px;
-            border-top: 1px solid var(--border);
-            background: var(--bg-main);
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: var(--bg-main);
-        }
-
-        .btn-primary:hover {
-            filter: brightness(1.1);
-        }
-
-        .btn-secondary {
-            background: var(--border);
-            color: var(--text);
-        }
-
-        .btn-secondary:hover {
-            background: #333;
-        }
-
-        .preview-container {
-            border-top: 1px solid var(--border);
-        }
-
-        .preview-header {
-            padding: 8px 16px;
-            background: var(--bg-main);
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .preview-frame {
-            width: 100%;
-            height: 220px;
-            border: none;
-            background: white;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .lesson-content {
-            animation: fadeIn 0.3s ease;
-        }
-
-        /* Mobile */
-        @media (max-width: 1024px) {
-            .sidebar {
-                display: none;
-            }
-
-            .main {
-                margin-left: 0;
-            }
-
-            .lesson-content {
-                grid-template-columns: 1fr;
-            }
-
-            .theory-panel {
-                max-height: none;
-                border-right: none;
-                border-bottom: 1px solid var(--border);
-            }
-        }
-    </style>
+    <title>CodeCraft | Interactive Coding Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styleLern.css">
 </head>
 <body>
-    <!-- Top Navigation -->
-    <nav class="top-nav">
-        <a href="index.html" class="logo">
-            <div class="logo-icon">💻</div>
-            Code<span>Lab</span>
-        </a>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="learn.html" class="active">Learn</a>
-            <a href="about.html">About</a>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="flex items-center gap-4">
+                <button class="mobile-menu-toggle" id="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    Code Lab
+                </a>
+            </div>
+
+
+            <div class="header-actions">
+                <div class="progress-container">
+                    <div class="progress-label">Learning Progress</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+                <div class="progress-value" id="progress-value">0%</div>
+            </div>
         </div>
-    </nav>
+    </header>
 
     <!-- Sidebar -->
-    <aside class="sidebar">
-        <nav class="nav-section">
-            <h3>HTML Basics</h3>
-            <div class="nav-item active" onclick="loadLesson('html-intro')">
-                <span class="num">1</span>
-                What is HTML?
-            </div>
-            <div class="nav-item" onclick="loadLesson('html-tags')">
-                <span class="num">2</span>
-                Tags & Structure
-            </div>
-            <div class="nav-item" onclick="loadLesson('html-text')">
-                <span class="num">3</span>
-                Working with Text
-            </div>
-            <div class="nav-item" onclick="loadLesson('html-links')">
-                <span class="num">4</span>
-                Links & Images
-            </div>
-        </nav>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Current Course</div>
+            <div class="sidebar-subtitle">Web Development Fundamentals</div>
+        </div>
 
-        <nav class="nav-section">
-            <h3>CSS Basics</h3>
-            <div class="nav-item" onclick="loadLesson('css-intro')">
-                <span class="num">5</span>
-                What is CSS?
+        <div class="sidebar-content">
+            <div class="module">
+                <div class="module-header">
+                    <div class="module-title">
+                        <span>HTML Foundations</span>
+                        <span class="module-progress" id="html-progress">2/5</span>
+                    </div>
+                </div>
+                <ul class="lesson-list">
+                    <li class="lesson-item active" data-lesson="html-structure">
+                        <div class="lesson-number">1</div>
+                        <div class="lesson-info">
+                            <div class="lesson-name">HTML Document Structure</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration">
+                                    <i class="fas fa-clock"></i>
+                                    <span>15 min</span>
+                                </span>
+                                <span class="lesson-difficulty">Beginner</span>
+                            </div>
+                        </div>
+                        <div class="lesson-status">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </li>
+                    <li class="lesson-item completed" data-lesson="html-elements">
+                        <div class="lesson-number">2</div>
+                        <div class="lesson-info">
+                            <div class="lesson-name">HTML Elements & Tags</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration">
+                                    <i class="fas fa-clock"></i>
+                                    <span>20 min</span>
+                                </span>
+                                <span class="lesson-difficulty">Beginner</span>
+                            </div>
+                        </div>
+                        <div class="lesson-status">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </li>
+                    <li class="lesson-item" data-lesson="html-links-images">
+                        <div class="lesson-number">3</div>
+                        <div class="lesson-info">
+                            <div class="lesson-name">Links & Images</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration">
+                                    <i class="fas fa-clock"></i>
+                                    <span>25 min</span>
+                                </span>
+                                <span class="lesson-difficulty">Beginner</span>
+                            </div>
+                        </div>
+                        <div class="lesson-status">
+                            <i class="far fa-circle"></i>
+                        </div>
+                    </li>
+                    <li class="lesson-item" data-lesson="html-semantic">
+                        <div class="lesson-number">4</div>
+                        <div class="lesson-info">
+                            <div class="lesson-name">Semantic HTML</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration">
+                                    <i class="fas fa-clock"></i>
+                                    <span>30 min</span>
+                                </span>
+                                <span class="lesson-difficulty">Intermediate</span>
+                            </div>
+                        </div>
+                        <div class="lesson-status">
+                            <i class="far fa-circle"></i>
+                        </div>
+                    </li>
+                    <li class="lesson-item" data-lesson="html-forms">
+                        <div class="lesson-number">5</div>
+                        <div class="lesson-info">
+                            <div class="lesson-name">Forms & Inputs</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration">
+                                    <i class="fas fa-clock"></i>
+                                    <span>35 min</span>
+                                </span>
+                                <span class="lesson-difficulty">Intermediate</span>
+                            </div>
+                        </div>
+                        <div class="lesson-status">
+                            <i class="far fa-circle"></i>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <div class="nav-item" onclick="loadLesson('css-colors')">
-                <span class="num">6</span>
-                Colors & Backgrounds
-            </div>
-            <div class="nav-item" onclick="loadLesson('css-box')">
-                <span class="num">7</span>
-                The Box Model
-            </div>
-        </nav>
 
-        <nav class="nav-section">
-            <h3>JavaScript Basics</h3>
-            <div class="nav-item" onclick="loadLesson('js-intro')">
-                <span class="num">8</span>
-                What is JavaScript?
+            <div class="module">
+                <div class="module-header">
+                    <div class="module-title">
+                        <span>CSS Styling</span>
+                        <span class="module-progress" id="css-progress">0/5</span>
+                    </div>
+                </div>
+                <ul class="lesson-list">
+                    <li class="lesson-item" data-lesson="css-intro">
+                        <div class="lesson-number">6</div>
+                        <div class="lesson-info">
+                            <div class="lesson-name">CSS Basics</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration">
+                                    <i class="fas fa-clock"></i>
+                                    <span>25 min</span>
+                                </span>
+                                <span class="lesson-difficulty">Beginner</span>
+                            </div>
+                        </div>
+                        <div class="lesson-status">
+                            <i class="far fa-circle"></i>
+                        </div>
+                    </li>
+                    <li class="lesson-item" data-lesson="css-selectors">
+                        <div class="lesson-number">7</div>
+                        <div class="lesson-info">
+                            <div class="lesson-name">Selectors & Specificity</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration">
+                                    <i class="fas fa-clock"></i>
+                                    <span>30 min</span>
+                                </span>
+                                <span class="lesson-difficulty">Intermediate</span>
+                            </div>
+                        </div>
+                        <div class="lesson-status">
+                            <i class="far fa-circle"></i>
+                        </div>
+                    </li>
+                    <li class="lesson-item" data-lesson="css-box-model">
+                        <div class="lesson-number">8</div>
+                        <div class="lesson-info">
+                            <div class="lesson-name">Box Model</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration">
+                                    <i class="fas fa-clock"></i>
+                                    <span>25 min</span>
+                                </span>
+                                <span class="lesson-difficulty">Intermediate</span>
+                            </div>
+                        </div>
+                        <div class="lesson-status">
+                            <i class="far fa-circle"></i>
+                        </div>
+                    </li>
+                    <li class="lesson-item" data-lesson="css-flexbox">
+                        <div class="lesson-number">9</div>
+                        <div class="lesson-info">
+                            <div class="lesson-name">Flexbox Layout</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration">
+                                    <i class="fas fa-clock"></i>
+                                    <span>40 min</span>
+                                </span>
+                                <span class="lesson-difficulty">Intermediate</span>
+                            </div>
+                        </div>
+                        <div class="lesson-status">
+                            <i class="far fa-circle"></i>
+                        </div>
+                    </li>
+                    <li class="lesson-item" data-lesson="css-responsive">
+                        <div class="lesson-number">10</div>
+                        <div class="lesson-info">
+                            <div class="lesson-name">Responsive Design</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration">
+                                    <i class="fas fa-clock"></i>
+                                    <span>45 min</span>
+                                </span>
+                                <span class="lesson-difficulty">Advanced</span>
+                            </div>
+                        </div>
+                        <div class="lesson-status">
+                            <i class="far fa-circle"></i>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <div class="nav-item" onclick="loadLesson('js-variables')">
-                <span class="num">9</span>
-                Variables
-            </div>
-            <div class="nav-item" onclick="loadLesson('js-events')">
-                <span class="num">10</span>
-                Events
-            </div>
-        </nav>
+        </div>
     </aside>
 
-    <!-- Main content -->
-    <main class="main">
-        <header class="lesson-header">
-            <h2 id="lesson-title">Lesson 1: What is HTML?</h2>
-            <p id="lesson-subtitle">Introduction to web page markup</p>
-        </header>
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+        <div class="lesson-header">
+            <h1 class="lesson-title" id="lesson-title">HTML Document Structure</h1>
+            <p class="lesson-subtitle" id="lesson-subtitle">Learn the fundamental structure of every HTML document and understand how web pages are built from the ground up.</p>
+            
+            <div class="lesson-meta-grid">
+                <div class="meta-card">
+                    <div class="meta-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="meta-title">Estimated Time</div>
+                    <div class="meta-value">15-20 minutes</div>
+                </div>
+                <div class="meta-card">
+                    <div class="meta-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="meta-title">Difficulty</div>
+                    <div class="meta-value">Beginner</div>
+                </div>
+                <div class="meta-card">
+                    <div class="meta-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="meta-title">Completion Rate</div>
+                    <div class="meta-value">94%</div>
+                </div>
+                <div class="meta-card">
+                    <div class="meta-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="meta-title">Your Score</div>
+                    <div class="meta-value" id="lesson-score">--</div>
+                </div>
+            </div>
+        </div>
 
         <div class="lesson-content">
-            <!-- Theory -->
-            <div class="theory-panel" id="theory-panel">
-                <h3>📖 Theory</h3>
-                
-                <p><strong>HTML</strong> (HyperText Markup Language) is the standard language for creating web pages. It describes the structure of a page using elements like headings, paragraphs, images, and links.</p>
-
-                <p>HTML uses <strong>tags</strong> — special commands inside angle brackets. Most tags come in pairs: an opening tag and a closing tag.</p>
-
-                <div class="code-example">
-<span class="comment">&lt;!-- This is a comment --&gt;</span>
-<span class="tag">&lt;h1&gt;</span>Hello, World!<span class="tag">&lt;/h1&gt;</span>
-<span class="tag">&lt;p&gt;</span>This is my first paragraph.<span class="tag">&lt;/p&gt;</span>
-                </div>
-
-                <div class="tip">
-                    <div class="tip-title">💡 Tip</div>
-                    The <code>&lt;h1&gt;</code> tag creates a heading, and <code>&lt;p&gt;</code> creates a paragraph.
-                </div>
-
-                <p>Every HTML page has a basic structure:</p>
-
-                <div class="code-example">
-<span class="tag">&lt;!DOCTYPE html&gt;</span>
-<span class="tag">&lt;html&gt;</span>
-  <span class="tag">&lt;head&gt;</span>
-    <span class="tag">&lt;title&gt;</span>My Page<span class="tag">&lt;/title&gt;</span>
-  <span class="tag">&lt;/head&gt;</span>
-  <span class="tag">&lt;body&gt;</span>
-    <span class="comment">&lt;!-- Content goes here --&gt;</span>
-  <span class="tag">&lt;/body&gt;</span>
-<span class="tag">&lt;/html&gt;</span>
-                </div>
-
-                <div class="task-box">
-                    <h4>✏️ Task</h4>
-                    <p>Write an <code>&lt;h1&gt;</code> heading with your name and a <code>&lt;p&gt;</code> paragraph with a greeting. Click "Run" to see the result!</p>
+            <!-- Theory Panel -->
+            <div class="theory-panel">
+                <div class="theory-content" id="theory-content">
+                    <!-- Content loaded dynamically -->
                 </div>
             </div>
 
-            <!-- Practice -->
+            <!-- Practice Panel -->
             <div class="practice-panel">
-                <div class="panel-tabs">
-                    <div class="panel-tab active">index.html</div>
-                </div>
-                
                 <div class="editor-container">
-                    <textarea class="code-editor" id="code-editor" placeholder="Write your code here..."><h1>Hello, World!</h1>
-<p>This is my first web page.</p>
-<p>I'm learning to code!</p></textarea>
-                    
-                    <div class="editor-actions">
-                        <button class="btn btn-primary" onclick="runCode()">▶ Run</button>
-                        <button class="btn btn-secondary" onclick="resetCode()">↺ Reset</button>
+                    <div class="editor-header">
+                        <div class="file-tabs" id="file-tabs">
+                            <button class="file-tab active" data-file="html">
+                                <i class="fab fa-html5"></i>
+                                index.html
+                            </button>
+                            <button class="file-tab" data-file="css">
+                                <i class="fab fa-css3-alt"></i>
+                                style.css
+                            </button>
+                            <button class="file-tab" data-file="js">
+                                <i class="fab fa-js-square"></i>
+                                script.js
+                            </button>
+                        </div>
+                        <div class="editor-options">
+                            <div class="option-group">
+                                <span class="option-label">Auto-refresh</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="auto-refresh" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="option-group">
+                                <span class="option-label">Line numbers</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="line-numbers-toggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="editor-wrapper">
+                        <div class="line-numbers" id="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25</div>
+                        <textarea class="code-editor" id="code-editor" spellcheck="false" placeholder="Write your code here..."></textarea>
+                    </div>
+
+                    <div class="editor-footer">
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="run-btn">
+                                <i class="fas fa-play"></i>
+                                Run Code
+                            </button>
+                            <button class="btn btn-secondary" id="reset-btn">
+                                <i class="fas fa-redo"></i>
+                                Reset
+                            </button>
+                            <button class="btn btn-success" id="submit-btn">
+                                <i class="fas fa-check-circle"></i>
+                                Submit Solution
+                            </button>
+                        </div>
+                        <button class="hint-btn" id="hint-btn">
+                            <i class="fas fa-lightbulb"></i>
+                            Need a hint?
+                        </button>
                     </div>
                 </div>
 
                 <div class="preview-container">
                     <div class="preview-header">
-                        <span>Preview</span>
-                        <span>Auto-refresh: on</span>
+                        <div class="preview-title">
+                            <i class="fas fa-eye"></i>
+                            Live Preview
+                        </div>
+                        <div class="preview-actions">
+                            <button class="btn btn-outline" id="refresh-preview">
+                                <i class="fas fa-sync-alt"></i>
+                                Refresh
+                            </button>
+                        </div>
                     </div>
-                    <iframe class="preview-frame" id="preview-frame"></iframe>
+                    <iframe class="preview-frame" id="preview-frame" title="Live Preview"></iframe>
                 </div>
             </div>
         </div>
     </main>
 
-    <script>
-        // Lessons data
-        const lessons = {
-            'html-intro': {
-                title: 'Lesson 1: What is HTML?',
-                subtitle: 'Introduction to web page markup',
-                theory: `
-                    <h3>📖 Theory</h3>
-                    <p><strong>HTML</strong> (HyperText Markup Language) is the standard language for creating web pages. It describes the structure of a page using elements like headings, paragraphs, images, and links.</p>
-                    <p>HTML uses <strong>tags</strong> — special commands inside angle brackets. Most tags come in pairs: an opening tag and a closing tag.</p>
-                    <div class="code-example">
-<span class="comment">&lt;!-- This is a comment --&gt;</span>
-<span class="tag">&lt;h1&gt;</span>Hello, World!<span class="tag">&lt;/h1&gt;</span>
-<span class="tag">&lt;p&gt;</span>This is my first paragraph.<span class="tag">&lt;/p&gt;</span>
-                    </div>
-                    <div class="tip">
-                        <div class="tip-title">💡 Tip</div>
-                        The <code>&lt;h1&gt;</code> tag creates a heading, and <code>&lt;p&gt;</code> creates a paragraph.
-                    </div>
-                    <div class="task-box">
-                        <h4>✏️ Task</h4>
-                        <p>Write a heading with your name and a paragraph with a greeting!</p>
-                    </div>
-                `,
-                code: `<h1>Hello, World!</h1>\n<p>This is my first web page.</p>\n<p>I'm learning to code!</p>`
-            },
-            'html-tags': {
-                title: 'Lesson 2: Tags & Structure',
-                subtitle: 'Learn essential HTML elements',
-                theory: `
-                    <h3>📖 Theory</h3>
-                    <p>HTML has many tags for different purposes. Here are the most important ones:</p>
-                    <div class="code-example">
-<span class="tag">&lt;h1&gt;</span> to <span class="tag">&lt;h6&gt;</span> — headings (h1 is biggest)
-<span class="tag">&lt;p&gt;</span> — paragraph
-<span class="tag">&lt;div&gt;</span> — block container
-<span class="tag">&lt;span&gt;</span> — inline container
-<span class="tag">&lt;br&gt;</span> — line break
-<span class="tag">&lt;hr&gt;</span> — horizontal line
-                    </div>
-                    <p>Tags can be nested inside each other:</p>
-                    <div class="code-example">
-<span class="tag">&lt;div&gt;</span>
-  <span class="tag">&lt;h2&gt;</span>Title<span class="tag">&lt;/h2&gt;</span>
-  <span class="tag">&lt;p&gt;</span>Text inside the block<span class="tag">&lt;/p&gt;</span>
-<span class="tag">&lt;/div&gt;</span>
-                    </div>
-                    <div class="task-box">
-                        <h4>✏️ Task</h4>
-                        <p>Create a page with h1, h2, h3 headings and some paragraphs.</p>
-                    </div>
-                `,
-                code: `<h1>Main Heading</h1>\n<h2>Subheading</h2>\n<p>First paragraph of text.</p>\n<h3>Smaller Heading</h3>\n<p>Second paragraph.</p>`
-            },
-            'html-text': {
-                title: 'Lesson 3: Working with Text',
-                subtitle: 'Formatting and lists',
-                theory: `
-                    <h3>📖 Theory</h3>
-                    <p>HTML lets you format text:</p>
-                    <div class="code-example">
-<span class="tag">&lt;strong&gt;</span>Bold text<span class="tag">&lt;/strong&gt;</span>
-<span class="tag">&lt;em&gt;</span>Italic text<span class="tag">&lt;/em&gt;</span>
-<span class="tag">&lt;u&gt;</span>Underlined<span class="tag">&lt;/u&gt;</span>
-<span class="tag">&lt;mark&gt;</span>Highlighted<span class="tag">&lt;/mark&gt;</span>
-                    </div>
-                    <p>There are two types of lists:</p>
-                    <div class="code-example">
-<span class="comment">&lt;!-- Unordered list (bullets) --&gt;</span>
-<span class="tag">&lt;ul&gt;</span>
-  <span class="tag">&lt;li&gt;</span>Item 1<span class="tag">&lt;/li&gt;</span>
-  <span class="tag">&lt;li&gt;</span>Item 2<span class="tag">&lt;/li&gt;</span>
-<span class="tag">&lt;/ul&gt;</span>
+    <!-- Completion Overlay -->
+    <div class="completion-overlay" id="completion-overlay">
+        <div class="completion-card">
+            <div class="completion-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <h2 class="completion-title">Lesson Complete!</h2>
+            <p class="completion-text" id="completion-text">Congratulations! You've successfully completed this lesson. Ready to move on to the next challenge?</p>
+            <div class="completion-actions">
+                <button class="btn btn-secondary" id="review-btn">
+                    <i class="fas fa-redo"></i>
+                    Review Again
+                </button>
+                <button class="btn btn-primary" id="next-lesson-btn">
+                    Next Lesson
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 
-<span class="comment">&lt;!-- Ordered list (numbers) --&gt;</span>
-<span class="tag">&lt;ol&gt;</span>
-  <span class="tag">&lt;li&gt;</span>First<span class="tag">&lt;/li&gt;</span>
-  <span class="tag">&lt;li&gt;</span>Second<span class="tag">&lt;/li&gt;</span>
-<span class="tag">&lt;/ol&gt;</span>
-                    </div>
-                    <div class="task-box">
-                        <h4>✏️ Task</h4>
-                        <p>Create a list of your favorite movies or games!</p>
-                    </div>
-                `,
-                code: `<h2>My Favorite Things</h2>\n\n<p>Here's what I <strong>really</strong> like:</p>\n\n<ul>\n  <li>Coding</li>\n  <li>Games</li>\n  <li>Music</li>\n</ul>`
-            },
-            'html-links': {
-                title: 'Lesson 4: Links & Images',
-                subtitle: 'Adding interactivity',
-                theory: `
-                    <h3>📖 Theory</h3>
-                    <p>Links are created with the <code>&lt;a&gt;</code> tag:</p>
-                    <div class="code-example">
-<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"https://google.com"</span><span class="tag">&gt;</span>
-  Go to Google
-<span class="tag">&lt;/a&gt;</span>
-                    </div>
-                    <p>Images are added with the <code>&lt;img&gt;</code> tag:</p>
-                    <div class="code-example">
-<span class="tag">&lt;img</span> 
-  <span class="attr">src</span>=<span class="value">"photo.jpg"</span>
-  <span class="attr">alt</span>=<span class="value">"Photo description"</span>
-  <span class="attr">width</span>=<span class="value">"300"</span>
-<span class="tag">/&gt;</span>
-                    </div>
-                    <div class="tip">
-                        <div class="tip-title">💡 Tip</div>
-                        The <code>alt</code> attribute describes the image for people who can't see it.
-                    </div>
-                    <div class="task-box">
-                        <h4>✏️ Task</h4>
-                        <p>Create a page with a link to your favorite website!</p>
-                    </div>
-                `,
-                code: `<h2>Useful Links</h2>\n\n<p>My favorite sites:</p>\n\n<ul>\n  <li><a href="https://youtube.com">YouTube</a></li>\n  <li><a href="https://wikipedia.org">Wikipedia</a></li>\n</ul>\n\n<img src="https://picsum.photos/200/100" alt="Random photo">`
-            },
-            'css-intro': {
-                title: 'Lesson 5: What is CSS?',
-                subtitle: 'Adding styles to HTML',
-                theory: `
-                    <h3>📖 Theory</h3>
-                    <p><strong>CSS</strong> (Cascading Style Sheets) is the language for styling web pages. It controls colors, fonts, sizes, layouts, and more.</p>
-                    <p>CSS can be written inside HTML using the <code>&lt;style&gt;</code> tag:</p>
-                    <div class="code-example">
-<span class="tag">&lt;style&gt;</span>
-  h1 {
-    color: blue;
-    font-size: 32px;
-  }
-  p {
-    color: gray;
-  }
-<span class="tag">&lt;/style&gt;</span>
-                    </div>
-                    <div class="tip">
-                        <div class="tip-title">💡 Tip</div>
-                        The selector (h1, p) specifies which element to style. Properties go inside curly braces.
-                    </div>
-                    <div class="task-box">
-                        <h4>✏️ Task</h4>
-                        <p>Change the heading color to red!</p>
-                    </div>
-                `,
-                code: `<style>\n  h1 {\n    color: blue;\n    font-size: 40px;\n  }\n  p {\n    color: green;\n  }\n</style>\n\n<h1>Hello!</h1>\n<p>This text is green.</p>`
-            },
-            'css-colors': {
-                title: 'Lesson 6: Colors & Backgrounds',
-                subtitle: 'Making things colorful',
-                theory: `
-                    <h3>📖 Theory</h3>
-                    <p>Colors in CSS can be set in different ways:</p>
-                    <div class="code-example">
-color: red;              <span class="comment">/* by name */</span>
-color: #ff0000;          <span class="comment">/* HEX */</span>
-color: rgb(255, 0, 0);   <span class="comment">/* RGB */</span>
-                    </div>
-                    <p>Backgrounds are set with the <code>background</code> property:</p>
-                    <div class="code-example">
-background-color: yellow;
-background: linear-gradient(to right, red, blue);
-                    </div>
-                    <div class="task-box">
-                        <h4>✏️ Task</h4>
-                        <p>Create a box with a beautiful gradient background!</p>
-                    </div>
-                `,
-                code: `<style>\n  .card {\n    background: linear-gradient(135deg, #667eea, #764ba2);\n    color: white;\n    padding: 30px;\n    border-radius: 15px;\n    text-align: center;\n  }\n</style>\n\n<div class="card">\n  <h2>Beautiful Card</h2>\n  <p>With a gradient background!</p>\n</div>`
-            },
-            'css-box': {
-                title: 'Lesson 7: The Box Model',
-                subtitle: 'Margins, borders, and padding',
-                theory: `
-                    <h3>📖 Theory</h3>
-                    <p>Every element in CSS is a "box" with several layers:</p>
-                    <div class="code-example">
-margin: 20px;     <span class="comment">/* outside spacing */</span>
-border: 2px solid black;  <span class="comment">/* border */</span>
-padding: 15px;    <span class="comment">/* inside spacing */</span>
-width: 200px;     <span class="comment">/* content width */</span>
-                    </div>
-                    <p>You can set spacing for each side:</p>
-                    <div class="code-example">
-margin-top: 10px;
-margin-right: 20px;
-padding: 10px 20px;  <span class="comment">/* top/bottom, left/right */</span>
-                    </div>
-                    <div class="task-box">
-                        <h4>✏️ Task</h4>
-                        <p>Create a card with a border and some spacing!</p>
-                    </div>
-                `,
-                code: `<style>\n  .box {\n    width: 250px;\n    padding: 20px;\n    margin: 20px;\n    border: 3px solid #333;\n    border-radius: 10px;\n    background: #f5f5f5;\n  }\n</style>\n\n<div class="box">\n  <h3>My Card</h3>\n  <p>With padding and border</p>\n</div>`
-            },
-            'js-intro': {
-                title: 'Lesson 8: What is JavaScript?',
-                subtitle: 'Adding interactivity',
-                theory: `
-                    <h3>📖 Theory</h3>
-                    <p><strong>JavaScript</strong> is a programming language that makes web pages interactive. It can change content, respond to clicks, show messages, and much more.</p>
-                    <div class="code-example">
-<span class="tag">&lt;script&gt;</span>
-  alert('Hello!');  <span class="comment">// popup message</span>
-  console.log('Log');  <span class="comment">// output to console</span>
-<span class="tag">&lt;/script&gt;</span>
-                    </div>
-                    <div class="tip">
-                        <div class="tip-title">💡 Tip</div>
-                        JS code goes inside the <code>&lt;script&gt;</code> tag or in a separate file.
-                    </div>
-                    <div class="task-box">
-                        <h4>✏️ Task</h4>
-                        <p>Change the text in the alert to your own greeting!</p>
-                    </div>
-                `,
-                code: `<h1>JavaScript</h1>\n<p>Open the page and see the message!</p>\n\n<script>\n  alert('Hello! I am JavaScript!');\n</script>`
-            },
-            'js-variables': {
-                title: 'Lesson 9: Variables',
-                subtitle: 'Storing data',
-                theory: `
-                    <h3>📖 Theory</h3>
-                    <p>Variables are "containers" for storing data:</p>
-                    <div class="code-example">
-let name = "John";       <span class="comment">// can be changed</span>
-const age = 18;          <span class="comment">// cannot be changed</span>
-let score = 100;
+    <!-- Toast Notification -->
+    <div class="toast hidden" id="toast">
+        <div class="toast-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="toast-message" id="toast-message">Success!</div>
+    </div>
 
-score = score + 50;      <span class="comment">// now it's 150</span>
-                    </div>
-                    <p>Data types:</p>
-                    <div class="code-example">
-let text = "Hello";      <span class="comment">// string</span>
-let number = 42;         <span class="comment">// number</span>
-let isTrue = true;       <span class="comment">// boolean</span>
-                    </div>
-                    <div class="task-box">
-                        <h4>✏️ Task</h4>
-                        <p>Create variables with your name and age, then display them!</p>
-                    </div>
-                `,
-                code: `<div id="output"></div>\n\n<script>\n  let name = "John";\n  let age = 18;\n  let message = "My name is " + name + ", I'm " + age + " years old!";\n  \n  document.getElementById("output").innerHTML = \n    "<h2>" + message + "</h2>";\n</script>`
-            },
-            'js-events': {
-                title: 'Lesson 10: Events',
-                subtitle: 'Responding to actions',
-                theory: `
-                    <h3>📖 Theory</h3>
-                    <p>Events are user actions: clicks, typing, mouse movements, etc.</p>
-                    <div class="code-example">
-<span class="tag">&lt;button</span> <span class="attr">onclick</span>=<span class="value">"alert('Clicked!')"</span><span class="tag">&gt;</span>
-  Click me
-<span class="tag">&lt;/button&gt;</span>
-                    </div>
-                    <p>You can change page content:</p>
-                    <div class="code-example">
-function changeText() {
-  document.getElementById("text").innerHTML = "New text!";
-}
-                    </div>
-                    <div class="task-box">
-                        <h4>✏️ Task</h4>
-                        <p>Create a button that changes the text when clicked!</p>
-                    </div>
-                `,
-                code: `<style>\n  button {\n    padding: 15px 30px;\n    font-size: 18px;\n    background: #4CAF50;\n    color: white;\n    border: none;\n    border-radius: 8px;\n    cursor: pointer;\n  }\n  button:hover {\n    background: #45a049;\n  }\n</style>\n\n<h2 id="title">Click the button!</h2>\n<button onclick="changeTitle()">Change</button>\n\n<script>\n  let count = 0;\n  function changeTitle() {\n    count++;\n    document.getElementById("title").innerHTML = \n      "You clicked " + count + " times!";\n  }\n</script>`
-            }
-        };
-
-        let currentLesson = 'html-intro';
-
-        // Run code in preview
-        function runCode() {
-            const code = document.getElementById('code-editor').value;
-            const preview = document.getElementById('preview-frame');
-            
-            const htmlContent = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <style>
-                        body { 
-                            font-family: Arial, sans-serif; 
-                            padding: 20px;
-                            margin: 0;
-                        }
-                    </style>
-                </head>
-                <body>${code}</body>
-                </html>
-            `;
-            
-            preview.srcdoc = htmlContent;
-        }
-
-        // Reset code to default
-        function resetCode() {
-            const lesson = lessons[currentLesson];
-            document.getElementById('code-editor').value = lesson.code;
-            runCode();
-        }
-
-        // Load lesson
-        function loadLesson(lessonId) {
-            const lesson = lessons[lessonId];
-            if (!lesson) return;
-
-            currentLesson = lessonId;
-            
-            // Update UI
-            document.getElementById('lesson-title').textContent = lesson.title;
-            document.getElementById('lesson-subtitle').textContent = lesson.subtitle;
-            document.getElementById('theory-panel').innerHTML = lesson.theory;
-            document.getElementById('code-editor').value = lesson.code;
-            
-            // Update nav
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.target.closest('.nav-item').classList.add('active');
-            
-            // Run code
-            runCode();
-        }
-
-        // Auto-run on input
-        document.getElementById('code-editor').addEventListener('input', function() {
-            clearTimeout(this.timer);
-            this.timer = setTimeout(runCode, 500);
-        });
-
-        // Initial run
-        runCode();
-    </script>
+    <script src="scriptLern.js"></script>
 </body>
 </html>
