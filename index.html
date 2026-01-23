@@ -1,1 +1,851 @@
 
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>КодШкола — Учись программировать</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --bg-editor: #0d0d0d;
+            --accent: #00d9ff;
+            --accent-dim: #00d9ff20;
+            --success: #10b981;
+            --text: #e5e5e5;
+            --text-dim: #888;
+            --border: #2a2a2a;
+            --sidebar-width: 260px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg-main);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+
+        .logo {
+            padding: 0 24px 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo h1 span {
+            color: var(--accent);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), #0099ff);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .nav-section {
+            padding: 8px 16px;
+        }
+
+        .nav-section h3 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+            padding: 0 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .nav-item:hover {
+            background: var(--accent-dim);
+        }
+
+        .nav-item.active {
+            background: var(--accent-dim);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .nav-item .num {
+            width: 24px;
+            height: 24px;
+            background: var(--border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .nav-item.active .num {
+            background: var(--accent);
+            color: var(--bg-main);
+        }
+
+        .nav-item.completed .num {
+            background: var(--success);
+            color: white;
+        }
+
+        /* Main content */
+        .main {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lesson-header {
+            padding: 32px 40px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .lesson-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .lesson-header p {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        .lesson-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        /* Theory panel */
+        .theory-panel {
+            padding: 32px 40px;
+            overflow-y: auto;
+            max-height: calc(100vh - 100px);
+            border-right: 1px solid var(--border);
+        }
+
+        .theory-panel h3 {
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            color: var(--accent);
+        }
+
+        .theory-panel p {
+            line-height: 1.7;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
+        .code-example {
+            background: var(--bg-editor);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+        }
+
+        .code-example .tag { color: #ff79c6; }
+        .code-example .attr { color: #50fa7b; }
+        .code-example .value { color: #f1fa8c; }
+        .code-example .comment { color: #6272a4; }
+
+        .tip {
+            background: var(--accent-dim);
+            border-left: 3px solid var(--accent);
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+        }
+
+        /* Practice panel */
+        .practice-panel {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-card);
+        }
+
+        .panel-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-tab {
+            padding: 12px 24px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .panel-tab:hover {
+            color: var(--accent);
+        }
+
+        .panel-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .code-editor {
+            flex: 1;
+            min-height: 200px;
+            background: var(--bg-editor);
+            border: none;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text);
+            resize: none;
+            outline: none;
+            line-height: 1.6;
+        }
+
+        .code-editor::placeholder {
+            color: var(--text-dim);
+        }
+
+        .preview-container {
+            border-top: 1px solid var(--border);
+        }
+
+        .preview-header {
+            padding: 8px 16px;
+            background: var(--bg-main);
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .preview-frame {
+            width: 100%;
+            height: 250px;
+            border: none;
+            background: white;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg-main);
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.1);
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: #3a3a3a;
+        }
+
+        .editor-actions {
+            padding: 12px 16px;
+            display: flex;
+            gap: 8px;
+            border-top: 1px solid var(--border);
+            background: var(--bg-main);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .lesson-content {
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Task section */
+        .task-box {
+            background: #1e3a2f;
+            border: 1px solid #2d5a47;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 24px;
+        }
+
+        .task-box h4 {
+            color: var(--success);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .task-box p {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        /* Progress indicator */
+        .progress-bar {
+            height: 3px;
+            background: var(--border);
+            margin: 16px 24px;
+            border-radius: 2px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            border-radius: 2px;
+            width: 20%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <h1>
+                <div class="logo-icon">💻</div>
+                Код<span>Школа</span>
+            </h1>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+
+        <nav class="nav-section">
+            <h3>Основы HTML</h3>
+            <div class="nav-item active" onclick="loadLesson('html-intro')">
+                <span class="num">1</span>
+                Что такое HTML?
+            </div>
+            <div class="nav-item" onclick="loadLesson('html-tags')">
+                <span class="num">2</span>
+                Теги и структура
+            </div>
+            <div class="nav-item" onclick="loadLesson('html-text')">
+                <span class="num">3</span>
+                Работа с текстом
+            </div>
+            <div class="nav-item" onclick="loadLesson('html-links')">
+                <span class="num">4</span>
+                Ссылки и изображения
+            </div>
+        </nav>
+
+        <nav class="nav-section">
+            <h3>Основы CSS</h3>
+            <div class="nav-item" onclick="loadLesson('css-intro')">
+                <span class="num">5</span>
+                Что такое CSS?
+            </div>
+            <div class="nav-item" onclick="loadLesson('css-colors')">
+                <span class="num">6</span>
+                Цвета и фоны
+            </div>
+            <div class="nav-item" onclick="loadLesson('css-box')">
+                <span class="num">7</span>
+                Блочная модель
+            </div>
+        </nav>
+
+        <nav class="nav-section">
+            <h3>Основы JavaScript</h3>
+            <div class="nav-item" onclick="loadLesson('js-intro')">
+                <span class="num">8</span>
+                Что такое JS?
+            </div>
+            <div class="nav-item" onclick="loadLesson('js-variables')">
+                <span class="num">9</span>
+                Переменные
+            </div>
+            <div class="nav-item" onclick="loadLesson('js-events')">
+                <span class="num">10</span>
+                События
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+        <header class="lesson-header">
+            <h2 id="lesson-title">Урок 1: Что такое HTML?</h2>
+            <p id="lesson-subtitle">Знакомство с языком разметки веб-страниц</p>
+        </header>
+
+        <div class="lesson-content">
+            <!-- Theory -->
+            <div class="theory-panel" id="theory-panel">
+                <h3>📖 Теория</h3>
+                
+                <p><strong>HTML</strong> (HyperText Markup Language) — это язык разметки, который используется для создания веб-страниц. Он описывает структуру страницы: заголовки, параграфы, изображения, ссылки и многое другое.</p>
+
+                <p>HTML состоит из <strong>тегов</strong> — специальных команд в угловых скобках. Большинство тегов парные: есть открывающий и закрывающий тег.</p>
+
+                <div class="code-example">
+<span class="comment">&lt;!-- Это комментарий, браузер его игнорирует --&gt;</span>
+<span class="tag">&lt;h1&gt;</span>Привет, мир!<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;p&gt;</span>Это мой первый параграф.<span class="tag">&lt;/p&gt;</span>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">💡 Подсказка</div>
+                    Тег <code>&lt;h1&gt;</code> создаёт заголовок, а <code>&lt;p&gt;</code> — параграф текста.
+                </div>
+
+                <p>Каждая HTML-страница имеет базовую структуру:</p>
+
+                <div class="code-example">
+<span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html&gt;</span>
+  <span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Моя страница<span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;/head&gt;</span>
+  <span class="tag">&lt;body&gt;</span>
+    <span class="comment">&lt;!-- Здесь контент --&gt;</span>
+  <span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span>
+                </div>
+
+                <div class="task-box">
+                    <h4>✏️ Задание</h4>
+                    <p>Напиши в редакторе справа заголовок <code>&lt;h1&gt;</code> со своим именем и параграф <code>&lt;p&gt;</code> с приветствием. Нажми "Запустить" чтобы увидеть результат!</p>
+                </div>
+            </div>
+
+            <!-- Practice -->
+            <div class="practice-panel">
+                <div class="panel-tabs">
+                    <div class="panel-tab active">index.html</div>
+                </div>
+                
+                <div class="editor-container">
+                    <textarea class="code-editor" id="code-editor" placeholder="Пиши код здесь..."><h1>Привет, мир!</h1>
+<p>Это моя первая веб-страница.</p>
+<p>Я учусь программировать!</p></textarea>
+                    
+                    <div class="editor-actions">
+                        <button class="btn btn-primary" onclick="runCode()">▶ Запустить</button>
+                        <button class="btn btn-secondary" onclick="resetCode()">↺ Сбросить</button>
+                    </div>
+                </div>
+
+                <div class="preview-container">
+                    <div class="preview-header">
+                        <span>Превью</span>
+                        <span>Автообновление: вкл</span>
+                    </div>
+                    <iframe class="preview-frame" id="preview-frame"></iframe>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Lessons data
+        const lessons = {
+            'html-intro': {
+                title: 'Урок 1: Что такое HTML?',
+                subtitle: 'Знакомство с языком разметки веб-страниц',
+                theory: `
+                    <h3>📖 Теория</h3>
+                    <p><strong>HTML</strong> (HyperText Markup Language) — это язык разметки, который используется для создания веб-страниц. Он описывает структуру страницы: заголовки, параграфы, изображения, ссылки и многое другое.</p>
+                    <p>HTML состоит из <strong>тегов</strong> — специальных команд в угловых скобках. Большинство тегов парные: есть открывающий и закрывающий тег.</p>
+                    <div class="code-example">
+<span class="comment">&lt;!-- Это комментарий --&gt;</span>
+<span class="tag">&lt;h1&gt;</span>Привет, мир!<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;p&gt;</span>Это мой первый параграф.<span class="tag">&lt;/p&gt;</span>
+                    </div>
+                    <div class="tip">
+                        <div class="tip-title">💡 Подсказка</div>
+                        Тег <code>&lt;h1&gt;</code> создаёт заголовок, а <code>&lt;p&gt;</code> — параграф текста.
+                    </div>
+                    <div class="task-box">
+                        <h4>✏️ Задание</h4>
+                        <p>Напиши заголовок со своим именем и параграф с приветствием!</p>
+                    </div>
+                `,
+                code: `<h1>Привет, мир!</h1>\n<p>Это моя первая веб-страница.</p>\n<p>Я учусь программировать!</p>`
+            },
+            'html-tags': {
+                title: 'Урок 2: Теги и структура',
+                subtitle: 'Изучаем основные HTML-теги',
+                theory: `
+                    <h3>📖 Теория</h3>
+                    <p>HTML имеет множество тегов для разных целей. Вот самые важные:</p>
+                    <div class="code-example">
+<span class="tag">&lt;h1&gt;</span> до <span class="tag">&lt;h6&gt;</span> — заголовки (h1 самый большой)
+<span class="tag">&lt;p&gt;</span> — параграф текста
+<span class="tag">&lt;div&gt;</span> — блок-контейнер
+<span class="tag">&lt;span&gt;</span> — строчный контейнер
+<span class="tag">&lt;br&gt;</span> — перенос строки
+<span class="tag">&lt;hr&gt;</span> — горизонтальная линия
+                    </div>
+                    <p>Теги можно вкладывать друг в друга:</p>
+                    <div class="code-example">
+<span class="tag">&lt;div&gt;</span>
+  <span class="tag">&lt;h2&gt;</span>Заголовок<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Текст внутри блока<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+                    </div>
+                    <div class="task-box">
+                        <h4>✏️ Задание</h4>
+                        <p>Создай страницу с заголовками h1, h2, h3 и несколькими параграфами.</p>
+                    </div>
+                `,
+                code: `<h1>Главный заголовок</h1>\n<h2>Подзаголовок</h2>\n<p>Первый параграф текста.</p>\n<h3>Маленький заголовок</h3>\n<p>Второй параграф.</p>`
+            },
+            'html-text': {
+                title: 'Урок 3: Работа с текстом',
+                subtitle: 'Форматирование и списки',
+                theory: `
+                    <h3>📖 Теория</h3>
+                    <p>HTML позволяет форматировать текст:</p>
+                    <div class="code-example">
+<span class="tag">&lt;strong&gt;</span>Жирный текст<span class="tag">&lt;/strong&gt;</span>
+<span class="tag">&lt;em&gt;</span>Курсив<span class="tag">&lt;/em&gt;</span>
+<span class="tag">&lt;u&gt;</span>Подчёркнутый<span class="tag">&lt;/u&gt;</span>
+<span class="tag">&lt;mark&gt;</span>Выделенный<span class="tag">&lt;/mark&gt;</span>
+                    </div>
+                    <p>Списки бывают двух видов:</p>
+                    <div class="code-example">
+<span class="comment">&lt;!-- Маркированный список --&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Пункт 1<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Пункт 2<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+
+<span class="comment">&lt;!-- Нумерованный список --&gt;</span>
+<span class="tag">&lt;ol&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Первый<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Второй<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ol&gt;</span>
+                    </div>
+                    <div class="task-box">
+                        <h4>✏️ Задание</h4>
+                        <p>Создай список своих любимых фильмов или игр!</p>
+                    </div>
+                `,
+                code: `<h2>Мои любимые вещи</h2>\n\n<p>Вот что мне <strong>очень</strong> нравится:</p>\n\n<ul>\n  <li>Программирование</li>\n  <li>Игры</li>\n  <li>Музыка</li>\n</ul>`
+            },
+            'html-links': {
+                title: 'Урок 4: Ссылки и изображения',
+                subtitle: 'Добавляем интерактивность',
+                theory: `
+                    <h3>📖 Теория</h3>
+                    <p>Ссылки создаются тегом <code>&lt;a&gt;</code>:</p>
+                    <div class="code-example">
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="value">"https://google.com"</span><span class="tag">&gt;</span>
+  Перейти в Google
+<span class="tag">&lt;/a&gt;</span>
+                    </div>
+                    <p>Изображения добавляются тегом <code>&lt;img&gt;</code>:</p>
+                    <div class="code-example">
+<span class="tag">&lt;img</span> 
+  <span class="attr">src</span>=<span class="value">"photo.jpg"</span>
+  <span class="attr">alt</span>=<span class="value">"Описание фото"</span>
+  <span class="attr">width</span>=<span class="value">"300"</span>
+<span class="tag">/&gt;</span>
+                    </div>
+                    <div class="tip">
+                        <div class="tip-title">💡 Подсказка</div>
+                        Атрибут <code>alt</code> описывает картинку для тех, кто её не видит.
+                    </div>
+                    <div class="task-box">
+                        <h4>✏️ Задание</h4>
+                        <p>Создай страницу со ссылкой на любимый сайт!</p>
+                    </div>
+                `,
+                code: `<h2>Полезные ссылки</h2>\n\n<p>Мои любимые сайты:</p>\n\n<ul>\n  <li><a href="https://youtube.com">YouTube</a></li>\n  <li><a href="https://wikipedia.org">Википедия</a></li>\n</ul>\n\n<img src="https://picsum.photos/200/100" alt="Случайное фото">`
+            },
+            'css-intro': {
+                title: 'Урок 5: Что такое CSS?',
+                subtitle: 'Добавляем стили к HTML',
+                theory: `
+                    <h3>📖 Теория</h3>
+                    <p><strong>CSS</strong> (Cascading Style Sheets) — это язык стилей. Он определяет как выглядят HTML-элементы: цвета, размеры, шрифты.</p>
+                    <p>CSS можно писать прямо в HTML через тег <code>&lt;style&gt;</code>:</p>
+                    <div class="code-example">
+<span class="tag">&lt;style&gt;</span>
+  h1 {
+    color: blue;
+    font-size: 32px;
+  }
+  p {
+    color: gray;
+  }
+<span class="tag">&lt;/style&gt;</span>
+                    </div>
+                    <div class="tip">
+                        <div class="tip-title">💡 Подсказка</div>
+                        Селектор (h1, p) указывает какой элемент стилизовать. В фигурных скобках — свойства.
+                    </div>
+                    <div class="task-box">
+                        <h4>✏️ Задание</h4>
+                        <p>Измени цвет заголовка на красный!</p>
+                    </div>
+                `,
+                code: `<style>\n  h1 {\n    color: blue;\n    font-size: 40px;\n  }\n  p {\n    color: green;\n  }\n</style>\n\n<h1>Привет!</h1>\n<p>Этот текст зелёный.</p>`
+            },
+            'css-colors': {
+                title: 'Урок 6: Цвета и фоны',
+                subtitle: 'Красим элементы',
+                theory: `
+                    <h3>📖 Теория</h3>
+                    <p>Цвета в CSS можно задавать разными способами:</p>
+                    <div class="code-example">
+color: red;              <span class="comment">/* по имени */</span>
+color: #ff0000;          <span class="comment">/* HEX */</span>
+color: rgb(255, 0, 0);   <span class="comment">/* RGB */</span>
+                    </div>
+                    <p>Фон задаётся свойством <code>background</code>:</p>
+                    <div class="code-example">
+background-color: yellow;
+background: linear-gradient(to right, red, blue);
+                    </div>
+                    <div class="task-box">
+                        <h4>✏️ Задание</h4>
+                        <p>Создай блок с красивым градиентным фоном!</p>
+                    </div>
+                `,
+                code: `<style>\n  .card {\n    background: linear-gradient(135deg, #667eea, #764ba2);\n    color: white;\n    padding: 30px;\n    border-radius: 15px;\n    text-align: center;\n  }\n</style>\n\n<div class="card">\n  <h2>Красивая карточка</h2>\n  <p>С градиентным фоном!</p>\n</div>`
+            },
+            'css-box': {
+                title: 'Урок 7: Блочная модель',
+                subtitle: 'Отступы, границы, размеры',
+                theory: `
+                    <h3>📖 Теория</h3>
+                    <p>Каждый элемент в CSS — это "коробка" с несколькими слоями:</p>
+                    <div class="code-example">
+margin: 20px;     <span class="comment">/* внешний отступ */</span>
+border: 2px solid black;  <span class="comment">/* граница */</span>
+padding: 15px;    <span class="comment">/* внутренний отступ */</span>
+width: 200px;     <span class="comment">/* ширина контента */</span>
+                    </div>
+                    <p>Можно задавать отступы для каждой стороны:</p>
+                    <div class="code-example">
+margin-top: 10px;
+margin-right: 20px;
+padding: 10px 20px;  <span class="comment">/* верх/низ, лево/право */</span>
+                    </div>
+                    <div class="task-box">
+                        <h4>✏️ Задание</h4>
+                        <p>Создай карточку с рамкой и отступами!</p>
+                    </div>
+                `,
+                code: `<style>\n  .box {\n    width: 250px;\n    padding: 20px;\n    margin: 20px;\n    border: 3px solid #333;\n    border-radius: 10px;\n    background: #f5f5f5;\n  }\n</style>\n\n<div class="box">\n  <h3>Моя карточка</h3>\n  <p>С отступами и границей</p>\n</div>`
+            },
+            'js-intro': {
+                title: 'Урок 8: Что такое JavaScript?',
+                subtitle: 'Добавляем интерактивность',
+                theory: `
+                    <h3>📖 Теория</h3>
+                    <p><strong>JavaScript</strong> — это язык программирования, который делает страницы интерактивными. Он может менять контент, реагировать на клики, показывать сообщения.</p>
+                    <div class="code-example">
+<span class="tag">&lt;script&gt;</span>
+  alert('Привет!');  <span class="comment">// всплывающее окно</span>
+  console.log('Лог');  <span class="comment">// вывод в консоль</span>
+<span class="tag">&lt;/script&gt;</span>
+                    </div>
+                    <div class="tip">
+                        <div class="tip-title">💡 Подсказка</div>
+                        Код JS пишется в теге <code>&lt;script&gt;</code> или в отдельном файле.
+                    </div>
+                    <div class="task-box">
+                        <h4>✏️ Задание</h4>
+                        <p>Измени текст в alert на своё приветствие!</p>
+                    </div>
+                `,
+                code: `<h1>JavaScript</h1>\n<p>Открой страницу и увидишь сообщение!</p>\n\n<script>\n  alert('Привет! Я JavaScript!');\n</script>`
+            },
+            'js-variables': {
+                title: 'Урок 9: Переменные',
+                subtitle: 'Храним данные',
+                theory: `
+                    <h3>📖 Теория</h3>
+                    <p>Переменные — это "коробки" для хранения данных:</p>
+                    <div class="code-example">
+let name = "Аня";        <span class="comment">// можно изменять</span>
+const age = 15;          <span class="comment">// нельзя изменять</span>
+let score = 100;
+
+score = score + 50;      <span class="comment">// теперь 150</span>
+                    </div>
+                    <p>Типы данных:</p>
+                    <div class="code-example">
+let text = "Привет";     <span class="comment">// строка</span>
+let number = 42;         <span class="comment">// число</span>
+let isTrue = true;       <span class="comment">// булево</span>
+                    </div>
+                    <div class="task-box">
+                        <h4>✏️ Задание</h4>
+                        <p>Создай переменные со своим именем и возрастом, выведи их!</p>
+                    </div>
+                `,
+                code: `<div id="output"></div>\n\n<script>\n  let name = "Аня";\n  let age = 15;\n  let message = "Меня зовут " + name + ", мне " + age + " лет!";\n  \n  document.getElementById("output").innerHTML = \n    "<h2>" + message + "</h2>";\n</script>`
+            },
+            'js-events': {
+                title: 'Урок 10: События',
+                subtitle: 'Реагируем на действия',
+                theory: `
+                    <h3>📖 Теория</h3>
+                    <p>События — это действия пользователя: клики, ввод текста, наведение мыши.</p>
+                    <div class="code-example">
+<span class="tag">&lt;button</span> <span class="attr">onclick</span>=<span class="value">"alert('Клик!')"</span><span class="tag">&gt;</span>
+  Нажми меня
+<span class="tag">&lt;/button&gt;</span>
+                    </div>
+                    <p>Можно менять содержимое страницы:</p>
+                    <div class="code-example">
+function changeText() {
+  document.getElementById("text").innerHTML = "Новый текст!";
+}
+                    </div>
+                    <div class="task-box">
+                        <h4>✏️ Задание</h4>
+                        <p>Создай кнопку, которая меняет текст при нажатии!</p>
+                    </div>
+                `,
+                code: `<style>\n  button {\n    padding: 15px 30px;\n    font-size: 18px;\n    background: #4CAF50;\n    color: white;\n    border: none;\n    border-radius: 8px;\n    cursor: pointer;\n  }\n  button:hover {\n    background: #45a049;\n  }\n</style>\n\n<h2 id="title">Нажми кнопку!</h2>\n<button onclick="changeTitle()">Изменить</button>\n\n<script>\n  let count = 0;\n  function changeTitle() {\n    count++;\n    document.getElementById("title").innerHTML = \n      "Ты нажал " + count + " раз!";\n  }\n</script>`
+            }
+        };
+
+        let currentLesson = 'html-intro';
+
+        // Run code in preview
+        function runCode() {
+            const code = document.getElementById('code-editor').value;
+            const preview = document.getElementById('preview-frame');
+            
+            const htmlContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body { 
+                            font-family: Arial, sans-serif; 
+                            padding: 20px;
+                            margin: 0;
+                        }
+                    </style>
+                </head>
+                <body>${code}</body>
+                </html>
+            `;
+            
+            preview.srcdoc = htmlContent;
+        }
+
+        // Reset code to default
+        function resetCode() {
+            const lesson = lessons[currentLesson];
+            document.getElementById('code-editor').value = lesson.code;
+            runCode();
+        }
+
+        // Load lesson
+        function loadLesson(lessonId) {
+            const lesson = lessons[lessonId];
+            if (!lesson) return;
+
+            currentLesson = lessonId;
+            
+            // Update UI
+            document.getElementById('lesson-title').textContent = lesson.title;
+            document.getElementById('lesson-subtitle').textContent = lesson.subtitle;
+            document.getElementById('theory-panel').innerHTML = lesson.theory;
+            document.getElementById('code-editor').value = lesson.code;
+            
+            // Update nav
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // Run code
+            runCode();
+        }
+
+        // Auto-run on input
+        document.getElementById('code-editor').addEventListener('input', function() {
+            clearTimeout(this.timer);
+            this.timer = setTimeout(runCode, 500);
+        });
+
+        // Initial run
+        runCode();
+    </script>
+</body>
+</html>
