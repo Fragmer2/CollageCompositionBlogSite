@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About — Bohdan Stepantsov</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0a0a0a;
+            --bg-card: #141414;
+            --accent: #00d9ff;
+            --accent-secondary: #a855f7;
+            --text: #e5e5e5;
+            --text-dim: #888;
+            --border: #252525;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg-main);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 120px 40px 80px;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .avatar {
+            width: 160px;
+            height: 160px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            flex-shrink: 0;
+        }
+
+        .profile-info h1 {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        .profile-info .tagline {
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .profile-info p {
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        .profile-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .tag {
+            padding: 6px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        /* Bio Section */
+        .bio-section {
+            margin-bottom: 48px;
+        }
+
+        .bio-section h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bio-section h2 span {
+            font-size: 1.2rem;
+        }
+
+        .bio-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            line-height: 1.8;
+        }
+
+        .bio-content p {
+            margin-bottom: 16px;
+        }
+
+        .bio-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .skill-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .skill-card h3 {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-item {
+            padding: 6px 12px;
+            background: rgba(0, 217, 255, 0.1);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* Experience */
+        .experience-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 16px;
+        }
+
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .experience-header h3 {
+            font-size: 1.1rem;
+        }
+
+        .experience-date {
+            font-size: 0.85rem;
+            color: var(--accent);
+            background: rgba(0, 217, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 50px;
+        }
+
+        .experience-item ul {
+            list-style: none;
+            margin-top: 16px;
+        }
+
+        .experience-item li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .experience-item li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        /* Interests */
+        .interests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .interest-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .interest-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .interest-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .interest-item span {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        /* Contact */
+        .contact-card {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(168, 85, 247, 0.1));
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .contact-card h3 {
+            margin-bottom: 20px;
+        }
+
+        .contact-links {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            padding: 12px 24px;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-link:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-header {
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .bio-section {
+            animation: fadeInUp 0.6s ease backwards;
+        }
+
+        .bio-section:nth-child(2) { animation-delay: 0.1s; }
+        .bio-section:nth-child(3) { animation-delay: 0.2s; }
+        .bio-section:nth-child(4) { animation-delay: 0.3s; }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            nav {
+                padding: 16px 20px;
+            }
+            
+            main {
+                padding: 100px 20px 60px;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-info h1 {
+                font-size: 2rem;
+            }
+
+            .profile-tags {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html" class="logo">
+            <div class="logo-icon">⚡</div>
+            Code<span>Lab</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="learn.html">Learn</a>
+            <a href="about.html" class="active">About</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="avatar">👨‍💻</div>
+            <div class="profile-info">
+                <h1>Bohdan Stepantsov</h1>
+                <div class="tagline">Full-Stack Developer • Student</div>
+                <p>Hey! I'm Bohdan — an 18-year-old Ukrainian guy living in Iowa. Just a regular dude who loves coding, sports, and building things with my hands. Faith in Jesus Christ is at the center of everything I do.</p>
+                <div class="profile-tags">
+                    <span class="tag">🇺🇦 Ukrainian</span>
+                    <span class="tag">📍 Iowa, USA</span>
+                    <span class="tag">✝️ Christian</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bio -->
+        <section class="bio-section">
+            <h2><span>👋</span> About Me</h2>
+            <div class="bio-content">
+                <p>I'm a high school senior at Western Christian High School, graduating in May 2026. Programming has been my thing for a few years now — I've built everything from Minecraft servers to school web apps.</p>
+                <p>When I'm not coding, you'll probably find me on the volleyball court, running cross country, playing soccer, or strumming my guitar at church worship. I'm also that guy who gets excited about building PCs and working with any kind of tech.</p>
+                <p>After graduation, I'm heading to Dordt University to study Engineering Technology. I want to combine my love for programming with hands-on work — automation, system control, that kind of stuff.</p>
+            </div>
+        </section>
+
+        <!-- Skills -->
+        <section class="bio-section">
+            <h2><span>💻</span> Tech Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h3>Frontend</h3>
+                    <div class="skill-list">
+                        <span class="skill-item">HTML</span>
+                        <span class="skill-item">CSS</span>
+                        <span class="skill-item">JavaScript</span>
+                        <span class="skill-item">React</span>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <h3>Backend</h3>
+                    <div class="skill-list">
+                        <span class="skill-item">Python</span>
+                        <span class="skill-item">Node.js</span>
+                        <span class="skill-item">Java</span>
+                        <span class="skill-item">Django</span>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <h3>Databases</h3>
+                    <div class="skill-list">
+                        <span class="skill-item">MySQL</span>
+                        <span class="skill-item">PostgreSQL</span>
+                        <span class="skill-item">MongoDB</span>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <h3>Tools</h3>
+                    <div class="skill-list">
+                        <span class="skill-item">Git</span>
+                        <span class="skill-item">Linux</span>
+                        <span class="skill-item">REST APIs</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience -->
+        <section class="bio-section">
+            <h2><span>🚀</span> Projects & Experience</h2>
+            
+            <div class="experience-item">
+                <div class="experience-header">
+                    <h3>Full-Stack Developer — Snack Shack</h3>
+                    <span class="experience-date">Aug 2025 — Present</span>
+                </div>
+                <p style="color: var(--text-dim);">School café web app for online orders</p>
+                <ul>
+                    <li>Built the frontend with React for students to order food</li>
+                    <li>Created admin dashboard for staff to manage the menu</li>
+                    <li>Set up SQL database for orders and menu items</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-header">
+                    <h3>Full-Stack Developer & Server Admin — Minecraft Server</h3>
+                    <span class="experience-date">Nov 2023 — Jun 2025</span>
+                </div>
+                <p style="color: var(--text-dim);">Built and ran a multiplayer gaming platform</p>
+                <ul>
+                    <li>Designed and launched a server from scratch</li>
+                    <li>Developed custom plugins in Java</li>
+                    <li>Built a web store for in-game purchases</li>
+                    <li>Managed VPS hosting and server optimization</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Interests -->
+        <section class="bio-section">
+            <h2><span>⚡</span> Beyond Code</h2>
+            <div class="interests-grid">
+                <div class="interest-item">
+                    <div class="interest-icon">🏐</div>
+                    <span>Volleyball</span>
+                </div>
+                <div class="interest-item">
+                    <div class="interest-icon">🏃</div>
+                    <span>Cross Country</span>
+                </div>
+                <div class="interest-item">
+                    <div class="interest-icon">⚽</div>
+                    <span>Soccer</span>
+                </div>
+                <div class="interest-item">
+                    <div class="interest-icon">🎸</div>
+                    <span>Guitar</span>
+                </div>
+                <div class="interest-item">
+                    <div class="interest-icon">⛪</div>
+                    <span>Church Worship</span>
+                </div>
+                <div class="interest-item">
+                    <div class="interest-icon">🖥️</div>
+                    <span>PC Building</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section class="bio-section">
+            <div class="contact-card">
+                <h3>Get in Touch</h3>
+                <div class="contact-links">
+                    <a href="mailto:bohdan.stepantsov@westernchristianhs.com" class="contact-link">
+                        ✉️ Email Me
+                    </a>
+                    <a href="https://boda-server.infy.uk/?i=1" target="_blank" class="contact-link">
+                        🎮 My Server
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Built by <a href="about.html">Bohdan Stepantsov</a> • School Project 2025</p>
+    </footer>
+</body>
+</html>
