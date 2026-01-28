@@ -458,142 +458,243 @@ const LESSONS = {
     // ==========================================
     // LESSON 1: HTML Document Structure
     // ==========================================
-    'html-structure': {
-        title: 'HTML Document Structure',
-        subtitle: 'Learn the basic building blocks of every web page',
-        difficulty: 'Beginner',
-        duration: '15 minutes',
-        theory: `
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-rocket"></i></div>
-                    <h2 class="section-title">Welcome! Let's Build Your First Web Page</h2>
-                </div>
-                <p class="theory-text">In this lesson, you'll create your very first web page! Don't worry - we'll guide you step by step.</p>
-                
-                <div class="tip-box">
-                    <div class="note-header">
-                        <div class="note-icon tip-icon"><i class="fas fa-info-circle"></i></div>
-                        <div class="note-title tip-title">How This Works</div>
-                    </div>
-                    <p class="theory-text">On the right side you see a <strong>Code Editor</strong> (where you write code) and a <strong>Preview</strong> (where you see the result). Try changing something in the editor - the preview updates automatically!</p>
-                </div>
+'html-structure': {
+    title: 'HTML Document Structure',
+    subtitle: 'Learn the basic building blocks of every web page',
+    difficulty: 'Beginner',
+    duration: '15 minutes',
+    theory: `
+        <div class="theory-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-rocket"></i></div>
+                <h2 class="section-title">Welcome! Do you want to try some easy coding shtaff?</h2>
             </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-tags"></i></div>
-                    <h2 class="section-title">HTML Tags Explained</h2>
-                </div>
-                <p class="theory-text">HTML uses <strong>tags</strong> to tell the browser what type of content to display. Tags look like this:</p>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> How Tags Work</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>&lt;tagname&gt;Your content here&lt;/tagname&gt;
-
-Examples:
-&lt;h1&gt;This is a big heading&lt;/h1&gt;
-&lt;p&gt;This is a paragraph of text&lt;/p&gt;</code></pre>
-                </div>
-                
-                <div class="note-box">
-                    <div class="note-header">
-                        <div class="note-icon"><i class="fas fa-lightbulb"></i></div>
-                        <div class="note-title">Remember!</div>
-                    </div>
-                    <p class="theory-text">Most tags need to be <strong>closed</strong>. If you open with <code>&lt;h1&gt;</code>, you must close with <code>&lt;/h1&gt;</code> (notice the slash <code>/</code>).</p>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-heading"></i></div>
-                    <h2 class="section-title">Tags You'll Use Today</h2>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-list"></i> Essential Tags</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>&lt;title&gt;Page Title&lt;/title&gt;    → Shows in browser tab
-&lt;h1&gt;Main Heading&lt;/h1&gt;        → Big heading (use once per page)
-&lt;h2&gt;Subheading&lt;/h2&gt;          → Smaller heading
-&lt;p&gt;Paragraph text&lt;/p&gt;        → Regular text paragraph</code></pre>
-                </div>
-            </div>
-
-            <div class="exercise-box">
-                <div class="exercise-header">
-                    <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
-                    <div class="exercise-title">📝 Your Task: Create an "About Me" Page</div>
-                </div>
-                <p class="theory-text">Follow these steps in the code editor on the right:</p>
-            </div>
-
-            <div class="step-by-step">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h4>Change the Page Title</h4>
-                        <p>Find this line in the editor:</p>
-                        <div class="code-inline">&lt;title&gt;Change This Title&lt;/title&gt;</div>
-                        <p>Change it to:</p>
-                        <div class="code-inline">&lt;title&gt;My First Web Page&lt;/title&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h4>Add Your Name as a Heading</h4>
-                        <p>Find the comment <code>&lt;!-- STEP 2 --&gt;</code> and add below it:</p>
-                        <div class="code-inline">&lt;h1&gt;John Smith&lt;/h1&gt;</div>
-                        <p><em>(Use your own name instead of John Smith)</em></p>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h4>Add an Introduction Paragraph</h4>
-                        <p>Below your h1, find <code>&lt;!-- STEP 3 --&gt;</code> and add:</p>
-                        <div class="code-inline">&lt;p&gt;Hello! I am learning web development.&lt;/p&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h4>Add a "My Hobbies" Section</h4>
-                        <p>Find <code>&lt;!-- STEP 4 --&gt;</code> and add a subheading:</p>
-                        <div class="code-inline">&lt;h2&gt;My Hobbies&lt;/h2&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">5</div>
-                    <div class="step-content">
-                        <h4>Add a Hobbies Paragraph</h4>
-                        <p>Below your h2, find <code>&lt;!-- STEP 5 --&gt;</code> and add:</p>
-                        <div class="code-inline">&lt;p&gt;I enjoy reading, gaming, and coding.&lt;/p&gt;</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tip-box" style="margin-top: 2rem;">
+            
+            <p class="theory-text">Imagine you're writing a letter, but instead of paper, you're writing for a web browser, that's basically what HTML is - a way to tell your browser "hey, this is a title, this is a paragraph, this is important text." The browser reads your instructions and displays everything beautifully on the screen.</p>
+            
+            <p class="theory-text">Don't worry if this sounds complicated - it's actually much simpler than it seems. By the end of this lesson, you'll have created your very own web page. Yes, a real one that you can show to your friends!</p>
+            
+            <div class="tip-box">
                 <div class="note-header">
-                    <div class="note-icon tip-icon"><i class="fas fa-check-circle"></i></div>
-                    <div class="note-title tip-title">When You're Done</div>
+                    <div class="note-icon tip-icon"><i class="fas fa-info-circle"></i></div>
+                    <div class="note-title tip-title">Before We Start - Look at the Right Side of Your Screen</div>
                 </div>
-                <p class="theory-text">Click the green <strong>"Submit"</strong> button to check your work. You need to pass all checks to complete the lesson!</p>
+                <p class="theory-text">You see two boxes on the right? The top one is your <strong>Code Editor</strong> - this is where you'll type your code. The bottom one is <strong>Preview</strong> - this shows you what your web page looks like in real time. Every time you type something in the editor, the preview updates automatically. It's like magic, but it's just technology!</p>
             </div>
-        `,
-        initialCode: {
-            html: `<!DOCTYPE html>
+        </div>
+
+        <div class="theory-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-question-circle"></i></div>
+                <h2 class="section-title">So What Exactly is HTML?</h2>
+            </div>
+            
+            <p class="theory-text">HTML stands for <strong>HyperText Markup Language</strong>. Sounds scary? Let's break it down:</p>
+            
+            <p class="theory-text">Think of HTML like the skeleton of a human body. Just like bones give structure to your body, HTML gives structure to a web page. It tells the browser: "This part is the head of the page, this is the body, this text is a big title, this text is just a regular paragraph."</p>
+            
+            <p class="theory-text">Without HTML, a web page would just be a messy blob of text with no organization. HTML is what makes the internet actually readable and organized.</p>
+        </div>
+
+        <div class="theory-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-tags"></i></div>
+                <h2 class="section-title">The Building Blocks: Tags</h2>
+            </div>
+            
+            <p class="theory-text">HTML uses something called <strong>tags</strong>. A tag is like a label that tells the browser what kind of content you're creating. Tags always look like this - they have angle brackets (these things: < >) around them.</p>
+            
+            <div class="code-block">
+                <div class="code-block-header">
+                    <div class="code-block-title"><i class="fas fa-code"></i> The Basic Pattern</div>
+                    <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <pre><code>&lt;tagname&gt;Your content goes here&lt;/tagname&gt;</code></pre>
+            </div>
+            
+            <p class="theory-text">See how there's an <strong>opening tag</strong> at the beginning and a <strong>closing tag</strong> at the end? The closing tag has a forward slash (/) before the tag name. This is super important - it's like opening and closing a door. You open it, put your content inside, then close it.</p>
+            
+            <div class="note-box">
+                <div class="note-header">
+                    <div class="note-icon"><i class="fas fa-lightbulb"></i></div>
+                    <div class="note-title">The Golden Rule</div>
+                </div>
+                <p class="theory-text">If you open a tag, you <strong>must</strong> close it. Think of it like parentheses in math - every opening parenthesis needs a closing one. Open with <code>&lt;h1&gt;</code>, close with <code>&lt;/h1&gt;</code>. Forget to close it? Your page might look broken or weird. This is the #1 mistake beginners make, so always double-check!</p>
+            </div>
+        </div>
+
+        <div class="theory-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-heading"></i></div>
+                <h2 class="section-title">The Four Tags You'll Learn Today</h2>
+            </div>
+            
+            <p class="theory-text">We're going to use just four tags today. That's it - four! Let me introduce them:</p>
+            
+            <div class="code-block">
+                <div class="code-block-header">
+                    <div class="code-block-title"><i class="fas fa-list"></i> Meet Your New Friends</div>
+                    <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <pre><code>&lt;title&gt;Page Title&lt;/title&gt;</code></pre>
+            </div>
+            <p class="theory-text"><strong>The Title Tag:</strong> This is what shows up in your browser tab - you know, that little text at the top of your browser window. It's also what Google shows when your page appears in search results. It's hidden on the actual page, but very important!</p>
+            
+            <div class="code-block">
+                <div class="code-block-header">
+                    <div class="code-block-title"><i class="fas fa-list"></i> The Big Heading</div>
+                    <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <pre><code>&lt;h1&gt;Main Heading&lt;/h1&gt;</code></pre>
+            </div>
+            <p class="theory-text"><strong>The H1 Tag:</strong> This is your main headline - the biggest, most important text on your page. Think of it like the title of a newspaper article. You should only use ONE h1 per page. It's like having one main title for your story.</p>
+            
+            <div class="code-block">
+                <div class="code-block-header">
+                    <div class="code-block-title"><i class="fas fa-list"></i> The Subheading</div>
+                    <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <pre><code>&lt;h2&gt;Subheading&lt;/h2&gt;</code></pre>
+            </div>
+            <p class="theory-text"><strong>The H2 Tag:</strong> This is a smaller heading, like a section title. If your page is a book, h1 is the book title and h2 are the chapter titles. You can have as many h2 tags as you want.</p>
+            
+            <div class="code-block">
+                <div class="code-block-header">
+                    <div class="code-block-title"><i class="fas fa-list"></i> The Paragraph</div>
+                    <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <pre><code>&lt;p&gt;This is regular text.&lt;/p&gt;</code></pre>
+            </div>
+            <p class="theory-text"><strong>The P Tag:</strong> P stands for paragraph. This is your regular text - the stuff people actually read. Blog posts, descriptions, explanations - all of that goes inside p tags.</p>
+        </div>
+
+        <div class="theory-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-eye"></i></div>
+                <h2 class="section-title">What About All That Other Code in the Editor?</h2>
+            </div>
+            
+            <p class="theory-text">If you look at the code editor on the right, you'll see a bunch of code already there. Don't panic! Most of it is just "setup code" that every web page needs. Let me quickly explain what you're seeing:</p>
+            
+            <p class="theory-text"><code>&lt;!DOCTYPE html&gt;</code> - This tells the browser "hey, this is an HTML document." Just leave it there.</p>
+            
+            <p class="theory-text"><code>&lt;html&gt;</code> - Everything on your page lives inside this tag. It's like the container for everything.</p>
+            
+            <p class="theory-text"><code>&lt;head&gt;</code> - This section contains invisible stuff - settings, the title, links to styles. Users don't see this part directly.</p>
+            
+            <p class="theory-text"><code>&lt;body&gt;</code> - This is where the magic happens! Everything you want people to SEE on your page goes in the body. This is where you'll be working today.</p>
+            
+            <div class="tip-box">
+                <div class="note-header">
+                    <div class="note-icon tip-icon"><i class="fas fa-hand-point-right"></i></div>
+                    <div class="note-title tip-title">Focus Here</div>
+                </div>
+                <p class="theory-text">For this lesson, you only need to work inside the <code>&lt;body&gt;</code> section and change the <code>&lt;title&gt;</code>. That's it! Ignore everything else for now.</p>
+            </div>
+        </div>
+
+        <div class="theory-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-comment-dots"></i></div>
+                <h2 class="section-title">One More Thing: Comments</h2>
+            </div>
+            
+            <p class="theory-text">In the code editor, you'll see lines that look like this:</p>
+            
+            <div class="code-block">
+                <div class="code-block-header">
+                    <div class="code-block-title"><i class="fas fa-code"></i> This is a Comment</div>
+                    <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <pre><code>&lt;!-- STEP 2: Add your h1 heading below this line --&gt;</code></pre>
+            </div>
+            
+            <p class="theory-text">These are called <strong>comments</strong>. They're notes for humans - the browser completely ignores them. I've put comments in the code to show you exactly where to type each thing. Think of them like sticky notes saying "write here!"</p>
+        </div>
+
+        <div class="exercise-box">
+            <div class="exercise-header">
+                <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
+                <div class="exercise-title">📝 Your Task: Create an "About Me" Page</div>
+            </div>
+            <p class="theory-text">Alright, enough reading - let's actually build something! You're going to create a simple "About Me" page. Follow these steps exactly, and watch the preview update as you type.</p>
+        </div>
+
+        <div class="step-by-step">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Change the Page Title</h4>
+                    <p>Look at the code in the editor. Find this line (it's near the top, inside the &lt;head&gt; section):</p>
+                    <div class="code-inline">&lt;title&gt;Change This Title&lt;/title&gt;</div>
+                    <p>Change the text between the tags to say "My First Web Page". After you change it, it should look like this:</p>
+                    <div class="code-inline">&lt;title&gt;My First Web Page&lt;/title&gt;</div>
+                    <p><em>Note: You won't see this change in the preview - it shows up in the browser tab!</em></p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Add Your Name as a Big Heading</h4>
+                    <p>Now scroll down in the editor until you find this comment:</p>
+                    <div class="code-inline">&lt;!-- STEP 2: Add your h1 heading below this line --&gt;</div>
+                    <p>Right below that comment (on a new line), type an h1 tag with your name inside:</p>
+                    <div class="code-inline">&lt;h1&gt;John Smith&lt;/h1&gt;</div>
+                    <p><em>Obviously, use YOUR actual name instead of John Smith! You should see your name appear in big letters in the preview.</em></p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>Add a Paragraph Introducing Yourself</h4>
+                    <p>Find the comment that says STEP 3. Below it, add a paragraph about yourself:</p>
+                    <div class="code-inline">&lt;p&gt;Hello! I am learning web development and this is my first web page.&lt;/p&gt;</div>
+                    <p><em>Feel free to write whatever you want! Just make sure it starts with &lt;p&gt; and ends with &lt;/p&gt;</em></p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h4>Add a Section About Your Hobbies</h4>
+                    <p>Find the STEP 4 comment. Add an h2 heading for a new section:</p>
+                    <div class="code-inline">&lt;h2&gt;My Hobbies&lt;/h2&gt;</div>
+                    <p><em>Notice this text will be smaller than your h1 name? That's because h2 is meant for section titles, not the main title.</em></p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h4>Add a Paragraph About Your Hobbies</h4>
+                    <p>Finally, find the STEP 5 comment and add one more paragraph:</p>
+                    <div class="code-inline">&lt;p&gt;I enjoy reading, playing video games, and learning new things.&lt;/p&gt;</div>
+                    <p><em>Write about YOUR actual hobbies! Make it personal.</em></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box" style="margin-top: 2rem;">
+            <div class="note-header">
+                <div class="note-icon tip-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="note-title tip-title">You're Almost Done!</div>
+            </div>
+            <p class="theory-text">Take a look at your preview - you should see your name as a big heading, a paragraph about yourself, a smaller "My Hobbies" heading, and another paragraph about your hobbies. If something looks wrong, check that all your tags are closed properly!</p>
+            <p class="theory-text">When you're happy with it, click the green <strong>"Submit Solution"</strong> button at the bottom of the editor. The system will check if you did everything correctly. You need to pass all checks to complete the lesson. If something's wrong, it will tell you what to fix.</p>
+        </div>
+
+        <div class="note-box" style="margin-top: 1.5rem;">
+            <div class="note-header">
+                <div class="note-icon"><i class="fas fa-trophy"></i></div>
+                <div class="note-title">Congratulations in Advance!</div>
+            </div>
+            <p class="theory-text">Once you complete this, you'll have created your first real web page. That's a huge deal! Every professional web developer started exactly where you are right now. The journey of a thousand websites begins with a single &lt;h1&gt; tag. 😊</p>
+        </div>
+    `,
+    initialCode: {
+        html: `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -616,7 +717,7 @@ Examples:
 
 </body>
 </html>`,
-            css: `/* CSS is pre-written for you - just focus on HTML! */
+        css: `/* CSS is pre-written for you - just focus on HTML! */
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     max-width: 700px;
@@ -642,215 +743,315 @@ p {
     font-size: 1.1rem;
     line-height: 1.8;
 }`,
-            js: `// No JavaScript needed for this lesson`
-        },
-        hints: [
-            "💡 Step 1: Find <title>Change This Title</title> and replace 'Change This Title' with 'My First Web Page'",
-            "💡 Step 2: Type <h1>Your Name</h1> right below the <!-- STEP 2 --> comment",
-            "💡 Step 3: Type <p>Your introduction text</p> below <!-- STEP 3 -->",
-            "💡 Step 4: Type <h2>My Hobbies</h2> below <!-- STEP 4 -->",
-            "💡 Step 5: Type <p>Your hobbies here</p> below <!-- STEP 5 -->",
-            "💡 Make sure every tag is closed! <h1>text</h1> not <h1>text"
-        ],
-        validation: (code) => {
-            const checks = [];
-            checks.push({ 
-                passed: code.html.includes('<title>My First Web Page</title>'), 
-                message: '✓ Title changed to "My First Web Page"' 
-            });
-            checks.push({ 
-                passed: /<h1>[\s\S]+<\/h1>/i.test(code.html), 
-                message: '✓ Added h1 heading with your name' 
-            });
-            checks.push({ 
-                passed: (code.html.match(/<p>[\s\S]*?<\/p>/gi) || []).length >= 2, 
-                message: '✓ Added two paragraphs' 
-            });
-            checks.push({ 
-                passed: /<h2>[\s\S]*<\/h2>/i.test(code.html), 
-                message: '✓ Added h2 subheading' 
-            });
-            return checks;
-        }
+        js: `// No JavaScript needed for this lesson`
     },
+    hints: [
+        "💡 Step 1: Find <title>Change This Title</title> and replace 'Change This Title' with 'My First Web Page'",
+        "💡 Step 2: Type <h1>Your Name</h1> right below the <!-- STEP 2 --> comment",
+        "💡 Step 3: Type <p>Your introduction text</p> below <!-- STEP 3 -->",
+        "💡 Step 4: Type <h2>My Hobbies</h2> below <!-- STEP 4 -->",
+        "💡 Step 5: Type <p>Your hobbies here</p> below <!-- STEP 5 -->",
+        "💡 Make sure every tag is closed! <h1>text</h1> not <h1>text"
+    ],
+    validation: (code) => {
+        const checks = [];
+        checks.push({ 
+            passed: code.html.includes('<title>My First Web Page</title>'), 
+            message: '✓ Title changed to "My First Web Page"' 
+        });
+        checks.push({ 
+            passed: /<h1>[\s\S]+<\/h1>/i.test(code.html), 
+            message: '✓ Added h1 heading with your name' 
+        });
+        checks.push({ 
+            passed: (code.html.match(/<p>[\s\S]*?<\/p>/gi) || []).length >= 2, 
+            message: '✓ Added two paragraphs' 
+        });
+        checks.push({ 
+            passed: /<h2>[\s\S]*<\/h2>/i.test(code.html), 
+            message: '✓ Added h2 subheading' 
+        });
+        return checks;
+    }
+},
+
 
     // ==========================================
     // LESSON 2: HTML Elements & Tags
     // ==========================================
-    'html-elements': {
-        title: 'Lists and Text Formatting',
-        subtitle: 'Learn to create bullet lists, numbered lists, and format text',
-        difficulty: 'Beginner',
-        duration: '20 minutes',
-        theory: `
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-list"></i></div>
-                    <h2 class="section-title">Creating Lists in HTML</h2>
-                </div>
-                <p class="theory-text">Lists help organize information. HTML has two main types:</p>
-                
-                <div class="comparison-box">
-                    <div class="compare-item">
-                        <h4>• Bullet List (Unordered)</h4>
-                        <p>Use <code>&lt;ul&gt;</code> for lists where order doesn't matter</p>
-                    </div>
-                    <div class="compare-item">
-                        <h4>1. Numbered List (Ordered)</h4>
-                        <p>Use <code>&lt;ol&gt;</code> for step-by-step instructions</p>
-                    </div>
-                </div>
+'html-elements': {
+    title: 'Lists and Text Formatting',
+    subtitle: 'Learn to create bullet lists, numbered lists, and format text',
+    difficulty: 'Beginner',
+    duration: '20 minutes',
+    theory: `
+        <div class="theory-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-list"></i></div>
+                <h2 class="section-title">Why Do We Need Lists?</h2>
             </div>
+            
+            <p class="theory-text">Think about the last time you wrote a shopping list or a to-do list. You probably wrote items one below another, maybe with bullet points or numbers. It's organized, easy to read, and you can quickly see each item. That's exactly what HTML lists do for web pages!</p>
+            
+            <p class="theory-text">Without lists, you'd have to write everything in paragraphs like "I need to buy milk and eggs and bread and cheese and..." - that's hard to read! Lists make information clear and scannable. They're everywhere on the internet - recipe ingredients, navigation menus, feature lists, step-by-step instructions, you name it.</p>
+            
+            <p class="theory-text">In this lesson, you'll learn how to create two types of lists and how to make text <strong>bold</strong> or <em>italic</em>. By the end, you'll build a complete recipe page!</p>
+        </div>
 
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-list-ul"></i></div>
-                    <h2 class="section-title">Bullet List (Unordered List)</h2>
+        <div class="theory-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-circle"></i></div>
+                <h2 class="section-title">Bullet Lists (Unordered Lists)</h2>
+            </div>
+            
+            <p class="theory-text">A bullet list is what you use when the order doesn't matter. Shopping list? Bullet points. List of your favorite movies? Bullet points. Features of a product? Bullet points.</p>
+            
+            <p class="theory-text">In HTML, we call this an <strong>unordered list</strong>, and we use the tag <code>&lt;ul&gt;</code> (ul = unordered list). But here's the thing - the <code>&lt;ul&gt;</code> tag is just the container. Each actual item in the list needs its own tag: <code>&lt;li&gt;</code> (li = list item).</p>
+            
+            <p class="theory-text">Think of it like a box and things inside the box. The <code>&lt;ul&gt;</code> is the box, and each <code>&lt;li&gt;</code> is something you put inside.</p>
+            
+            <div class="code-block">
+                <div class="code-block-header">
+                    <div class="code-block-title"><i class="fas fa-code"></i> Bullet List Example</div>
+                    <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
                 </div>
-                <p class="theory-text">Perfect for shopping lists, features, or any collection of items:</p>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Bullet List Example</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>&lt;ul&gt;
+                <pre><code>&lt;ul&gt;
     &lt;li&gt;Apples&lt;/li&gt;
     &lt;li&gt;Bananas&lt;/li&gt;
     &lt;li&gt;Oranges&lt;/li&gt;
 &lt;/ul&gt;</code></pre>
-                </div>
-                
-                <div class="result-preview">
-                    <strong>Result:</strong>
-                    <ul style="margin: 10px 0 0 20px; color: var(--text-secondary);">
-                        <li>Apples</li>
-                        <li>Bananas</li>
-                        <li>Oranges</li>
-                    </ul>
-                </div>
             </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-list-ol"></i></div>
-                    <h2 class="section-title">Numbered List (Ordered List)</h2>
+            
+            <p class="theory-text">Let me break this down line by line:</p>
+            <p class="theory-text">• <code>&lt;ul&gt;</code> — "Hey browser, I'm starting a bullet list!"</p>
+            <p class="theory-text">• <code>&lt;li&gt;Apples&lt;/li&gt;</code> — "Here's the first item: Apples"</p>
+            <p class="theory-text">• <code>&lt;li&gt;Bananas&lt;/li&gt;</code> — "Here's another item: Bananas"</p>
+            <p class="theory-text">• <code>&lt;li&gt;Oranges&lt;/li&gt;</code> — "And another: Oranges"</p>
+            <p class="theory-text">• <code>&lt;/ul&gt;</code> — "Okay, that's the end of my list!"</p>
+            
+            <div class="result-preview">
+                <strong>This creates:</strong>
+                <ul style="margin: 10px 0 0 20px; color: var(--text-secondary);">
+                    <li>Apples</li>
+                    <li>Bananas</li>
+                    <li>Oranges</li>
+                </ul>
+            </div>
+            
+            <div class="note-box">
+                <div class="note-header">
+                    <div class="note-icon"><i class="fas fa-lightbulb"></i></div>
+                    <div class="note-title">Common Mistake Alert!</div>
                 </div>
-                <p class="theory-text">Perfect for recipes, instructions, or rankings:</p>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Numbered List Example</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>&lt;ol&gt;
+                <p class="theory-text">Don't forget to close BOTH tags! You need <code>&lt;/li&gt;</code> after each item AND <code>&lt;/ul&gt;</code> at the very end. Missing any of these will break your list.</p>
+            </div>
+        </div>
+
+        <div class="theory-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-list-ol"></i></div>
+                <h2 class="section-title">Numbered Lists (Ordered Lists)</h2>
+            </div>
+            
+            <p class="theory-text">Sometimes order DOES matter. If you're writing a recipe, you can't just randomly do steps - you need to preheat the oven BEFORE you put the food in, right? Or if you're explaining how to do something, step 1 has to come before step 2.</p>
+            
+            <p class="theory-text">For these situations, we use an <strong>ordered list</strong> with the tag <code>&lt;ol&gt;</code> (ol = ordered list). The cool thing? The browser automatically adds the numbers for you! You don't have to type "1.", "2.", "3." - it just happens.</p>
+            
+            <div class="code-block">
+                <div class="code-block-header">
+                    <div class="code-block-title"><i class="fas fa-code"></i> Numbered List Example</div>
+                    <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <pre><code>&lt;ol&gt;
     &lt;li&gt;Preheat oven to 350°F&lt;/li&gt;
-    &lt;li&gt;Mix ingredients&lt;/li&gt;
+    &lt;li&gt;Mix all ingredients in a bowl&lt;/li&gt;
+    &lt;li&gt;Pour into baking pan&lt;/li&gt;
     &lt;li&gt;Bake for 25 minutes&lt;/li&gt;
 &lt;/ol&gt;</code></pre>
+            </div>
+            
+            <p class="theory-text">Notice something? The inside is exactly the same! You still use <code>&lt;li&gt;</code> for each item. The only difference is the outer tag: <code>&lt;ol&gt;</code> instead of <code>&lt;ul&gt;</code>.</p>
+            
+            <div class="result-preview">
+                <strong>This creates:</strong>
+                <ol style="margin: 10px 0 0 20px; color: var(--text-secondary);">
+                    <li>Preheat oven to 350°F</li>
+                    <li>Mix all ingredients in a bowl</li>
+                    <li>Pour into baking pan</li>
+                    <li>Bake for 25 minutes</li>
+                </ol>
+            </div>
+            
+            <div class="tip-box">
+                <div class="note-header">
+                    <div class="note-icon tip-icon"><i class="fas fa-info-circle"></i></div>
+                    <div class="note-title tip-title">Quick Summary</div>
                 </div>
-                
-                <div class="result-preview">
-                    <strong>Result:</strong>
-                    <ol style="margin: 10px 0 0 20px; color: var(--text-secondary);">
-                        <li>Preheat oven to 350°F</li>
-                        <li>Mix ingredients</li>
-                        <li>Bake for 25 minutes</li>
-                    </ol>
+                <p class="theory-text"><code>&lt;ul&gt;</code> = bullets (unordered) — use when order doesn't matter</p>
+                <p class="theory-text"><code>&lt;ol&gt;</code> = numbers (ordered) — use when order matters</p>
+                <p class="theory-text"><code>&lt;li&gt;</code> = each item — used inside BOTH types of lists</p>
+            </div>
+        </div>
+
+        <div class="theory-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-bold"></i></div>
+                <h2 class="section-title">Making Text Bold and Italic</h2>
+            </div>
+            
+            <p class="theory-text">Sometimes you want to emphasize certain words. Maybe you want to say "This cake is AMAZING" and really make that word pop. In HTML, we have special tags for this.</p>
+            
+            <p class="theory-text">For <strong>bold text</strong>, we use the <code>&lt;strong&gt;</code> tag. It's called "strong" because you're making the text strongly emphasized - it's important!</p>
+            
+            <div class="code-block">
+                <div class="code-block-header">
+                    <div class="code-block-title"><i class="fas fa-code"></i> Bold Text</div>
+                    <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <pre><code>&lt;p&gt;This cake is &lt;strong&gt;amazing&lt;/strong&gt; and you should try it!&lt;/p&gt;</code></pre>
+            </div>
+            
+            <p class="theory-text">This shows: This cake is <strong>amazing</strong> and you should try it!</p>
+            
+            <p class="theory-text">For <em>italic text</em>, we use the <code>&lt;em&gt;</code> tag. "Em" stands for emphasis - it's like when you stress a word while speaking.</p>
+            
+            <div class="code-block">
+                <div class="code-block-header">
+                    <div class="code-block-title"><i class="fas fa-code"></i> Italic Text</div>
+                    <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <pre><code>&lt;p&gt;You &lt;em&gt;really&lt;/em&gt; need to try this recipe.&lt;/p&gt;</code></pre>
+            </div>
+            
+            <p class="theory-text">This shows: You <em>really</em> need to try this recipe.</p>
+            
+            <div class="note-box">
+                <div class="note-header">
+                    <div class="note-icon"><i class="fas fa-lightbulb"></i></div>
+                    <div class="note-title">How It Works</div>
+                </div>
+                <p class="theory-text">Notice that <code>&lt;strong&gt;</code> and <code>&lt;em&gt;</code> go INSIDE your paragraph tags. You're not replacing the <code>&lt;p&gt;</code> tag - you're adding formatting to specific words within it. It's like highlighting certain words in a sentence you've already written.</p>
+            </div>
+        </div>
+
+        <div class="theory-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-layer-group"></i></div>
+                <h2 class="section-title">Putting It All Together</h2>
+            </div>
+            
+            <p class="theory-text">Now you know headings (from lesson 1), paragraphs, lists, and text formatting. That's actually enough to build a lot of real web content! A typical recipe page uses ALL of these:</p>
+            
+            <p class="theory-text">• <code>&lt;h1&gt;</code> for the recipe name</p>
+            <p class="theory-text">• <code>&lt;p&gt;</code> with <code>&lt;strong&gt;</code> for a tasty description</p>
+            <p class="theory-text">• <code>&lt;h2&gt;</code> for "Ingredients" section title</p>
+            <p class="theory-text">• <code>&lt;ul&gt;</code> with <code>&lt;li&gt;</code> items for the ingredient list</p>
+            <p class="theory-text">• <code>&lt;h2&gt;</code> for "Instructions" section title</p>
+            <p class="theory-text">• <code>&lt;ol&gt;</code> with <code>&lt;li&gt;</code> items for the cooking steps</p>
+            
+            <p class="theory-text">See how it all connects? You're not just learning random tags - you're learning how to structure real content!</p>
+        </div>
+
+        <div class="exercise-box">
+            <div class="exercise-header">
+                <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
+                <div class="exercise-title">📝 Your Task: Create a Recipe Page</div>
+            </div>
+            <p class="theory-text">Time to cook up some code! You're going to create a complete recipe page. It can be any recipe you like - cookies, pasta, a sandwich, whatever! Just follow the structure below.</p>
+        </div>
+
+        <div class="step-by-step">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Add the Recipe Title</h4>
+                    <p>Find <code>&lt;!-- STEP 1 --&gt;</code> in the editor and add a big heading with your recipe name:</p>
+                    <div class="code-inline">&lt;h1&gt;Chocolate Chip Cookies&lt;/h1&gt;</div>
+                    <p><em>Pick any recipe you want! Pizza, pancakes, smoothie - anything works.</em></p>
                 </div>
             </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-bold"></i></div>
-                    <h2 class="section-title">Text Formatting</h2>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Bold and Italic Text</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>&lt;p&gt;This is &lt;strong&gt;bold text&lt;/strong&gt; for emphasis.&lt;/p&gt;
-&lt;p&gt;This is &lt;em&gt;italic text&lt;/em&gt; for stress.&lt;/p&gt;</code></pre>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Add a Tasty Description with Bold Text</h4>
+                    <p>Find <code>&lt;!-- STEP 2 --&gt;</code> and add a paragraph that describes your recipe. Make at least one word bold using <code>&lt;strong&gt;</code>:</p>
+                    <div class="code-inline">&lt;p&gt;These &lt;strong&gt;delicious&lt;/strong&gt; cookies are perfect for any occasion!&lt;/p&gt;</div>
+                    <p><em>The word "delicious" will appear in bold. You can make any word bold - "amazing", "easy", "homemade" - whatever fits!</em></p>
                 </div>
             </div>
-
-            <div class="exercise-box">
-                <div class="exercise-header">
-                    <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
-                    <div class="exercise-title">📝 Your Task: Create a Recipe Page</div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>Add "Ingredients" Section Heading</h4>
+                    <p>Find <code>&lt;!-- STEP 3 --&gt;</code> and add a subheading for the ingredients section:</p>
+                    <div class="code-inline">&lt;h2&gt;Ingredients&lt;/h2&gt;</div>
                 </div>
-                <p class="theory-text">Build a simple recipe page with a title, description, ingredients list, and cooking steps.</p>
             </div>
-
-            <div class="step-by-step">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h4>Add a Recipe Title</h4>
-                        <p>Find <code>&lt;!-- STEP 1 --&gt;</code> and add:</p>
-                        <div class="code-inline">&lt;h1&gt;Chocolate Chip Cookies&lt;/h1&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h4>Add a Description</h4>
-                        <p>Find <code>&lt;!-- STEP 2 --&gt;</code> and add a paragraph with <strong>bold</strong> text:</p>
-                        <div class="code-inline">&lt;p&gt;These &lt;strong&gt;delicious&lt;/strong&gt; cookies are perfect for any occasion!&lt;/p&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h4>Add "Ingredients" Heading</h4>
-                        <p>Find <code>&lt;!-- STEP 3 --&gt;</code> and add:</p>
-                        <div class="code-inline">&lt;h2&gt;Ingredients&lt;/h2&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h4>Create a Bullet List of Ingredients</h4>
-                        <p>Find <code>&lt;!-- STEP 4 --&gt;</code> and add a <code>&lt;ul&gt;</code> with at least 4 items:</p>
-                        <div class="code-inline">&lt;ul&gt;
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h4>Create a Bullet List of Ingredients</h4>
+                    <p>Find <code>&lt;!-- STEP 4 --&gt;</code>. This is where it gets fun! Create an unordered list with at least 4 ingredients:</p>
+                    <div class="code-inline">&lt;ul&gt;
     &lt;li&gt;2 cups flour&lt;/li&gt;
     &lt;li&gt;1 cup sugar&lt;/li&gt;
     &lt;li&gt;1 cup butter&lt;/li&gt;
     &lt;li&gt;2 cups chocolate chips&lt;/li&gt;
 &lt;/ul&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">5</div>
-                    <div class="step-content">
-                        <h4>Add "Instructions" Heading</h4>
-                        <p>Find <code>&lt;!-- STEP 5 --&gt;</code> and add:</p>
-                        <div class="code-inline">&lt;h2&gt;Instructions&lt;/h2&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">6</div>
-                    <div class="step-content">
-                        <h4>Create a Numbered List of Steps</h4>
-                        <p>Find <code>&lt;!-- STEP 6 --&gt;</code> and add an <code>&lt;ol&gt;</code> with at least 3 steps:</p>
-                        <div class="code-inline">&lt;ol&gt;
-    &lt;li&gt;Preheat oven to 375°F&lt;/li&gt;
-    &lt;li&gt;Mix all ingredients together&lt;/li&gt;
-    &lt;li&gt;Bake for 10 minutes&lt;/li&gt;
-&lt;/ol&gt;</div>
-                    </div>
+                    <p><em>Remember: start with &lt;ul&gt;, then each ingredient gets its own &lt;li&gt;...&lt;/li&gt;, then close with &lt;/ul&gt;. Add as many ingredients as you want!</em></p>
                 </div>
             </div>
-        `,
-        initialCode: {
-            html: `<!DOCTYPE html>
+            
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h4>Add "Instructions" Section Heading</h4>
+                    <p>Find <code>&lt;!-- STEP 5 --&gt;</code> and add another subheading:</p>
+                    <div class="code-inline">&lt;h2&gt;Instructions&lt;/h2&gt;</div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">6</div>
+                <div class="step-content">
+                    <h4>Create a Numbered List of Steps</h4>
+                    <p>Find <code>&lt;!-- STEP 6 --&gt;</code>. Now create an ordered list with at least 3 cooking steps:</p>
+                    <div class="code-inline">&lt;ol&gt;
+    &lt;li&gt;Preheat oven to 375°F&lt;/li&gt;
+    &lt;li&gt;Mix all ingredients together in a large bowl&lt;/li&gt;
+    &lt;li&gt;Scoop onto baking sheet and bake for 10 minutes&lt;/li&gt;
+&lt;/ol&gt;</div>
+                    <p><em>Same idea as before, but use &lt;ol&gt; instead of &lt;ul&gt;. The browser will automatically number your steps 1, 2, 3...</em></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box" style="margin-top: 2rem;">
+            <div class="note-header">
+                <div class="note-icon tip-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="note-title tip-title">Check Your Work</div>
+            </div>
+            <p class="theory-text">Before you hit Submit, look at the preview and make sure you see:</p>
+            <p class="theory-text">✓ A big recipe title at the top</p>
+            <p class="theory-text">✓ A description with at least one bold word</p>
+            <p class="theory-text">✓ "Ingredients" heading with bullet points below it</p>
+            <p class="theory-text">✓ "Instructions" heading with numbered steps below it</p>
+            <p class="theory-text">If something looks off, check your opening and closing tags!</p>
+        </div>
+
+        <div class="note-box" style="margin-top: 1.5rem;">
+            <div class="note-header">
+                <div class="note-icon"><i class="fas fa-trophy"></i></div>
+                <div class="note-title">Nice Work!</div>
+            </div>
+            <p class="theory-text">After this lesson, you'll have created something that looks like a real web page! Recipe sites, how-to guides, product pages - they all use exactly what you just learned. These building blocks are the foundation of almost every website you visit. Keep going! 🚀</p>
+        </div>
+    `,
+    initialCode: {
+        html: `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -879,7 +1080,7 @@ p {
 
 </body>
 </html>`,
-            css: `body {
+        css: `body {
     font-family: Georgia, serif;
     max-width: 650px;
     margin: 0 auto;
@@ -910,27 +1111,27 @@ li {
     color: #6d4c41;
 }
 strong { color: #d2691e; }`,
-            js: `// No JavaScript needed`
-        },
-        hints: [
-            "💡 Step 1: Type <h1>Chocolate Chip Cookies</h1> (or your own recipe name)",
-            "💡 Step 2: Use <strong>word</strong> inside your <p> tag to make a word bold",
-            "💡 Step 3: Type <h2>Ingredients</h2>",
-            "💡 Step 4: Start with <ul>, then add <li>item</li> for each ingredient, end with </ul>",
-            "💡 Step 5: Type <h2>Instructions</h2>",
-            "💡 Step 6: Same as step 4, but use <ol> instead of <ul> for numbered list"
-        ],
-        validation: (code) => {
-            const checks = [];
-            checks.push({ passed: /<h1>[\s\S]+<\/h1>/i.test(code.html), message: '✓ Added recipe title (h1)' });
-            checks.push({ passed: /<strong>[\s\S]+<\/strong>/i.test(code.html), message: '✓ Used bold text (<strong>)' });
-            checks.push({ passed: (code.html.match(/<h2>/gi) || []).length >= 2, message: '✓ Added two h2 headings' });
-            checks.push({ passed: /<ul>[\s\S]*<li>[\s\S]*<\/li>[\s\S]*<\/ul>/i.test(code.html), message: '✓ Added bullet list (ul)' });
-            checks.push({ passed: /<ol>[\s\S]*<li>[\s\S]*<\/li>[\s\S]*<\/ol>/i.test(code.html), message: '✓ Added numbered list (ol)' });
-            checks.push({ passed: (code.html.match(/<li>/gi) || []).length >= 7, message: '✓ Added at least 7 list items total' });
-            return checks;
-        }
+        js: `// No JavaScript needed`
     },
+    hints: [
+        "💡 Step 1: Type <h1>Your Recipe Name</h1> - pick any food you like!",
+        "💡 Step 2: Write a <p> paragraph and put <strong>one word</strong> in strong tags for bold",
+        "💡 Step 3: Type <h2>Ingredients</h2>",
+        "💡 Step 4: Start with <ul>, add <li>item</li> for each ingredient (at least 4!), end with </ul>",
+        "💡 Step 5: Type <h2>Instructions</h2>",
+        "💡 Step 6: Same as step 4, but use <ol> instead of <ul> for numbered steps"
+    ],
+    validation: (code) => {
+        const checks = [];
+        checks.push({ passed: /<h1>[\s\S]+<\/h1>/i.test(code.html), message: '✓ Added recipe title (h1)' });
+        checks.push({ passed: /<strong>[\s\S]+<\/strong>/i.test(code.html), message: '✓ Used bold text (<strong>)' });
+        checks.push({ passed: (code.html.match(/<h2>/gi) || []).length >= 2, message: '✓ Added two h2 headings' });
+        checks.push({ passed: /<ul>[\s\S]*<li>[\s\S]*<\/li>[\s\S]*<\/ul>/i.test(code.html), message: '✓ Added bullet list (ul)' });
+        checks.push({ passed: /<ol>[\s\S]*<li>[\s\S]*<\/li>[\s\S]*<\/ol>/i.test(code.html), message: '✓ Added numbered list (ol)' });
+        checks.push({ passed: (code.html.match(/<li>/gi) || []).length >= 7, message: '✓ Added at least 7 list items total' });
+        return checks;
+    }
+},
 
     // ==========================================
     // LESSON 3: Links & Images
