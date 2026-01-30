@@ -472,14 +472,14 @@ const LESSONS = {
             
             <p class="theory-text">Imagine you're writing a letter, but instead of paper, you're writing for a web browser, that's basically what HTML is - a way to tell your browser "hey, this is a title, this is a paragraph, this is important text." The browser reads your instructions and displays everything beautifully on the screen.</p>
             
-            <p class="theory-text">Don't worry if this sounds complicated - it's actually much simpler than it seems. By the end of this lesson, you'll have created your very own web page. Yes, a real one that you can show to your friends!</p>
+            <p class="theory-text">Don't worry if this sounds complicated - it's actually much simpler than it seems. By the end of this lesson, you'll get knowledge.</p>
             
             <div class="tip-box">
                 <div class="note-header">
                     <div class="note-icon tip-icon"><i class="fas fa-info-circle"></i></div>
                     <div class="note-title tip-title">Before We Start - Look at the Right Side of Your Screen</div>
                 </div>
-                <p class="theory-text">You see two boxes on the right? The top one is your <strong>Code Editor</strong> - this is where you'll type your code. The bottom one is <strong>Preview</strong> - this shows you what your web page looks like in real time. Every time you type something in the editor, the preview updates automatically. It's like magic, but it's just technology!</p>
+                <p class="theory-text">You see two boxes on the right? The top one is your <strong>Code Editor</strong> - this is where you'll type your code. The bottom one is <strong>Preview</strong> - this shows you what your web page looks like in real time. Every time you type something in the editor, the preview updates automatically.</p>
             </div>
         </div>
 
@@ -489,7 +489,7 @@ const LESSONS = {
                 <h2 class="section-title">So What Exactly is HTML?</h2>
             </div>
             
-            <p class="theory-text">HTML stands for <strong>HyperText Markup Language</strong>. Sounds scary? Let's break it down:</p>
+            <p class="theory-text">HTML stands for <strong>Hyper Text Markup Language</strong>. Sounds scary? Let's break it down:</p>
             
             <p class="theory-text">Think of HTML like the skeleton of a human body. Just like bones give structure to your body, HTML gives structure to a web page. It tells the browser: "This part is the head of the page, this is the body, this text is a big title, this text is just a regular paragraph."</p>
             
@@ -509,7 +509,7 @@ const LESSONS = {
                     <div class="code-block-title"><i class="fas fa-code"></i> The Basic Pattern</div>
                     <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
                 </div>
-                <pre><code>&lt;tagname&gt;Your content goes here&lt;/tagname&gt;</code></pre>
+                <pre><code>&lt;name_of_the_tag&gt;Your content goes here&lt;/name_of_the_tag&gt;</code></pre>
             </div>
             
             <p class="theory-text">See how there's an <strong>opening tag</strong> at the beginning and a <strong>closing tag</strong> at the end? The closing tag has a forward slash (/) before the tag name. This is super important - it's like opening and closing a door. You open it, put your content inside, then close it.</p>
@@ -556,7 +556,7 @@ const LESSONS = {
                 </div>
                 <pre><code>&lt;h2&gt;Subheading&lt;/h2&gt;</code></pre>
             </div>
-            <p class="theory-text"><strong>The H2 Tag:</strong> This is a smaller heading, like a section title. If your page is a book, h1 is the book title and h2 are the chapter titles. You can have as many h2 tags as you want.</p>
+            <p class="theory-text"><strong>The H2 Tag:</strong> This is a smaller heading, like a section title. If your page is a book, h1 is the book title and h2 are the chapter titles. You can have as many h2 tags as you want h3, h4, h5...</p>
             
             <div class="code-block">
                 <div class="code-block-header">
@@ -574,7 +574,7 @@ const LESSONS = {
                 <h2 class="section-title">What About All That Other Code in the Editor?</h2>
             </div>
             
-            <p class="theory-text">If you look at the code editor on the right, you'll see a bunch of code already there. Don't panic! Most of it is just "setup code" that every web page needs. Let me quickly explain what you're seeing:</p>
+            <p class="theory-text">If you look at the code editor on the right, you'll see a bunch of code already there. Most of it is just "setup code" that every web page needs. Let me quickly explain what you're seeing:</p>
             
             <p class="theory-text"><code>&lt;!DOCTYPE html&gt;</code> - This tells the browser "hey, this is an HTML document." Just leave it there.</p>
             
@@ -582,7 +582,7 @@ const LESSONS = {
             
             <p class="theory-text"><code>&lt;head&gt;</code> - This section contains invisible stuff - settings, the title, links to styles. Users don't see this part directly.</p>
             
-            <p class="theory-text"><code>&lt;body&gt;</code> - This is where the magic happens! Everything you want people to SEE on your page goes in the body. This is where you'll be working today.</p>
+            <p class="theory-text"><code>&lt;body&gt;</code> - This is where the main things happens! Everything you want people to SEE on your page goes in the body. This is where you'll be working today.</p>
             
             <div class="tip-box">
                 <div class="note-header">
@@ -615,9 +615,9 @@ const LESSONS = {
         <div class="exercise-box">
             <div class="exercise-header">
                 <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
-                <div class="exercise-title">📝 Your Task: Create an "About Me" Page</div>
+                <div class="exercise-title"> Your Task Today: Create an "About Me" Page, very simple!</div>
             </div>
-            <p class="theory-text">Alright, enough reading - let's actually build something! You're going to create a simple "About Me" page. Follow these steps exactly, and watch the preview update as you type.</p>
+            <p class="theory-text">Alright, Now You're going to create a simple "About Me" page. Follow these steps exactly, and watch the preview update as you type. Do not try to remember everything, just comeback late and do the same lesson again, so you'll become use to it, You need time to adapt.</p>
         </div>
 
         <div class="step-by-step">
@@ -688,10 +688,11 @@ const LESSONS = {
         <div class="note-box" style="margin-top: 1.5rem;">
             <div class="note-header">
                 <div class="note-icon"><i class="fas fa-trophy"></i></div>
-                <div class="note-title">Congratulations in Advance!</div>
+                <div class="note-title">Congratulations!</div>
             </div>
-            <p class="theory-text">Once you complete this, you'll have created your first real web page. That's a huge deal! Every professional web developer started exactly where you are right now. The journey of a thousand websites begins with a single &lt;h1&gt; tag. 😊</p>
-        </div>
+            <p class="theory-text">Once you complete this, you'll have created your first real web page. Now you can create text document and rename it <strong>index.html</strong> and open it with a text editor. After you've pasted the code into it, open it with a browser by right-clicking, and your page will open in the browser.</p>
+            <p><strong>See you next lesson!</strong></p>
+            </div>
     `,
     initialCode: {
         html: `<!DOCTYPE html>
@@ -791,7 +792,7 @@ p {
                 <h2 class="section-title">Why Do We Need Lists?</h2>
             </div>
             
-            <p class="theory-text">Think about the last time you wrote a shopping list or a to-do list. You probably wrote items one below another, maybe with bullet points or numbers. It's organized, easy to read, and you can quickly see each item. That's exactly what HTML lists do for web pages!</p>
+            <p class="theory-text">Think about the last time you wrote a shopping list or a to-do list. You probably wrote items one below another, maybe with bullet points or numbers. It's organized, easy to read, and you can quickly see each item.</p>
             
             <p class="theory-text">Without lists, you'd have to write everything in paragraphs like "I need to buy milk and eggs and bread and cheese and..." - that's hard to read! Lists make information clear and scannable. They're everywhere on the internet - recipe ingredients, navigation menus, feature lists, step-by-step instructions, you name it.</p>
             
@@ -913,7 +914,7 @@ p {
             
             <p class="theory-text">This shows: This cake is <strong>amazing</strong> and you should try it!</p>
             
-            <p class="theory-text">For <em>italic text</em>, we use the <code>&lt;em&gt;</code> tag. "Em" stands for emphasis - it's like when you stress a word while speaking.</p>
+            <p class="theory-text">For <em>italic text</em>, we use the <code>&lt;em&gt;</code> tag. "Em" stands for emphasis.</p>
             
             <div class="code-block">
                 <div class="code-block-header">
@@ -923,7 +924,7 @@ p {
                 <pre><code>&lt;p&gt;You &lt;em&gt;really&lt;/em&gt; need to try this recipe.&lt;/p&gt;</code></pre>
             </div>
             
-            <p class="theory-text">This shows: You <em>really</em> need to try this recipe.</p>
+            <p class="theory-text">Exemple: You <em>really</em> need to try this recipe.</p>
             
             <div class="note-box">
                 <div class="note-header">
@@ -933,6 +934,19 @@ p {
                 <p class="theory-text">Notice that <code>&lt;strong&gt;</code> and <code>&lt;em&gt;</code> go INSIDE your paragraph tags. You're not replacing the <code>&lt;p&gt;</code> tag - you're adding formatting to specific words within it. It's like highlighting certain words in a sentence you've already written.</p>
             </div>
         </div>
+        
+        <p class="theory-text">Also you can try both &lt;p&gt; and &lt;em&gt;: <em><strong>Storng and Itallic</strong></em></p>
+
+                 <div class="code-block">
+                <div class="code-block-header">
+                    <div class="code-block-title"><i class="fas fa-code"></i> Italic Text</div>
+                    <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <pre><h6><code></code>This is how it should looks like: &lt;em&gt;&lt;strong&gt; Your text inside! &lt;/strong&gt;&lt;/em&gt;</h6>
+                <h6>the order of &lt;strong&gt; and &lt;em&gt; should be only this way other wise it will not work!</h6></pre>
+            </div>
+
+        
 
         <div class="theory-section">
             <div class="section-header">
@@ -949,7 +963,7 @@ p {
             <p class="theory-text">• <code>&lt;h2&gt;</code> for "Instructions" section title</p>
             <p class="theory-text">• <code>&lt;ol&gt;</code> with <code>&lt;li&gt;</code> items for the cooking steps</p>
             
-            <p class="theory-text">See how it all connects? You're not just learning random tags - you're learning how to structure real content!</p>
+            <p class="theory-text">See how it all connects?</p>
         </div>
 
         <div class="exercise-box">
@@ -1045,9 +1059,9 @@ p {
         <div class="note-box" style="margin-top: 1.5rem;">
             <div class="note-header">
                 <div class="note-icon"><i class="fas fa-trophy"></i></div>
-                <div class="note-title">Nice Work!</div>
+                <div class="note-title">Good Job!</div>
             </div>
-            <p class="theory-text">After this lesson, you'll have created something that looks like a real web page! Recipe sites, how-to guides, product pages - they all use exactly what you just learned. These building blocks are the foundation of almost every website you visit. Keep going! 🚀</p>
+            <p class="theory-text">Next lesson is in procces</p>
         </div>
     `,
     initialCode: {
