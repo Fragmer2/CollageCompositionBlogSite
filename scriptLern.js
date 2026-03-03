@@ -1156,147 +1156,168 @@ strong { color: #d2691e; }`,
         difficulty: 'Beginner',
         duration: '20 minutes',
         theory: `
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-link"></i></div>
-                    <h2 class="section-title">Creating Links</h2>
-                </div>
-                <p class="theory-text">Links let users click to go to other pages. They use the <code>&lt;a&gt;</code> tag (a = anchor):</p>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Link Syntax</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>&lt;a href="https://google.com"&gt;Click here to visit Google&lt;/a&gt;</code></pre>
-                </div>
-                
-                <div class="note-box">
-                    <div class="note-header">
-                        <div class="note-icon"><i class="fas fa-lightbulb"></i></div>
-                        <div class="note-title">Understanding the Parts</div>
-                    </div>
-                    <ul class="theory-list">
-                        <li><code>&lt;a&gt;</code> - The link tag</li>
-                        <li><code>href="..."</code> - Where the link goes (the URL)</li>
-                        <li>The text between tags - What users see and click</li>
-                    </ul>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Open Link in New Tab</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>&lt;a href="https://google.com" target="_blank"&gt;Opens in new tab&lt;/a&gt;</code></pre>
-                </div>
+    <div class="theory-section">
+        <div class="section-header">
+            <div class="section-icon"><i class="fas fa-link"></i></div>
+            <h2 class="section-title">What Are Links?</h2>
+        </div>
+        <p class="theory-text">Links (also called "hyperlinks") are clickable text or images that take you to another webpage, file, or even send an email. Think of them as doors that lead somewhere else.</p>
+        <p class="theory-text">In HTML, we make links using the <code>&lt;a&gt;</code> tag. The <code>a</code> stands for <strong>anchor</strong>.</p>
+        
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-title"><i class="fas fa-code"></i> Exeple: Basic Link</div>
+                <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
             </div>
+            <pre><code>&lt;a href="https://google.com"&gt;Click here to visit Google&lt;/a&gt;</code></pre>
+        </div>
+        
+        <div class="note-box">
+            <div class="note-header">
+                <div class="note-icon"><i class="fas fa-puzzle-piece"></i></div>
+                <div class="note-title">Breaking it down</div>
+            </div>
+            <ul class="theory-list">
+                <li><code>&lt;a&gt;</code> – the link container</li>
+                <li><code>href="your link here"</code> – the destination address (like a URL)</li>
+                <li>The text between <code>&lt;a&gt;</code> and <code>&lt;/a&gt;</code> – what the user sees and clicks</li>
+            </ul>
+        </div>
 
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-image"></i></div>
-                    <h2 class="section-title">Adding Images</h2>
-                </div>
-                <p class="theory-text">Images use the <code>&lt;img&gt;</code> tag. Unlike other tags, it doesn't need a closing tag!</p>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Image Syntax</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>&lt;img src="https://picsum.photos/300/200" alt="A random photo"&gt;</code></pre>
-                </div>
-                
-                <div class="note-box">
-                    <div class="note-header">
-                        <div class="note-icon"><i class="fas fa-lightbulb"></i></div>
-                        <div class="note-title">Important Attributes</div>
-                    </div>
-                    <ul class="theory-list">
-                        <li><code>src="..."</code> - The image URL (where the image is located)</li>
-                        <li><code>alt="..."</code> - Description for screen readers (always include this!)</li>
-                    </ul>
-                </div>
-                
-                <div class="tip-box">
-                    <div class="note-header">
-                        <div class="note-icon tip-icon"><i class="fas fa-camera"></i></div>
-                        <div class="note-title tip-title">Free Images for Practice</div>
-                    </div>
-                    <p class="theory-text">Use <code>https://picsum.photos/300/200</code> to get random photos. Change the numbers to change size (width/height).</p>
-                </div>
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-title"><i class="fas fa-code"></i> Open in a New Tab</div>
+                <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
             </div>
+            <pre><code>&lt;a href="https://google.com" target="_blank"&gt;Google (new tab)&lt;/a&gt;</code></pre>
+            <p class="theory-text"><code>target="_blank"</code> tells the browser to open the link in a fresh tab.</p>
+        </div>
+    </div>
 
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-envelope"></i></div>
-                    <h2 class="section-title">Email Links</h2>
-                </div>
-                <p class="theory-text">Create a link that opens the user's email app:</p>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Email Link</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>&lt;a href="mailto:hello@example.com"&gt;Send me an email&lt;/a&gt;</code></pre>
-                </div>
+    <div class="theory-section">
+        <div class="section-header">
+            <div class="section-icon"><i class="fas fa-image"></i></div>
+            <h2 class="section-title">Adding Images</h2>
+        </div>
+        <p class="theory-text">Images make your page look great! Use the <code>&lt;img&gt;</code> tag. Unlike most tags, it doesn't need a closing tag – it's self-closing.</p>
+        
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-title"><i class="fas fa-code"></i> Image Example</div>
+                <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
             </div>
+            <pre><code>&lt;img src="https://picsum.photos/300/200" alt="A random landscape"&gt;</code></pre>
+        </div>
+        
+        <div class="note-box">
+            <div class="note-header">
+                <div class="note-icon"><i class="fas fa-tag"></i></div>
+                <div class="note-title">Image Attributes (settings)</div>
+            </div>
+            <ul class="theory-list">
+                <li><code>src</code> – the image source (where the image lives). Can be a web address or a local file.</li>
+                <li><code>alt</code> – alternative text describing the image. Important for accessibility (screen readers) and shows if the image fails to load. <strong>Always include it!</strong></li>
+            </ul>
+        </div>
+        
+        <div class="tip-box">
+            <div class="note-header">
+                <div class="note-icon tip-icon"><i class="fas fa-camera"></i></div>
+                <div class="note-title tip-title">Free Practice Images</div>
+            </div>
+            <p class="theory-text">Use <code>https://picsum.photos/200/150</code> to get a random photo. The numbers are width and height. For a square, just use one number: <code>https://picsum.photos/150</code>.</p>
+        </div>
+    </div>
 
-            <div class="exercise-box">
-                <div class="exercise-header">
-                    <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
-                    <div class="exercise-title">📝 Your Task: Create a Profile Card</div>
-                </div>
-                <p class="theory-text">Build a profile card with an image, some text, and social links.</p>
+    <div class="theory-section">
+        <div class="section-header">
+            <div class="section-icon"><i class="fas fa-envelope"></i></div>
+            <h2 class="section-title">Email Links</h2>
+        </div>
+        <p class="theory-text">Want a link that opens the user's email program? Use <code>mailto:</code> inside <code>href</code>.</p>
+        
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-title"><i class="fas fa-code"></i> Email Link</div>
+                <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
             </div>
+            <pre><code>&lt;a href="mailto:hello@example.com"&gt;Send me an email&lt;/a&gt;</code></pre>
+            <p class="theory-text">Clicking this will open the default email app with "hello@example.com" in the "To" field.</p>
+        </div>
+    </div>
 
-            <div class="step-by-step">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h4>Add a Profile Image</h4>
-                        <p>Find <code>&lt;!-- STEP 1 --&gt;</code> and add:</p>
-                        <div class="code-inline">&lt;img src="https://picsum.photos/150" alt="Profile photo"&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h4>Add Your Name</h4>
-                        <p>Find <code>&lt;!-- STEP 2 --&gt;</code> and add:</p>
-                        <div class="code-inline">&lt;h1&gt;Alex Johnson&lt;/h1&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h4>Add a Short Bio</h4>
-                        <p>Find <code>&lt;!-- STEP 3 --&gt;</code> and add:</p>
-                        <div class="code-inline">&lt;p&gt;Web developer who loves creating beautiful websites.&lt;/p&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h4>Add a Website Link</h4>
-                        <p>Find <code>&lt;!-- STEP 4 --&gt;</code> and add a link (use any URL you want):</p>
-                        <div class="code-inline">&lt;a href="https://github.com"&gt;My GitHub&lt;/a&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">5</div>
-                    <div class="step-content">
-                        <h4>Add an Email Link</h4>
-                        <p>Find <code>&lt;!-- STEP 5 --&gt;</code> and add:</p>
-                        <div class="code-inline">&lt;a href="mailto:hello@example.com"&gt;Contact Me&lt;/a&gt;</div>
-                    </div>
-                </div>
+    <div class="exercise-box">
+        <div class="exercise-header">
+            <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
+            <div class="exercise-title"> Your Mission: Build a Profile Card</div>
+        </div>
+        <p class="theory-text">Now you'll create a small profile card that includes an image, your name, a short bio, a link to a website, and an email link. Follow the steps below. Don't worry if it's not perfect – just try!</p>
+    </div>
+
+    <div class="step-by-step">
+        <div class="step">
+            <div class="step-number">Step 1</div>
+            <div class="step-content">
+                <h4>Add a Profile Picture</h4>
+                <p>Find the comment <code>&lt;!-- STEP 1 --&gt;</code> in the code editor. Right after it, type:</p>
+                <div class="code-inline">&lt;img src="https://picsum.photos/150" alt="My profile photo"&gt;</div>
             </div>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">Step 2</div>
+            <div class="step-content">
+                <h4>Write Your Name</h4>
+                <p>Under <code>&lt;!-- STEP 2 --&gt;</code>, add your name inside <code>&lt;h1&gt;</code> tags:</p>
+                <div class="code-inline">&lt;h1&gt;Alex Johnson&lt;/h1&gt;</div>
+                <p>(Replace "Alex Johnson" with your own name, or any name you like.)</p>
+            </div>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">Step 3</div>
+            <div class="step-content">
+                <h4>Write a Short Bio</h4>
+                <p>Under <code>&lt;!-- STEP 3 --&gt;</code>, create a paragraph using <code>&lt;p&gt;</code>:</p>
+                <div class="code-inline">&lt;p&gt;I'm learning HTML and loving it!&lt;/p&gt;</div>
+            </div>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">Step 4</div>
+            <div class="step-content">
+                <h4>Add a Website Link</h4>
+                <p>Inside the <code>&lt;div class="links"&gt;</code> section, find <code>&lt;!-- STEP 4 --&gt;</code> and add a link:</p>
+                <div class="code-inline">&lt;a href="https://github.com"&gt;My GitHub&lt;/a&gt;</div>
+                <p>You can change the URL and text to whatever you want.</p>
+            </div>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">Step 5</div>
+            <div class="step-content">
+                <h4>Add an Email Link</h4>
+                <p>Under <code>&lt;!-- STEP 5 --&gt;</code>, add a <code>mailto:</code> link:</p>
+                <div class="code-inline">&lt;a href="mailto:hello@example.com"&gt;Contact Me&lt;/a&gt;</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="theory-section" style="margin-top: 30px; background: #004f8b; border-left: 5px solid #074475; padding: 20px; border-radius: 12px;">
+        <div class="section-header">
+            <div class="section-icon"><i class="fas fa-clipboard-check"></i></div>
+            <h2 class="section-title"> What You've Accomplished</h2>
+        </div>
+        <ul class="theory-list" style="font-size: 1.1rem;">
+            <li> Created a clickable link using <code>&lt;a&gt;</code> and <code>href</code></li>
+            <li> Added an image with <code>&lt;img&gt;</code>, including <code>src</code> and <code>alt</code></li>
+            <li> Made an email link with <code>mailto:</code></li>
+            <li> Built a small profile card with multiple elements</li>
+            <li> Saw how CSS (already provided) makes it look nice</li>
+        </ul>
+        <p class="theory-text" style="margin-top: 15px;"><strong>Next step:</strong> Click "Submit Solution" to check your work. You'll see a checklist of what you did right. If something is missing, you can go back and fix it. Great job!</p>
+    </div>
+
         `,
         initialCode: {
             html: `<!DOCTYPE html>
