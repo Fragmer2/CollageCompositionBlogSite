@@ -10,25 +10,14 @@ const CONFIG = {
     version: '3.0.0'
 };
 
-
-// ============================================
-// СИСТЕМА СОХРАНЕНИЯ ПРОГРЕССА
-// Добавьте этот код в scriptLern.js
-// ============================================
-
-// Добавьте в начало файла, после CONFIG
 const STORAGE_KEY = 'codecraft_user_progress';
 
 // ============================================
-// ФУНКЦИИ СОХРАНЕНИЯ И ЗАГРУЗКИ
+// SAVE / LOAD PROGRESS
 // ============================================
-
-/**
- * Сохранить весь прогресс пользователя
- */
 function saveProgress(username) {
     const progressData = {
-        username: username,
+        username,
         lastAccessed: new Date().toISOString(),
         currentLesson: CONFIG.currentLesson,
         scores: CONFIG.userScores,
@@ -38,426 +27,139 @@ function saveProgress(username) {
         overallProgress: CONFIG.progress.overall,
         version: CONFIG.version
     };
-    
-    // Получаем все сохраненные прогрессы
-    const allProgress = getAllProgress();
-    
-    // Обновляем прогресс текущего пользователя
-    allProgress[username.toLowerCase()] = progressData;
-    
-    // Сохраняем обратно в localStorage
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(allProgress));
-    
-    console.log(`✅ Progress saved for ${username}`);
+    const all = getAllProgress();
+    all[username.toLowerCase()] = progressData;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
 }
 
-/**
- * Загрузить прогресс пользователя
- */
 function loadProgress(username) {
-    const allProgress = getAllProgress();
-    const userProgress = allProgress[username.toLowerCase()];
-    
-    if (userProgress) {
-        // Восстанавливаем прогресс
-        CONFIG.currentLesson = userProgress.currentLesson || 'html-structure';
-        CONFIG.userScores = userProgress.scores || {};
-        CONFIG.progress.html = userProgress.htmlProgress || { completed: 0, total: 5 };
-        CONFIG.progress.css = userProgress.cssProgress || { completed: 0, total: 5 };
-        CONFIG.progress.overall = userProgress.overallProgress || { completed: 0, total: 10 };
-        
-        // Восстанавливаем отметки о завершении уроков
-        restoreCompletedLessons(userProgress.completedLessons || []);
-        
-        // Загружаем текущий урок
+    const all = getAllProgress();
+    const data = all[username.toLowerCase()];
+    if (data) {
+        CONFIG.currentLesson = data.currentLesson || 'html-structure';
+        CONFIG.userScores = data.scores || {};
+        CONFIG.progress.html = data.htmlProgress || { completed: 0, total: 5 };
+        CONFIG.progress.css = data.cssProgress || { completed: 0, total: 5 };
+        CONFIG.progress.overall = data.overallProgress || { completed: 0, total: 10 };
+        restoreCompletedLessons(data.completedLessons || []);
         loadLesson(CONFIG.currentLesson);
         updateProgress();
-        
-        console.log(`✅ Progress loaded for ${username}`);
-        showToast(`Welcome back, ${username}! 👋`, 'success');
-        
+        showToast(`Welcome back, ${username}! `, 'success');
         return true;
     }
-    
     return false;
 }
 
-/**
- * Получить все сохраненные прогрессы
- */
 function getAllProgress() {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : {};
+    const s = localStorage.getItem(STORAGE_KEY);
+    return s ? JSON.parse(s) : {};
 }
 
-/**
- * Получить список завершенных уроков
- */
 function getCompletedLessons() {
     const completed = [];
     elements.lessonItems.forEach(item => {
-        if (item.classList.contains('completed')) {
-            completed.push(item.dataset.lesson);
-        }
+        if (item.classList.contains('completed')) completed.push(item.dataset.lesson);
     });
     return completed;
 }
 
-/**
- * Восстановить отметки о завершенных уроках
- */
-function restoreCompletedLessons(completedLessons) {
+function restoreCompletedLessons(list) {
     elements.lessonItems.forEach(item => {
-        const lessonId = item.dataset.lesson;
-        if (completedLessons.includes(lessonId)) {
+        if (list.includes(item.dataset.lesson)) {
             item.classList.add('completed');
-            const statusIcon = item.querySelector('.lesson-status i');
-            if (statusIcon) statusIcon.className = 'fas fa-check-circle';
+            const icon = item.querySelector('.lesson-status i');
+            if (icon) icon.className = 'fas fa-check-circle';
         }
     });
 }
 
-/**
- * Удалить прогресс пользователя
- */
-function deleteProgress(username) {
-    const allProgress = getAllProgress();
-    delete allProgress[username.toLowerCase()];
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(allProgress));
-    console.log(`🗑️ Progress deleted for ${username}`);
-}
-
-/**
- * Получить список всех пользователей
- */
-function getAllUsers() {
-    const allProgress = getAllProgress();
-    return Object.keys(allProgress).map(key => ({
-        username: allProgress[key].username,
-        lastAccessed: allProgress[key].lastAccessed,
-        progressPercentage: Math.round(
-            (allProgress[key].overallProgress.completed / 
-             allProgress[key].overallProgress.total) * 100
-        )
-    }));
-}
-
 // ============================================
-// МОДАЛЬНОЕ ОКНО ДЛЯ ВХОДА
+// LOGIN MODAL
 // ============================================
-
 function showLoginModal() {
-    // Проверяем, есть ли сохраненное имя
-    const savedUsername = localStorage.getItem('codecraft_current_user');
-    
-    if (savedUsername) {
-        // Автоматически загружаем последнего пользователя
-        const loaded = loadProgress(savedUsername);
-        if (loaded) {
-            // Добавляем кнопку выхода
-            addLogoutButton();
-            return; // Выходим, не показываем модалку
-        }
+    const savedUser = localStorage.getItem('codecraft_current_user');
+    if (savedUser && loadProgress(savedUser)) {
+        addLogoutButton();
+        return;
     }
-    
-    // Показываем модальное окно для входа
-    const users = getAllUsers();
+
+    const users = Object.values(getAllProgress());
     let userListHTML = '';
-    
     if (users.length > 0) {
-        userListHTML = '<div class="saved-users"><h4>Saved Users:</h4><ul>';
-        users.forEach(user => {
-            userListHTML += `
-                <li onclick="loadUserProgress('${user.username}')">
-                    <strong>${user.username}</strong> - ${user.progressPercentage}% complete
-                    <small>Last seen: ${new Date(user.lastAccessed).toLocaleDateString()}</small>
-                </li>
-            `;
+        userListHTML = '<div class="saved-users"><h4>Continue as:</h4><ul>';
+        users.forEach(u => {
+            const pct = Math.round((u.overallProgress.completed / u.overallProgress.total) * 100);
+            userListHTML += `<li onclick="loadUserProgress('${u.username}')"><strong>${u.username}</strong> — ${pct}% complete</li>`;
         });
         userListHTML += '</ul></div>';
     }
-    
+
     const modal = document.createElement('div');
     modal.className = 'login-modal';
     modal.innerHTML = `
         <div class="login-card">
-            <h2>Welcome to CodeCraft! 👋</h2>
-            <p>Enter your name to start learning or continue where you left off.</p>
-            
+            <h2>Welcome to Code Lab! </h2>
+            <p>Enter your name to start or continue learning.</p>
             ${userListHTML}
-            
             <form id="login-form">
-                <input 
-                    type="text" 
-                    id="username-input" 
-                    placeholder="Enter your name" 
-                    required 
-                    minlength="2"
-                    autocomplete="off"
-                />
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Start Learning
-                </button>
+                <input type="text" id="username-input" placeholder="Enter your name" required minlength="2" autocomplete="off"/>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Start Learning</button>
             </form>
-        </div>
-    `;
-    
+        </div>`;
     document.body.appendChild(modal);
-    
-    // Фокус на поле ввода
-    setTimeout(() => {
-        document.getElementById('username-input')?.focus();
-    }, 300);
-    
-    // Обработчик формы
-    document.getElementById('login-form').addEventListener('submit', (e) => {
+    setTimeout(() => document.getElementById('username-input')?.focus(), 300);
+
+    document.getElementById('login-form').addEventListener('submit', e => {
         e.preventDefault();
-        const username = document.getElementById('username-input').value.trim();
-        
-        if (username.length >= 2) {
-            localStorage.setItem('codecraft_current_user', username);
-            
-            // Загружаем или создаем новый прогресс
-            const loaded = loadProgress(username);
-            if (!loaded) {
-                showToast(`Welcome, ${username}! Let's start learning! 🚀`, 'success');
-                // Загружаем первый урок для нового пользователя
+        const name = document.getElementById('username-input').value.trim();
+        if (name.length >= 2) {
+            localStorage.setItem('codecraft_current_user', name);
+            if (!loadProgress(name)) {
+                showToast(`Welcome, ${name}! Let's start learning! `, 'success');
                 loadLesson('html-structure');
             }
-            
-            // Добавляем кнопку выхода
             addLogoutButton();
-            
             modal.remove();
         }
     });
 }
 
-// Глобальная функция для загрузки прогресса из списка
 window.loadUserProgress = function(username) {
     localStorage.setItem('codecraft_current_user', username);
     loadProgress(username);
-    addLogoutButton(); // Добавляем кнопку выхода
+    addLogoutButton();
     document.querySelector('.login-modal')?.remove();
 };
 
-// ============================================
-// АВТОСОХРАНЕНИЕ
-// ============================================
-
-// Сохранять прогресс при завершении урока
-function markLessonCompletedWithSave(lessonId) {
-    const lessonItem = document.querySelector(`[data-lesson="${lessonId}"]`);
-    if (lessonItem && !lessonItem.classList.contains('completed')) {
-        lessonItem.classList.add('completed');
-        const statusIcon = lessonItem.querySelector('.lesson-status i');
-        if (statusIcon) statusIcon.className = 'fas fa-check-circle';
-        
-        if (lessonId.startsWith('html')) {
-            CONFIG.progress.html.completed++;
-        } else if (lessonId.startsWith('css')) {
-            CONFIG.progress.css.completed++;
-        }
-        CONFIG.progress.overall.completed++;
-        updateProgress();
-        
-        // Автосохранение
-        const currentUser = localStorage.getItem('codecraft_current_user');
-        if (currentUser) {
-            saveProgress(currentUser);
-        }
-    }
-}
-
-// Сохранять при смене урока
-function loadLessonWithSave(lessonId) {
-    const lesson = LESSONS[lessonId];
-    if (!lesson) return;
-    
-    CONFIG.currentLesson = lessonId;
-    currentHintIndex = 0;
-    
-    elements.lessonTitle.textContent = lesson.title;
-    elements.lessonSubtitle.textContent = lesson.subtitle;
-    elements.theoryContent.innerHTML = lesson.theory;
-    
-    editorContent = { ...lesson.initialCode };
-    currentFile = 'html';
-    loadCurrentFile();
-    updateFileTabs();
-    
-    elements.lessonItems.forEach(item => {
-        item.classList.toggle('active', item.dataset.lesson === lessonId);
-    });
-    
-    const currentScore = CONFIG.userScores[lessonId] || '--';
-    elements.lessonScore.textContent = currentScore === '--' ? '--' : `${currentScore}%`;
-    
-    if (window.innerWidth <= 992) {
-        elements.sidebar.classList.add('collapsed');
-    }
-    
-    setTimeout(runCode, 100);
-    
-    // Автосохранение
-    const currentUser = localStorage.getItem('codecraft_current_user');
-    if (currentUser) {
-        saveProgress(currentUser);
-    }
-}
-
-// ============================================
-// ЗАМЕНИТЕ СТАРЫЕ ФУНКЦИИ
-// ============================================
-
-// Замените старую функцию markLessonCompleted на:
-// markLessonCompleted = markLessonCompletedWithSave;
-
-// Замените старую функцию loadLesson на:
-// loadLesson = loadLessonWithSave;
-
-// ============================================
-// ИНИЦИАЛИЗАЦИЯ
-// ============================================
-
-// Добавьте в функцию initializeApp():
-function initializeAppWithLogin() {
-    // СНАЧАЛА инициализируем всё приложение
-    updateProgress();
-    initializeEventListeners();
-    updateLineNumbers();
-    
-    // ПОТОМ показываем окно входа
-    setTimeout(() => {
-        showLoginModal();
-    }, 100);
-    
-    // Автосохранение каждые 30 секунд
-    setInterval(() => {
-        const currentUser = localStorage.getItem('codecraft_current_user');
-        if (currentUser) {
-            saveProgress(currentUser);
-        }
-    }, 30000);
-    
-    // Добавляем кнопку выхода если пользователь залогинен
-    const currentUser = localStorage.getItem('codecraft_current_user');
-    if (currentUser) {
-        setTimeout(addLogoutButton, 200);
-    }
-}
-
-// Замените:
-// document.addEventListener('DOMContentLoaded', initializeApp);
-// На:
-// document.addEventListener('DOMContentLoaded', initializeAppWithLogin);
-
-// ============================================
-// КНОПКА ВЫХОДА (опционально)
-// ============================================
-
 function addLogoutButton() {
+    if (document.getElementById('logout-btn')) return;
     const headerActions = document.querySelector('.header-actions');
     const currentUser = localStorage.getItem('codecraft_current_user');
-    
-    // Проверяем, не добавлена ли уже кнопка
-    if (document.getElementById('logout-btn')) {
-        return;
-    }
-    
     if (currentUser && headerActions) {
-        const logoutBtn = document.createElement('button');
-        logoutBtn.id = 'logout-btn';
-        logoutBtn.className = 'btn btn-outline';
-        logoutBtn.innerHTML = `
-            <i class="fas fa-sign-out-alt"></i>
-            ${currentUser}
-        `;
-        logoutBtn.onclick = () => {
+        const btn = document.createElement('button');
+        btn.id = 'logout-btn';
+        btn.className = 'btn btn-outline';
+        btn.innerHTML = `<i class="fas fa-sign-out-alt"></i> ${currentUser}`;
+        btn.onclick = () => {
             if (confirm(`Save progress for ${currentUser} and logout?`)) {
                 saveProgress(currentUser);
                 localStorage.removeItem('codecraft_current_user');
                 location.reload();
             }
         };
-        headerActions.appendChild(logoutBtn);
-    }
-}
-
-// Вызовите после успешного входа
-// addLogoutButton();
-
-// ============================================
-// ЗАМЕНИТЕ СТАРЫЕ ФУНКЦИИ
-// ============================================
-
-// Замените старую функцию markLessonCompleted на:
-// markLessonCompleted = markLessonCompletedWithSave;
-
-// Замените старую функцию loadLesson на:
-// loadLesson = loadLessonWithSave;
-
-// ============================================
-// ИНИЦИАЛИЗАЦИЯ
-// ============================================
-
-// Добавьте в функцию initializeApp():
-function initializeAppWithLogin() {
-    // Показываем окно входа
-    showLoginModal();
-    
-    updateProgress();
-    initializeEventListeners();
-    updateLineNumbers();
-    
-    // Автосохранение каждые 30 секунд
-    setInterval(() => {
-        const currentUser = localStorage.getItem('codecraft_current_user');
-        if (currentUser) {
-            saveProgress(currentUser);
-        }
-    }, 30000);
-}
-
-// Замените:
-// document.addEventListener('DOMContentLoaded', initializeApp);
-// На:
-// document.addEventListener('DOMContentLoaded', initializeAppWithLogin);
-
-// ============================================
-// КНОПКА ВЫХОДА (опционально)
-// ============================================
-
-function addLogoutButton() {
-    const headerActions = document.querySelector('.header-actions');
-    const currentUser = localStorage.getItem('codecraft_current_user');
-    
-    if (currentUser && headerActions) {
-        const logoutBtn = document.createElement('button');
-        logoutBtn.className = 'btn btn-outline';
-        logoutBtn.innerHTML = `
-            <i class="fas fa-sign-out-alt"></i>
-            Logout (${currentUser})
-        `;
-        logoutBtn.onclick = () => {
-            if (confirm('Save progress and logout?')) {
-                saveProgress(currentUser);
-                localStorage.removeItem('codecraft_current_user');
-                location.reload();
-            }
-        };
-        headerActions.appendChild(logoutBtn);
+        headerActions.appendChild(btn);
     }
 }
 
 // ============================================
-// LESSONS DATA - 10 COMPLETE LESSONS
+// LESSONS DATA
 // ============================================
 const LESSONS = {
-    // ==========================================
-    // LESSON 1: HTML Document Structure
-    // ==========================================
+
+
+// ==========================================
+// LESSON 1: HTML Document Structure
+// ==========================================
 'html-structure': {
     title: 'HTML Document Structure',
     subtitle: 'Learn the basic building blocks of every web page',
@@ -777,9 +479,9 @@ p {
 },
 
 
-    // ==========================================
-    // LESSON 2: HTML Elements & Tags
-    // ==========================================
+// ==========================================
+// LESSON 2: HTML Elements & Tags
+// ==========================================
 'html-elements': {
     title: 'Lists and Text Formatting',
     subtitle: 'Learn to create bullet lists, numbered lists, and format text',
@@ -1147,15 +849,15 @@ strong { color: #d2691e; }`,
     }
 },
 
-    // ==========================================
-    // LESSON 3: Links & Images
-    // ==========================================
-    'html-links-images': {
-        title: 'Links and Images',
-        subtitle: 'Add clickable links and images to make your pages interactive',
-        difficulty: 'Beginner',
-        duration: '20 minutes',
-        theory: `
+// ==========================================
+// LESSON 3: Links & Images
+// ==========================================
+'html-links-images': {
+    title: 'Links and Images',
+    subtitle: 'Add clickable links and images to make your pages interactive',
+    difficulty: 'Beginner',
+    duration: '20 minutes',
+    theory: `
     <div class="theory-section">
         <div class="section-header">
             <div class="section-icon"><i class="fas fa-link"></i></div>
@@ -1318,9 +1020,9 @@ strong { color: #d2691e; }`,
         <p class="theory-text" style="margin-top: 15px;"><strong>Next step:</strong> Click "Submit Solution" to check your work. You'll see a checklist of what you did right. If something is missing, you can go back and fix it. Great job!</p>
     </div>
 
-        `,
-        initialCode: {
-            html: `<!DOCTYPE html>
+    `,
+    initialCode: {
+        html: `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1350,7 +1052,7 @@ strong { color: #d2691e; }`,
     </div>
 </body>
 </html>`,
-            css: `body {
+        css: `body {
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
@@ -1405,176 +1107,342 @@ strong { color: #d2691e; }`,
     transform: translateY(-2px);
     box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
 }`,
-            js: `// No JavaScript needed`
-        },
-        hints: [
-            "💡 Step 1: Type <img src=\"https://picsum.photos/150\" alt=\"Profile photo\">",
-            "💡 Step 2: Type <h1>Your Name</h1>",
-            "💡 Step 3: Type <p>A sentence about yourself</p>",
-            "💡 Step 4: Type <a href=\"https://anywebsite.com\">Link Text</a>",
-            "💡 Step 5: Use mailto: in href: <a href=\"mailto:email@example.com\">Contact Me</a>"
-        ],
-        validation: (code) => {
-            const checks = [];
-            checks.push({ passed: /<img[^>]+src=["'][^"']+["'][^>]*>/i.test(code.html), message: '✓ Added an image with src' });
-            checks.push({ passed: /<img[^>]+alt=["'][^"']+["'][^>]*>/i.test(code.html), message: '✓ Image has alt text' });
-            checks.push({ passed: /<h1>[\s\S]+<\/h1>/i.test(code.html), message: '✓ Added name heading' });
-            checks.push({ passed: (code.html.match(/<a[^>]+href=/gi) || []).length >= 2, message: '✓ Added at least 2 links' });
-            checks.push({ passed: /mailto:/i.test(code.html), message: '✓ Added an email link (mailto:)' });
-            return checks;
-        }
+        js: `// No JavaScript needed`
     },
+    hints: [
+        "💡 Step 1: Type <img src=\"https://picsum.photos/150\" alt=\"Profile photo\">",
+        "💡 Step 2: Type <h1>Your Name</h1>",
+        "💡 Step 3: Type <p>A sentence about yourself</p>",
+        "💡 Step 4: Type <a href=\"https://anywebsite.com\">Link Text</a>",
+        "💡 Step 5: Use mailto: in href: <a href=\"mailto:email@example.com\">Contact Me</a>"
+    ],
+    validation: (code) => {
+        const checks = [];
+        checks.push({ passed: /<img[^>]+src=["'][^"']+["'][^>]*>/i.test(code.html), message: '✓ Added an image with src' });
+        checks.push({ passed: /<img[^>]+alt=["'][^"']+["'][^>]*>/i.test(code.html), message: '✓ Image has alt text' });
+        checks.push({ passed: /<h1>[\s\S]+<\/h1>/i.test(code.html), message: '✓ Added name heading' });
+        checks.push({ passed: (code.html.match(/<a[^>]+href=/gi) || []).length >= 2, message: '✓ Added at least 2 links' });
+        checks.push({ passed: /mailto:/i.test(code.html), message: '✓ Added an email link (mailto:)' });
+        return checks;
+    }
+},
 
-    // ==========================================
-    // LESSON 4: Semantic HTML
-    // ==========================================
-    'html-semantic': {
-        title: 'Page Layout with Semantic HTML',
-        subtitle: 'Structure your page properly with header, nav, main, and footer',
-        difficulty: 'Beginner',
-        duration: '25 minutes',
-        theory: `
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-sitemap"></i></div>
-                    <h2 class="section-title">What is Semantic HTML?</h2>
+// ==========================================
+// LESSON 4: Semantic HTML  — INTERACTIVE
+// ==========================================
+'html-semantic': {
+    title: 'Page Layout with Semantic HTML',
+    subtitle: 'Play a game, then build a real page — structure matters!',
+    difficulty: 'Beginner',
+    duration: '25 minutes',
+    theory: `
+<!-- ═══════════════════════════════════════
+     STAGE 1 — THEORY
+═══════════════════════════════════════ -->
+<div class="theory-section">
+    <div class="section-header">
+        <div class="section-icon"><i class="fas fa-sitemap"></i></div>
+        <h2 class="section-title">What is Semantic HTML?</h2>
+    </div>
+    <p class="theory-text">Until now you've used <code>&lt;h1&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;a&gt;</code> — tags that describe <em>what content looks like</em>. Semantic HTML goes one step further: tags that describe <em>what the content IS</em> and <em>where it lives</em> on the page.</p>
+    <p class="theory-text">Instead of wrapping everything in a generic <code>&lt;div&gt;</code>, you use purpose-built containers:</p>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin:20px 0;">
+        <div style="background:rgba(124,58,237,0.15); border:1px solid rgba(124,58,237,0.4); border-radius:12px; padding:14px;">
+            <div style="font-family:monospace; font-size:1rem; color:#a78bfa; font-weight:700;">&lt;header&gt;</div>
+            <div style="color:#cbd5e1; font-size:0.85rem; margin-top:4px;">Top of page — logo, site name</div>
+        </div>
+        <div style="background:rgba(8,145,178,0.15); border:1px solid rgba(8,145,178,0.4); border-radius:12px; padding:14px;">
+            <div style="font-family:monospace; font-size:1rem; color:#67e8f9; font-weight:700;">&lt;nav&gt;</div>
+            <div style="color:#cbd5e1; font-size:0.85rem; margin-top:4px;">Navigation links menu</div>
+        </div>
+        <div style="background:rgba(5,150,105,0.15); border:1px solid rgba(5,150,105,0.4); border-radius:12px; padding:14px;">
+            <div style="font-family:monospace; font-size:1rem; color:#6ee7b7; font-weight:700;">&lt;main&gt;</div>
+            <div style="color:#cbd5e1; font-size:0.85rem; margin-top:4px;">The main content (one per page!)</div>
+        </div>
+        <div style="background:rgba(217,119,6,0.15); border:1px solid rgba(217,119,6,0.4); border-radius:12px; padding:14px;">
+            <div style="font-family:monospace; font-size:1rem; color:#fcd34d; font-weight:700;">&lt;article&gt;</div>
+            <div style="color:#cbd5e1; font-size:0.85rem; margin-top:4px;">Self-contained block (blog post, card)</div>
+        </div>
+        <div style="background:rgba(220,38,38,0.15); border:1px solid rgba(220,38,38,0.4); border-radius:12px; padding:14px; grid-column: 1 / -1; max-width:50%;">
+            <div style="font-family:monospace; font-size:1rem; color:#fca5a5; font-weight:700;">&lt;footer&gt;</div>
+            <div style="color:#cbd5e1; font-size:0.85rem; margin-top:4px;">Bottom of page — copyright, links</div>
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <div class="note-header"><div class="note-icon tip-icon"><i class="fas fa-newspaper"></i></div><div class="note-title tip-title">Think of a newspaper</div></div>
+        <p class="theory-text"><i class="fas fa-newspaper"></i> The masthead at the top = <code>&lt;header&gt;</code> &nbsp;|&nbsp; Sections menu = <code>&lt;nav&gt;</code> &nbsp;|&nbsp; Main story = <code>&lt;main&gt;</code> → <code>&lt;article&gt;</code> &nbsp;|&nbsp; Fine print at bottom = <code>&lt;footer&gt;</code></p>
+    </div>
+
+    <div class="note-box">
+        <div class="note-header"><div class="note-icon"><i class="fas fa-question-circle"></i></div><div class="note-title">Why bother?</div></div>
+        <p class="theory-text"><i class="fas fa-search"></i> <strong>Google</strong> understands your page → better search ranking<br><i class="fas fa-wheelchair"></i> <strong>Screen readers</strong> can navigate it → accessible for blind users<br><i class="fas fa-laptop-code"></i> <strong>Other developers</strong> instantly understand your code</p>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     STAGE 2 — INTERACTIVE GAME
+═══════════════════════════════════════ -->
+<div style="background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); border-radius: 20px; padding: 28px; margin: 28px 0; border: 1px solid rgba(165,180,252,0.2);">
+
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
+        <div style="background:#f59e0b; border-radius:10px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;"><i class="fas fa-gamepad"></i></div>
+        <h2 style="color:#fbbf24; margin:0; font-size:1.3rem;">Stage 2 — Fix the Broken Website!</h2>
+    </div>
+    <p style="color:#c7d2fe; margin:0 0 20px; font-size:0.95rem;">A developer used <code style="background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px;">&lt;div&gt;</code> for everything. Drag each correct semantic tag onto the broken section. Earn <i class="fas fa-star" style="color:#f59e0b;"></i> for every correct placement!</p>
+
+    <!-- Scoreboard -->
+    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); border-radius:12px; padding:12px 16px; margin-bottom:16px;">
+        <div id="sem-stars" style="font-size:1.2rem; display:flex; gap:4px; align-items:center;"><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></div>
+        <div id="sem-msg" style="color:#a5b4fc; font-size:0.9rem;">0 / 5 correct</div>
+        <button onclick="resetSemanticGame()" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#cbd5e1; padding:6px 14px; border-radius:8px; cursor:pointer; font-size:0.8rem;">↺ Reset</button>
+    </div>
+
+    <!-- Tag Toolbox -->
+    <div id="sem-toolbox" style="display:flex; flex-wrap:wrap; gap:10px; padding:14px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:16px;">
+        <div style="color:#64748b; font-size:0.75rem; width:100%; margin-bottom:2px;"><i class="fas fa-toolbox"></i> Drag these tags onto the correct zones:</div>
+        <div class="sem-tag" draggable="true" data-tag="header"  style="cursor:grab; background:#7c3aed; color:white; padding:8px 18px; border-radius:8px; font-family:monospace; font-weight:700; user-select:none; transition:transform 0.15s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">&lt;header&gt;</div>
+        <div class="sem-tag" draggable="true" data-tag="nav"     style="cursor:grab; background:#0891b2; color:white; padding:8px 18px; border-radius:8px; font-family:monospace; font-weight:700; user-select:none; transition:transform 0.15s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">&lt;nav&gt;</div>
+        <div class="sem-tag" draggable="true" data-tag="main"    style="cursor:grab; background:#059669; color:white; padding:8px 18px; border-radius:8px; font-family:monospace; font-weight:700; user-select:none; transition:transform 0.15s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">&lt;main&gt;</div>
+        <div class="sem-tag" draggable="true" data-tag="article" style="cursor:grab; background:#d97706; color:white; padding:8px 18px; border-radius:8px; font-family:monospace; font-weight:700; user-select:none; transition:transform 0.15s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">&lt;article&gt;</div>
+        <div class="sem-tag" draggable="true" data-tag="footer"  style="cursor:grab; background:#dc2626; color:white; padding:8px 18px; border-radius:8px; font-family:monospace; font-weight:700; user-select:none; transition:transform 0.15s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">&lt;footer&gt;</div>
+    </div>
+
+    <!-- Broken Page Mock-up -->
+    <div style="border: 2px solid rgba(255,255,255,0.1); border-radius:14px; overflow:hidden; font-size:0.9rem;">
+
+        <!-- Zone: header -->
+        <div class="sem-zone" data-answer="header"
+             style="background:rgba(220,38,38,0.15); border-bottom:1px solid rgba(255,255,255,0.08); padding:18px 20px; transition:all 0.3s;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <div>
+                    <span style="font-family:monospace; color:#f87171; font-size:0.8rem; display:block; margin-bottom:4px;">&lt;div id="top"&gt; <i class="fas fa-times-circle"></i> wrong tag!</span>
+                    <span style="color:#e2e8f0; font-size:1.1rem; font-weight:700;"><i class="fas fa-globe"></i> MySite — Best Website Ever</span>
                 </div>
-                <p class="theory-text"><strong>Semantic HTML</strong> means using tags that describe their content. Instead of using <code>&lt;div&gt;</code> for everything, we use descriptive tags like <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, and <code>&lt;footer&gt;</code>.</p>
-                
-                <div class="tip-box">
-                    <div class="note-header">
-                        <div class="note-icon tip-icon"><i class="fas fa-question-circle"></i></div>
-                        <div class="note-title tip-title">Why Does This Matter?</div>
-                    </div>
-                    <ul class="theory-list">
-                        <li><strong>Accessibility:</strong> Screen readers understand your page structure</li>
-                        <li><strong>SEO:</strong> Search engines rank your content better</li>
-                        <li><strong>Readability:</strong> Your code is easier to understand</li>
-                    </ul>
-                </div>
+                <div class="sem-drop-hint" style="color:#94a3b8; font-size:0.8rem; font-style:italic; border:1px dashed rgba(148,163,184,0.4); padding:6px 12px; border-radius:8px;">Drop correct tag here <i class="fas fa-arrow-down"></i></div>
             </div>
+        </div>
 
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-th-large"></i></div>
-                    <h2 class="section-title">The Main Semantic Tags</h2>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Page Structure</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>&lt;body&gt;
-    &lt;header&gt;
-        Logo and navigation go here
-    &lt;/header&gt;
-    
-    &lt;main&gt;
-        Main content goes here
-    &lt;/main&gt;
-    
-    &lt;footer&gt;
-        Copyright info goes here
-    &lt;/footer&gt;
-&lt;/body&gt;</code></pre>
-                </div>
-                
-                <div class="note-box">
-                    <div class="note-header">
-                        <div class="note-icon"><i class="fas fa-lightbulb"></i></div>
-                        <div class="note-title">What Each Tag Means</div>
-                    </div>
-                    <ul class="theory-list">
-                        <li><code>&lt;header&gt;</code> - Top of page (logo, site title, navigation)</li>
-                        <li><code>&lt;nav&gt;</code> - Navigation links</li>
-                        <li><code>&lt;main&gt;</code> - Main content (use only once per page!)</li>
-                        <li><code>&lt;article&gt;</code> - Self-contained content (like a blog post)</li>
-                        <li><code>&lt;footer&gt;</code> - Bottom of page (copyright, contact info)</li>
-                    </ul>
-                </div>
-            </div>
+        <!-- Zone: nav -->
+        <div class="sem-zone" data-answer="nav"
+             style="background:rgba(245,158,11,0.1); border-bottom:1px solid rgba(255,255,255,0.08); padding:14px 20px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; transition:all 0.3s;">
+            <span style="font-family:monospace; color:#fb923c; font-size:0.8rem;">&lt;div id="menu"&gt; <i class="fas fa-times-circle"></i></span>
+            <span style="color:#cbd5e1;">Home</span>
+            <span style="color:#cbd5e1;">About</span>
+            <span style="color:#cbd5e1;">Portfolio</span>
+            <span style="color:#cbd5e1;">Contact</span>
+            <div class="sem-drop-hint" style="margin-left:auto; color:#94a3b8; font-size:0.8rem; font-style:italic; border:1px dashed rgba(148,163,184,0.4); padding:6px 12px; border-radius:8px;">Drop here <i class="fas fa-arrow-down"></i></div>
+        </div>
 
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-compass"></i></div>
-                    <h2 class="section-title">Navigation Example</h2>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Nav with Links</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>&lt;nav&gt;
+        <!-- Zone: main -->
+        <div class="sem-zone" data-answer="main"
+             style="background:rgba(5,150,105,0.08); border-bottom:1px solid rgba(255,255,255,0.08); padding:18px 20px; transition:all 0.3s;">
+            <span style="font-family:monospace; color:#86efac; font-size:0.8rem; display:block; margin-bottom:8px;">&lt;div id="content"&gt; <i class="fas fa-times-circle"></i></span>
+            <div style="color:#94a3b8; font-size:0.85rem; font-style:italic;">[ The main content of the page lives here ]</div>
+            <div class="sem-drop-hint" style="display:inline-block; margin-top:10px; color:#94a3b8; font-size:0.8rem; font-style:italic; border:1px dashed rgba(148,163,184,0.4); padding:6px 12px; border-radius:8px;">This is the primary page content — Drop here <i class="fas fa-arrow-down"></i></div>
+        </div>
+
+        <!-- Zone: article (indented = inside main) -->
+        <div class="sem-zone" data-answer="article"
+             style="background:rgba(217,119,6,0.08); border-bottom:1px solid rgba(255,255,255,0.08); padding:18px 20px 18px 44px; transition:all 0.3s;">
+            <span style="font-family:monospace; color:#fcd34d; font-size:0.8rem; display:block; margin-bottom:6px;">&lt;div class="post"&gt; <i class="fas fa-times-circle"></i> ← nested inside main</span>
+            <div style="color:#e2e8f0; font-weight:600;"><i class="fas fa-file-alt"></i> How I Built My First Website</div>
+            <div style="color:#94a3b8; font-size:0.85rem; margin-top:4px;">A self-contained blog post — it could be picked up and published anywhere</div>
+            <div class="sem-drop-hint" style="display:inline-block; margin-top:10px; color:#94a3b8; font-size:0.8rem; font-style:italic; border:1px dashed rgba(148,163,184,0.4); padding:6px 12px; border-radius:8px;">Drop here <i class="fas fa-arrow-down"></i></div>
+        </div>
+
+        <!-- Zone: footer -->
+        <div class="sem-zone" data-answer="footer"
+             style="background:rgba(99,102,241,0.1); padding:16px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; transition:all 0.3s;">
+            <span style="font-family:monospace; color:#a5b4fc; font-size:0.8rem;">&lt;div id="bottom"&gt; <i class="fas fa-times-circle"></i></span>
+            <span style="color:#cbd5e1; font-size:0.85rem;">© 2026 BS. All rights reserved.</span>
+            <div class="sem-drop-hint" style="color:#94a3b8; font-size:0.8rem; font-style:italic; border:1px dashed rgba(148,163,184,0.4); padding:6px 12px; border-radius:8px;">Drop here <i class="fas fa-arrow-down"></i></div>
+        </div>
+    </div>
+
+    <!-- Celebration banner (hidden initially) -->
+    <div id="sem-win" style="display:none; margin-top:16px; background:linear-gradient(135deg,#065f46,#047857); border-radius:12px; padding:16px 20px; text-align:center; color:#d1fae5; font-size:1rem; font-weight:600;">
+        <i class="fas fa-trophy"></i> Perfect score! All 5 tags correct! Now complete the code challenge on the right →
+    </div>
+</div>
+
+<!-- Drag & Drop Script (scoped, runs once) -->
+<script>
+(function initSemanticGame() {
+    let score = 0;
+    const TOTAL = 5;
+    let dragging = null;
+
+    function render() {
+        const starFull  = '<i class="fas fa-star" style="color:#f59e0b;font-size:1.1rem;"></i>';
+        const starEmpty = '<i class="far fa-star" style="color:rgba(255,255,255,0.25);font-size:1.1rem;"></i>';
+        const stars = starFull.repeat(score) + starEmpty.repeat(TOTAL - score);
+        document.getElementById('sem-stars').innerHTML = stars;
+        document.getElementById('sem-msg').textContent = score + ' / ' + TOTAL + ' correct';
+        if (score === TOTAL) {
+            document.getElementById('sem-win').style.display = 'block';
+        }
+    }
+
+    function bindTags() {
+        document.querySelectorAll('.sem-tag').forEach(tag => {
+            tag.addEventListener('dragstart', e => {
+                dragging = tag.dataset.tag;
+                setTimeout(() => tag.style.opacity = '0.4', 0);
+            });
+            tag.addEventListener('dragend', () => { tag.style.opacity = '1'; });
+        });
+    }
+
+    function bindZones() {
+        document.querySelectorAll('.sem-zone').forEach(zone => {
+            zone.addEventListener('dragover', e => {
+                e.preventDefault();
+                if (!zone.dataset.answered) zone.style.boxShadow = '0 0 0 2px #a5b4fc inset';
+            });
+            zone.addEventListener('dragleave', () => { zone.style.boxShadow = ''; });
+            zone.addEventListener('drop', e => {
+                e.preventDefault();
+                zone.style.boxShadow = '';
+                if (zone.dataset.answered) return;
+
+                const hint = zone.querySelector('.sem-drop-hint');
+                if (dragging === zone.dataset.answer) {
+                    // Correct!
+                    zone.style.background = 'rgba(34,197,94,0.2)';
+                    zone.style.borderLeft = '4px solid #4ade80';
+                    if (hint) {
+                        hint.style.background = 'rgba(34,197,94,0.25)';
+                        hint.style.border = '1px solid #4ade80';
+                        hint.style.color = '#4ade80';
+                        hint.innerHTML = '<i class="fas fa-check-circle"></i> &lt;' + dragging + '&gt; — correct!';
+                    }
+                    // Hide the used tag
+                    const used = document.querySelector('.sem-tag[data-tag="' + dragging + '"]');
+                    if (used) { used.style.opacity = '0.3'; used.style.pointerEvents = 'none'; used.draggable = false; }
+                    zone.dataset.answered = 'true';
+                    score++;
+                    render();
+                } else {
+                    // Wrong
+                    const prevBg = zone.style.background;
+                    zone.style.background = 'rgba(239,68,68,0.25)';
+                    if (hint) { hint.innerHTML = '<i class="fas fa-times-circle"></i> Not quite — try a different tag!'; }
+                    setTimeout(() => {
+                        zone.style.background = prevBg;
+                        if (hint && !zone.dataset.answered) hint.innerHTML = 'Drop here <i class="fas fa-arrow-down"></i>';
+                    }, 1400);
+                }
+            });
+        });
+    }
+
+    window.resetSemanticGame = function() {
+        score = 0;
+        document.getElementById('sem-win').style.display = 'none';
+        render();
+        // Restore tags
+        document.querySelectorAll('.sem-tag').forEach(t => { t.style.opacity='1'; t.style.pointerEvents='auto'; t.draggable=true; });
+        // Restore zones
+        document.querySelectorAll('.sem-zone').forEach(z => {
+            delete z.dataset.answered;
+            z.style.background = '';
+            z.style.borderLeft = '';
+            const h = z.querySelector('.sem-drop-hint');
+            if (h) { h.style.background=''; h.style.border='1px dashed rgba(148,163,184,0.4)'; h.style.color='#94a3b8'; h.innerHTML='Drop here <i class="fas fa-arrow-down"></i>'; }
+        });
+    };
+
+    bindTags();
+    bindZones();
+    render();
+})();
+</script>
+
+<!-- ═══════════════════════════════════════
+     STAGE 3 — CODE CHALLENGE
+═══════════════════════════════════════ -->
+<div class="exercise-box" style="margin-top:28px;">
+    <div class="exercise-header">
+        <div class="exercise-icon"><i class="fas fa-keyboard"></i></div>
+        <div class="exercise-title">Stage 3 — Now Type It! Build the Same Layout in Code</div>
+    </div>
+    <p class="theory-text">You just placed the tags visually. Now type them in the code editor on the right. Follow the 4 steps in the comments.</p>
+</div>
+
+<div class="step-by-step">
+    <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+            <h4>Header + Nav</h4>
+            <p>Find <code>&lt;!-- STEP 1 & 2 --&gt;</code> and add:</p>
+            <div class="code-inline">&lt;header&gt;
+  &lt;h1&gt;My Awesome Website&lt;/h1&gt;
+  &lt;nav&gt;
     &lt;a href="#home"&gt;Home&lt;/a&gt;
     &lt;a href="#about"&gt;About&lt;/a&gt;
     &lt;a href="#contact"&gt;Contact&lt;/a&gt;
-&lt;/nav&gt;</code></pre>
-                </div>
-            </div>
-
-            <div class="exercise-box">
-                <div class="exercise-header">
-                    <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
-                    <div class="exercise-title">📝 Your Task: Build a Complete Page Layout</div>
-                </div>
-                <p class="theory-text">Create a properly structured page with header, navigation, main content, and footer.</p>
-            </div>
-
-            <div class="step-by-step">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h4>Create the Header with Site Title</h4>
-                        <p>Find <code>&lt;!-- STEP 1 --&gt;</code> and add:</p>
-                        <div class="code-inline">&lt;header&gt;
-    &lt;h1&gt;My Awesome Website&lt;/h1&gt;
+  &lt;/nav&gt;
 &lt;/header&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h4>Add Navigation Inside the Header</h4>
-                        <p>Inside your header (after h1), add:</p>
-                        <div class="code-inline">&lt;nav&gt;
-    &lt;a href="#home"&gt;Home&lt;/a&gt;
-    &lt;a href="#about"&gt;About&lt;/a&gt;
-    &lt;a href="#contact"&gt;Contact&lt;/a&gt;
-&lt;/nav&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h4>Add the Main Content Area</h4>
-                        <p>Find <code>&lt;!-- STEP 3 --&gt;</code> and add main with an article inside:</p>
-                        <div class="code-inline">&lt;main&gt;
-    &lt;article&gt;
-        &lt;h2&gt;Welcome!&lt;/h2&gt;
-        &lt;p&gt;This is my website. I'm learning HTML!&lt;/p&gt;
-    &lt;/article&gt;
+            <p><em>Notice: <code>&lt;nav&gt;</code> goes <strong>inside</strong> <code>&lt;header&gt;</code>!</em></p>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+            <h4>Main + Article</h4>
+            <p>Find <code>&lt;!-- STEP 3 --&gt;</code> and add:</p>
+            <div class="code-inline">&lt;main&gt;
+  &lt;article&gt;
+    &lt;h2&gt;Welcome to my site!&lt;/h2&gt;
+    &lt;p&gt;I'm learning HTML and having a blast.&lt;/p&gt;
+  &lt;/article&gt;
 &lt;/main&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h4>Add the Footer</h4>
-                        <p>Find <code>&lt;!-- STEP 4 --&gt;</code> and add:</p>
-                        <div class="code-inline">&lt;footer&gt;
-    &lt;p&gt;© 2024 My Website. All rights reserved.&lt;/p&gt;
+            <p><em><code>&lt;article&gt;</code> goes <strong>inside</strong> <code>&lt;main&gt;</code>.</em></p>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+            <h4>Footer</h4>
+            <p>Find <code>&lt;!-- STEP 4 --&gt;</code> and add:</p>
+            <div class="code-inline">&lt;footer&gt;
+  &lt;p&gt;&amp;copy; 2026 My Website. All rights reserved.&lt;/p&gt;
 &lt;/footer&gt;</div>
-                    </div>
-                </div>
-            </div>
-        `,
-        initialCode: {
-            html: `<!DOCTYPE html>
+            <p><em><code>&amp;copy;</code> is the HTML code for the © symbol — cool trick!</em></p>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+            <h4>Check your structure</h4>
+            <p>Your page should be structured like this — everything in the right place:</p>
+            <div class="code-inline">&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;...&lt;/h1&gt;
+    &lt;nav&gt;...&lt;/nav&gt;
+  &lt;/header&gt;
+  &lt;main&gt;
+    &lt;article&gt;...&lt;/article&gt;
+  &lt;/main&gt;
+  &lt;footer&gt;...&lt;/footer&gt;
+&lt;/body&gt;</div>
+            <p><em>Click <strong>Submit</strong> when ready — the validator checks all 5 semantic tags!</em></p>
+        </div>
+    </div>
+</div>
+
+<div class="tip-box" style="margin-top:1.5rem;">
+    <div class="note-header"><div class="note-icon tip-icon"><i class="fas fa-check-circle"></i></div><div class="note-title tip-title">What gets checked</div></div>
+    <p class="theory-text">✓ <code>&lt;header&gt;</code> exists &nbsp; ✓ <code>&lt;nav&gt;</code> with links &nbsp; ✓ <code>&lt;main&gt;</code> exists &nbsp; ✓ <code>&lt;article&gt;</code> inside main &nbsp; ✓ <code>&lt;footer&gt;</code> exists</p>
+</div>
+    `,
+    initialCode: {
+        html: `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1583,269 +1451,233 @@ strong { color: #d2691e; }`,
 </head>
 <body>
 
-    <!-- STEP 1 & 2: Add header with h1 and nav below -->
-    
-    
-    
-    <!-- STEP 3: Add main with article below -->
-    
-    
-    
-    <!-- STEP 4: Add footer below -->
-    
-    
+    <!-- STEP 1 & 2: Add <header> with <h1> and <nav> inside -->
+
+
+    <!-- STEP 3: Add <main> with <article> inside -->
+
+
+    <!-- STEP 4: Add <footer> -->
+
 
 </body>
 </html>`,
-            css: `* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-    font-family: 'Segoe UI', sans-serif;
-    line-height: 1.6;
-    color: #333;
-}
+        css: `* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #333; }
+
 header {
     background: linear-gradient(135deg, #2c3e50, #3498db);
     color: white;
     padding: 20px 40px;
 }
-header h1 {
-    font-size: 1.8rem;
-    margin-bottom: 15px;
-}
-nav {
-    display: flex;
-    gap: 20px;
-}
-nav a {
-    color: rgba(255,255,255,0.9);
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    transition: background 0.3s;
-}
-nav a:hover {
-    background: rgba(255,255,255,0.2);
-}
-main {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 0 20px;
-}
-article {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
-article h2 {
-    color: #2c3e50;
-    margin-bottom: 15px;
-}
-article p {
-    color: #666;
-}
-footer {
-    background: #2c3e50;
-    color: rgba(255,255,255,0.8);
-    text-align: center;
-    padding: 25px;
-    margin-top: 40px;
-}`,
-            js: `// No JavaScript needed`
-        },
-        hints: [
-            "💡 Step 1: Start with <header> tag, put <h1> inside it, then close with </header>",
-            "💡 Step 2: Add <nav> with 3 links INSIDE the header, before </header>",
-            "💡 Step 3: Create <main> tag, put <article> inside with h2 and p",
-            "💡 Step 4: Add <footer> with a paragraph inside",
-            "💡 Make sure main and footer are OUTSIDE the header tag!"
-        ],
-        validation: (code) => {
-            const checks = [];
-            checks.push({ passed: /<header>[\s\S]*<\/header>/i.test(code.html), message: '✓ Added header element' });
-            checks.push({ passed: /<nav>[\s\S]*<a[\s\S]*<\/nav>/i.test(code.html), message: '✓ Added nav with links' });
-            checks.push({ passed: /<main>[\s\S]*<\/main>/i.test(code.html), message: '✓ Added main element' });
-            checks.push({ passed: /<article>[\s\S]*<\/article>/i.test(code.html), message: '✓ Added article element' });
-            checks.push({ passed: /<footer>[\s\S]*<\/footer>/i.test(code.html), message: '✓ Added footer element' });
-            return checks;
-        }
+header h1 { font-size: 1.8rem; margin-bottom: 15px; }
+
+nav { display: flex; gap: 20px; }
+nav a { color: rgba(255,255,255,0.9); text-decoration: none; padding: 8px 16px; border-radius: 5px; transition: background 0.3s; }
+nav a:hover { background: rgba(255,255,255,0.2); }
+
+main { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+
+article { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+article h2 { color: #2c3e50; margin-bottom: 15px; }
+article p { color: #666; }
+
+footer { background: #2c3e50; color: rgba(255,255,255,0.8); text-align: center; padding: 25px; margin-top: 40px; }`,
+        js: `// No JavaScript needed`
     },
+    hints: [
+        "• Start with <header>, put your <h1> title inside, then add <nav> with 3 links, close </header>",
+        "• Nav goes INSIDE header: <header> <h1>...</h1> <nav>...</nav> </header>",
+        "• Main wraps article: <main> <article> <h2>...</h2> <p>...</p> </article> </main>",
+        "• Footer is OUTSIDE main: </main> then <footer><p>...</p></footer>",
+        "• Check nesting — every opening tag needs a closing tag in the right place!"
+    ],
+    validation: (code) => {
+        const checks = [];
+        checks.push({ passed: /<header>[\s\S]*<\/header>/i.test(code.html), message: '✓ Added <header> element' });
+        checks.push({ passed: /<nav>[\s\S]*<a[\s\S]*<\/nav>/i.test(code.html), message: '✓ Added <nav> with links inside' });
+        checks.push({ passed: /<main>[\s\S]*<\/main>/i.test(code.html), message: '✓ Added <main> element' });
+        checks.push({ passed: /<article>[\s\S]*<\/article>/i.test(code.html), message: '✓ Added <article> element' });
+        checks.push({ passed: /<footer>[\s\S]*<\/footer>/i.test(code.html), message: '✓ Added <footer> element' });
+        return checks;
+    }
+},
 
-    // ==========================================
-    // LESSON 5: Forms & Inputs
-    // ==========================================
-    'html-forms': {
-        title: 'Creating Forms',
-        subtitle: 'Build interactive forms with text inputs, checkboxes, and buttons',
-        difficulty: 'Intermediate',
-        duration: '25 minutes',
-        theory: `
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-wpforms"></i></div>
-                    <h2 class="section-title">What Are Forms?</h2>
-                </div>
-                <p class="theory-text">Forms let users enter information - like login pages, contact forms, or search boxes. Every form needs the <code>&lt;form&gt;</code> tag to wrap its contents.</p>
+// ==========================================
+// LESSON 5: Forms & Inputs
+// ==========================================
+'html-forms': {
+    title: 'Creating Forms',
+    subtitle: 'Build interactive forms with text inputs, checkboxes, and buttons',
+    difficulty: 'Intermediate',
+    duration: '25 minutes',
+    theory: `
+        <div class="theory-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-wpforms"></i></div>
+                <h2 class="section-title">What Are Forms?</h2>
             </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-keyboard"></i></div>
-                    <h2 class="section-title">Text Inputs</h2>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Basic Text Input</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>&lt;label for="username"&gt;Username:&lt;/label&gt;
-&lt;input type="text" id="username" name="username" placeholder="Enter your name"&gt;</code></pre>
-                </div>
-                
-                <div class="note-box">
-                    <div class="note-header">
-                        <div class="note-icon"><i class="fas fa-lightbulb"></i></div>
-                        <div class="note-title">Understanding Input Attributes</div>
-                    </div>
-                    <ul class="theory-list">
-                        <li><code>type</code> - What kind of input (text, email, password, etc.)</li>
-                        <li><code>id</code> - Unique identifier (connects to label)</li>
-                        <li><code>name</code> - Name for the data when form is submitted</li>
-                        <li><code>placeholder</code> - Hint text shown inside the input</li>
-                    </ul>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Common Input Types</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>&lt;input type="text" placeholder="Regular text"&gt;
-&lt;input type="email" placeholder="email@example.com"&gt;
-&lt;input type="password" placeholder="Your password"&gt;
-&lt;input type="number" placeholder="Enter a number"&gt;</code></pre>
-                </div>
+            <p class="theory-text">Every time you log in, sign up, search Google, or send a message — you're using an HTML <strong>form</strong>. Forms collect information from users and send it somewhere.</p>
+            <p class="theory-text">The <code>&lt;form&gt;</code> tag wraps everything. Inside it you place inputs, dropdowns, text areas, and buttons.</p>
+            <div class="code-block">
+                <div class="code-block-header"><div class="code-block-title"><i class="fas fa-code"></i> Form Skeleton</div><button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button></div>
+                <pre><code>&lt;form action="#" method="POST"&gt;
+    &lt;!-- inputs go here --&gt;
+    &lt;button type="submit"&gt;Send&lt;/button&gt;
+&lt;/form&gt;</code></pre>
             </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-caret-square-down"></i></div>
-                    <h2 class="section-title">Dropdown Select</h2>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Dropdown Menu</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>&lt;label for="country"&gt;Country:&lt;/label&gt;
-&lt;select id="country" name="country"&gt;
-    &lt;option value=""&gt;Select a country&lt;/option&gt;
-    &lt;option value="us"&gt;United States&lt;/option&gt;
-    &lt;option value="uk"&gt;United Kingdom&lt;/option&gt;
-    &lt;option value="ca"&gt;Canada&lt;/option&gt;
-&lt;/select&gt;</code></pre>
-                </div>
+            <div class="tip-box">
+                <div class="note-header"><div class="note-icon tip-icon"><i class="fas fa-info-circle"></i></div><div class="note-title tip-title">Why labels matter</div></div>
+                <p class="theory-text">Every input needs a <code>&lt;label&gt;</code>. The <code>for</code> attribute on the label must match the <code>id</code> on the input — this lets screen readers announce what each field is, and lets users click the label to focus the input.</p>
             </div>
+        </div>
 
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-comment-alt"></i></div>
-                    <h2 class="section-title">Text Area (Multi-line)</h2>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Large Text Box</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>&lt;label for="message"&gt;Message:&lt;/label&gt;
-&lt;textarea id="message" name="message" rows="4" placeholder="Type your message..."&gt;&lt;/textarea&gt;</code></pre>
-                </div>
+        <div class="theory-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-keyboard"></i></div>
+                <h2 class="section-title">Text & Email Inputs</h2>
             </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-paper-plane"></i></div>
-                    <h2 class="section-title">Submit Button</h2>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Button to Submit Form</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>&lt;button type="submit"&gt;Send Message&lt;/button&gt;</code></pre>
-                </div>
+            <p class="theory-text">The <code>&lt;input&gt;</code> tag creates a single-line text field. Change the <code>type</code> attribute to get different behaviors:</p>
+            <div class="code-block">
+                <div class="code-block-header"><div class="code-block-title"><i class="fas fa-code"></i> Label + Text Input</div><button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button></div>
+                <pre><code>&lt;label for="name"&gt;Your Name:&lt;/label&gt;
+&lt;input type="text" id="name" name="name" placeholder="John Doe"&gt;</code></pre>
             </div>
-
-            <div class="exercise-box">
-                <div class="exercise-header">
-                    <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
-                    <div class="exercise-title">📝 Your Task: Create a Contact Form</div>
-                </div>
-                <p class="theory-text">Build a contact form with name, email, subject dropdown, message, and submit button.</p>
+            <div class="code-block">
+                <div class="code-block-header"><div class="code-block-title"><i class="fas fa-code"></i> Email Input (validates @ automatically)</div><button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button></div>
+                <pre><code>&lt;label for="email"&gt;Email:&lt;/label&gt;
+&lt;input type="email" id="email" name="email" placeholder="you@example.com"&gt;</code></pre>
             </div>
+            <div class="note-box">
+                <div class="note-header"><div class="note-icon"><i class="fas fa-lightbulb"></i></div><div class="note-title">The name attribute</div></div>
+                <p class="theory-text"><code>name="email"</code> is the key that gets sent to the server. Without it the data won't be submitted! Think of it as a label on an envelope — it tells the server which value is which.</p>
+            </div>
+        </div>
 
-            <div class="step-by-step">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h4>Add Name Input</h4>
-                        <p>Find <code>&lt;!-- STEP 1 --&gt;</code> and add:</p>
-                        <div class="code-inline">&lt;label for="name"&gt;Your Name:&lt;/label&gt;
-&lt;input type="text" id="name" name="name" placeholder="John Doe"&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h4>Add Email Input</h4>
-                        <p>Find <code>&lt;!-- STEP 2 --&gt;</code> and add:</p>
-                        <div class="code-inline">&lt;label for="email"&gt;Your Email:&lt;/label&gt;
-&lt;input type="email" id="email" name="email" placeholder="you@example.com"&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h4>Add Subject Dropdown</h4>
-                        <p>Find <code>&lt;!-- STEP 3 --&gt;</code> and add:</p>
-                        <div class="code-inline">&lt;label for="subject"&gt;Subject:&lt;/label&gt;
+        <div class="theory-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-caret-square-down"></i></div>
+                <h2 class="section-title">Dropdowns with &lt;select&gt;</h2>
+            </div>
+            <p class="theory-text">When you want users to pick from a fixed list of choices, use <code>&lt;select&gt;</code> with <code>&lt;option&gt;</code> tags inside:</p>
+            <div class="code-block">
+                <div class="code-block-header"><div class="code-block-title"><i class="fas fa-code"></i> Select Dropdown</div><button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button></div>
+                <pre><code>&lt;label for="subject"&gt;Subject:&lt;/label&gt;
 &lt;select id="subject" name="subject"&gt;
-    &lt;option value=""&gt;Select a topic&lt;/option&gt;
-    &lt;option value="general"&gt;General Question&lt;/option&gt;
+    &lt;option value=""&gt;-- Choose a topic --&lt;/option&gt;
+    &lt;option value="general"&gt;General Inquiry&lt;/option&gt;
+    &lt;option value="support"&gt;Technical Support&lt;/option&gt;
+    &lt;option value="feedback"&gt;Feedback&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+            </div>
+            <p class="theory-text">The first <code>&lt;option&gt;</code> with an empty <code>value=""</code> acts as a placeholder — it shows "Choose a topic" but counts as nothing selected.</p>
+        </div>
+
+        <div class="theory-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-align-left"></i></div>
+                <h2 class="section-title">Multi-line Text with &lt;textarea&gt;</h2>
+            </div>
+            <p class="theory-text">Unlike <code>&lt;input&gt;</code>, a <code>&lt;textarea&gt;</code> lets users type multiple lines — perfect for messages, comments, or descriptions.</p>
+            <div class="code-block">
+                <div class="code-block-header"><div class="code-block-title"><i class="fas fa-code"></i> Textarea</div><button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button></div>
+                <pre><code>&lt;label for="message"&gt;Your Message:&lt;/label&gt;
+&lt;textarea id="message" name="message" rows="5" placeholder="Write your message here..."&gt;&lt;/textarea&gt;</code></pre>
+            </div>
+            <div class="note-box">
+                <div class="note-header"><div class="note-icon"><i class="fas fa-lightbulb"></i></div><div class="note-title">rows attribute</div></div>
+                <p class="theory-text"><code>rows="5"</code> sets how tall the textarea appears initially. Users can still type more — it'll scroll. You can also use CSS to control the exact height.</p>
+            </div>
+        </div>
+
+        <div class="theory-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-paper-plane"></i></div>
+                <h2 class="section-title">The Submit Button</h2>
+            </div>
+            <p class="theory-text">Every form needs a way to send the data. The submit button triggers the form's action:</p>
+            <div class="code-block">
+                <div class="code-block-header"><div class="code-block-title"><i class="fas fa-code"></i> Submit Button</div><button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button></div>
+                <pre><code>&lt;button type="submit"&gt;Send Message&lt;/button&gt;</code></pre>
+            </div>
+        </div>
+
+        <div class="exercise-box">
+            <div class="exercise-header">
+                <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
+                <div class="exercise-title">Your Task: Build a Contact Form</div>
+            </div>
+            <p class="theory-text">Create a real contact form with a name field, email field, subject dropdown, message area, and a submit button. Follow the 5 steps below — type the code inside each <code>&lt;div class="form-group"&gt;</code> in the editor.</p>
+        </div>
+
+        <div class="step-by-step">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Name Input</h4>
+                    <p>Find <code>&lt;!-- STEP 1 --&gt;</code> and add a label + text input inside the form-group:</p>
+                    <div class="code-inline">&lt;label for="name"&gt;Your Name:&lt;/label&gt;
+&lt;input type="text" id="name" name="name" placeholder="John Doe"&gt;</div>
+                    <p><em>The <code>for="name"</code> connects the label to <code>id="name"</code> on the input.</em></p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Email Input</h4>
+                    <p>Find <code>&lt;!-- STEP 2 --&gt;</code> and add the same pattern but with <code>type="email"</code>:</p>
+                    <div class="code-inline">&lt;label for="email"&gt;Email Address:&lt;/label&gt;
+&lt;input type="email" id="email" name="email" placeholder="you@example.com"&gt;</div>
+                    <p><em>Using <code>type="email"</code> makes the browser check for a valid email format automatically!</em></p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>Subject Dropdown</h4>
+                    <p>Find <code>&lt;!-- STEP 3 --&gt;</code> and add a label + select with at least 3 options:</p>
+                    <div class="code-inline">&lt;label for="subject"&gt;Subject:&lt;/label&gt;
+&lt;select id="subject" name="subject"&gt;
+    &lt;option value=""&gt;-- Choose a topic --&lt;/option&gt;
+    &lt;option value="general"&gt;General Inquiry&lt;/option&gt;
     &lt;option value="support"&gt;Technical Support&lt;/option&gt;
     &lt;option value="feedback"&gt;Feedback&lt;/option&gt;
 &lt;/select&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h4>Add Message Textarea</h4>
-                        <p>Find <code>&lt;!-- STEP 4 --&gt;</code> and add:</p>
-                        <div class="code-inline">&lt;label for="message"&gt;Your Message:&lt;/label&gt;
-&lt;textarea id="message" name="message" rows="5" placeholder="Type your message here..."&gt;&lt;/textarea&gt;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">5</div>
-                    <div class="step-content">
-                        <h4>Add Submit Button</h4>
-                        <p>Find <code>&lt;!-- STEP 5 --&gt;</code> and add:</p>
-                        <div class="code-inline">&lt;button type="submit"&gt;Send Message&lt;/button&gt;</div>
-                    </div>
+                    <p><em>The first <code>&lt;option value=""&gt;</code> is a placeholder — it shows a prompt but doesn't count as a real choice.</em></p>
                 </div>
             </div>
-        `,
-        initialCode: {
-            html: `<!DOCTYPE html>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h4>Message Textarea</h4>
+                    <p>Find <code>&lt;!-- STEP 4 --&gt;</code> and add a label + textarea:</p>
+                    <div class="code-inline">&lt;label for="message"&gt;Your Message:&lt;/label&gt;
+&lt;textarea id="message" name="message" rows="5" placeholder="Write your message here..."&gt;&lt;/textarea&gt;</div>
+                    <p><em>Remember: <code>&lt;textarea&gt;</code> needs a closing tag <code>&lt;/textarea&gt;</code> — it's NOT self-closing like <code>&lt;input&gt;</code>!</em></p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h4>Submit Button</h4>
+                    <p>Find <code>&lt;!-- STEP 5 --&gt;</code> (below the last form-group) and add:</p>
+                    <div class="code-inline">&lt;button type="submit"&gt;Send Message&lt;/button&gt;</div>
+                    <p><em><code>type="submit"</code> tells the browser this button sends the form data. Without it, nothing happens on click!</em></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box" style="margin-top:1.5rem;">
+            <div class="note-header"><div class="note-icon tip-icon"><i class="fas fa-check-circle"></i></div><div class="note-title tip-title">When ready — click the green Submit button!</div></div>
+            <p class="theory-text">The validator checks: ✓ text input for name &nbsp; ✓ email input &nbsp; ✓ select dropdown with options &nbsp; ✓ textarea for message &nbsp; ✓ submit button &nbsp; ✓ at least 4 labels</p>
+        </div>
+    `,
+    initialCode: {
+        html: `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1856,1617 +1688,49 @@ footer {
     <div class="container">
         <h1>Contact Us</h1>
         <p>Fill out the form below and we'll get back to you!</p>
-        
         <form action="#" method="POST">
-        
-            <div class="form-group">
-                <!-- STEP 1: Add name label and input below -->
-                
-            </div>
-            
-            <div class="form-group">
-                <!-- STEP 2: Add email label and input below -->
-                
-            </div>
-            
-            <div class="form-group">
-                <!-- STEP 3: Add subject label and select below -->
-                
-            </div>
-            
-            <div class="form-group">
-                <!-- STEP 4: Add message label and textarea below -->
-                
-            </div>
-            
-            <!-- STEP 5: Add submit button below -->
-            
-            
+            <div class="form-group"><!-- STEP 1: Name label + input --></div>
+            <div class="form-group"><!-- STEP 2: Email label + input --></div>
+            <div class="form-group"><!-- STEP 3: Subject label + select --></div>
+            <div class="form-group"><!-- STEP 4: Message label + textarea --></div>
+            <!-- STEP 5: Submit button -->
         </form>
     </div>
 </body>
 </html>`,
-            css: `* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    padding: 40px 20px;
-}
-.container {
-    max-width: 500px;
-    margin: 0 auto;
-    background: white;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-}
-h1 {
-    color: #333;
-    margin-bottom: 10px;
-    font-size: 1.8rem;
-}
-h1 + p {
-    color: #666;
-    margin-bottom: 30px;
-}
-.form-group {
-    margin-bottom: 20px;
-}
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #444;
-}
-input, select, textarea {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 1rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-}
+        css: `* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 40px 20px; }
+.container { max-width: 500px; margin: 0 auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+h1 { color: #333; margin-bottom: 10px; font-size: 1.8rem; }
+h1 + p { color: #666; margin-bottom: 30px; }
+.form-group { margin-bottom: 20px; }
+label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; }
+input, select, textarea { width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem; transition: border-color 0.3s; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: #667eea; }
 textarea { resize: vertical; min-height: 120px; }
-button[type="submit"] {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-button[type="submit"]:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-}`,
-            js: `// No JavaScript needed`
-        },
-        hints: [
-            "💡 Step 1: Add <label for=\"name\">Your Name:</label> then <input type=\"text\" id=\"name\">",
-            "💡 Step 2: Same pattern but use type=\"email\" for email validation",
-            "💡 Step 3: Use <select> tag with <option> tags inside for dropdown",
-            "💡 Step 4: Use <textarea> tag - it doesn't use type attribute",
-            "💡 Step 5: Add <button type=\"submit\">Send Message</button>"
-        ],
-        validation: (code) => {
-            const checks = [];
-            checks.push({ passed: /<input[^>]+type=["']text["'][^>]*>/i.test(code.html), message: '✓ Added text input for name' });
-            checks.push({ passed: /<input[^>]+type=["']email["'][^>]*>/i.test(code.html), message: '✓ Added email input' });
-            checks.push({ passed: /<select[\s\S]*>[\s\S]*<option[\s\S]*>[\s\S]*<\/select>/i.test(code.html), message: '✓ Added select dropdown' });
-            checks.push({ passed: /<textarea[\s\S]*>[\s\S]*<\/textarea>/i.test(code.html), message: '✓ Added textarea' });
-            checks.push({ passed: /<button[^>]+type=["']submit["'][^>]*>/i.test(code.html), message: '✓ Added submit button' });
-            checks.push({ passed: (code.html.match(/<label/gi) || []).length >= 4, message: '✓ Added labels for accessibility' });
-            return checks;
-        }
+button[type="submit"] { width: 100%; padding: 14px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; }`,
+        js: `// No JavaScript needed`
     },
-
-    // ==========================================
-    // LESSON 6: CSS Basics
-    // ==========================================
-    'css-intro': {
-        title: 'Introduction to CSS',
-        subtitle: 'Learn how to add colors, fonts, and basic styling to your HTML',
-        difficulty: 'Beginner',
-        duration: '20 minutes',
-        theory: `
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-paint-brush"></i></div>
-                    <h2 class="section-title">What is CSS?</h2>
-                </div>
-                <p class="theory-text"><strong>CSS (Cascading Style Sheets)</strong> makes your HTML look beautiful. If HTML is the skeleton of your page, CSS is the skin, clothes, and makeup!</p>
-                
-                <div class="tip-box">
-                    <div class="note-header">
-                        <div class="note-icon tip-icon"><i class="fas fa-info-circle"></i></div>
-                        <div class="note-title tip-title">How to Practice</div>
-                    </div>
-                    <p class="theory-text">In this lesson, you'll write CSS in the <strong>CSS tab</strong> of the editor. Click the "CSS" tab to switch to it!</p>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-code"></i></div>
-                    <h2 class="section-title">CSS Syntax</h2>
-                </div>
-                <p class="theory-text">CSS has a simple pattern: <strong>selector { property: value; }</strong></p>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> CSS Rule Structure</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>selector {
-    property: value;
-    another-property: value;
-}
-
-/* Example: Make all paragraphs blue */
-p {
-    color: blue;
-}</code></pre>
-                </div>
-                
-                <div class="note-box">
-                    <div class="note-header">
-                        <div class="note-icon"><i class="fas fa-lightbulb"></i></div>
-                        <div class="note-title">Understanding the Parts</div>
-                    </div>
-                    <ul class="theory-list">
-                        <li><strong>Selector</strong> - What element to style (p, h1, .classname)</li>
-                        <li><strong>Property</strong> - What aspect to change (color, font-size)</li>
-                        <li><strong>Value</strong> - The new setting (blue, 20px)</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-palette"></i></div>
-                    <h2 class="section-title">Essential CSS Properties</h2>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Common Properties</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>/* Colors */
-color: red;                /* Text color */
-background-color: yellow;  /* Background color */
-
-/* Text */
-font-size: 20px;           /* Text size */
-font-weight: bold;         /* Bold text */
-text-align: center;        /* Center text */
-
-/* Spacing */
-padding: 20px;             /* Space INSIDE element */
-margin: 10px;              /* Space OUTSIDE element */
-
-/* Box */
-border: 2px solid black;   /* Border around element */
-border-radius: 10px;       /* Rounded corners */</code></pre>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-crosshairs"></i></div>
-                    <h2 class="section-title">Selectors</h2>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Types of Selectors</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>/* Element selector - targets all of that element */
-p { color: gray; }
-h1 { font-size: 32px; }
-
-/* Class selector - targets elements with that class */
-.highlight { background-color: yellow; }
-.button { padding: 10px 20px; }
-
-/* ID selector - targets one specific element */
-#header { background-color: navy; }</code></pre>
-                </div>
-                
-                <div class="note-box">
-                    <div class="note-header">
-                        <div class="note-icon"><i class="fas fa-lightbulb"></i></div>
-                        <div class="note-title">Classes vs Elements</div>
-                    </div>
-                    <p class="theory-text">Use a <strong>dot (.)</strong> before class names: <code>.card</code><br>
-                    No dot for HTML elements: <code>p</code>, <code>h1</code>, <code>body</code></p>
-                </div>
-            </div>
-
-            <div class="exercise-box">
-                <div class="exercise-header">
-                    <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
-                    <div class="exercise-title">📝 Your Task: Style a Profile Card</div>
-                </div>
-                <p class="theory-text">The HTML is already written. Your job is to add CSS in the <strong>CSS tab</strong> to make it look beautiful!</p>
-            </div>
-
-            <div class="step-by-step">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h4>Style the Card Container</h4>
-                        <p>Click the <strong>CSS tab</strong>, find the <code>.card</code> rule and add:</p>
-                        <div class="code-inline">background-color: white;
-padding: 40px;
-border-radius: 20px;
-text-align: center;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h4>Make the Image Round</h4>
-                        <p>Find <code>.card img</code> and add:</p>
-                        <div class="code-inline">border-radius: 50%;
-width: 120px;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h4>Style the Name</h4>
-                        <p>Find <code>h1</code> and add:</p>
-                        <div class="code-inline">color: #333;
-font-size: 1.8rem;
-margin: 15px 0;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h4>Style the Bio Paragraph</h4>
-                        <p>Find <code>.bio</code> and add:</p>
-                        <div class="code-inline">color: #666;
-font-size: 1rem;
-line-height: 1.6;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">5</div>
-                    <div class="step-content">
-                        <h4>Style the Skill Tags</h4>
-                        <p>Find <code>.skill</code> and add:</p>
-                        <div class="code-inline">background-color: #667eea;
-color: white;
-padding: 8px 16px;
-border-radius: 20px;
-margin: 5px;
-display: inline-block;</div>
-                    </div>
-                </div>
-            </div>
-        `,
-        initialCode: {
-            html: `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSS Practice</title>
-</head>
-<body>
-    <div class="card">
-        <img src="https://picsum.photos/150" alt="Profile">
-        <h1>Sarah Chen</h1>
-        <p class="bio">Full-stack developer passionate about creating beautiful and functional websites.</p>
-        <div class="skills">
-            <span class="skill">HTML</span>
-            <span class="skill">CSS</span>
-            <span class="skill">JavaScript</span>
-        </div>
-    </div>
-</body>
-</html>`,
-            css: `/* Page styling - already done for you */
-body {
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    padding: 20px;
-}
-
-/* STEP 1: Style the card - add your CSS below */
-.card {
-    
-}
-
-/* STEP 2: Make image round - add your CSS below */
-.card img {
-    
-}
-
-/* STEP 3: Style the name - add your CSS below */
-h1 {
-    
-}
-
-/* STEP 4: Style the bio - add your CSS below */
-.bio {
-    
-}
-
-/* Skills container - already done */
-.skills {
-    margin-top: 20px;
-}
-
-/* STEP 5: Style skill tags - add your CSS below */
-.skill {
-    
-}`,
-            js: `// No JavaScript needed`
-        },
-        hints: [
-            "💡 Click the CSS tab first to edit CSS!",
-            "💡 Step 1: Add background-color: white; padding: 40px; border-radius: 20px; text-align: center;",
-            "💡 Step 2: border-radius: 50% makes images circular",
-            "💡 Step 3: Set color, font-size, and margin for h1",
-            "💡 Step 5: display: inline-block lets you add padding to inline elements"
-        ],
-        validation: (code) => {
-            const checks = [];
-            checks.push({ passed: /\.card\s*\{[^}]*background/i.test(code.css), message: '✓ Added background to .card' });
-            checks.push({ passed: /\.card\s*\{[^}]*padding/i.test(code.css), message: '✓ Added padding to .card' });
-            checks.push({ passed: /border-radius\s*:\s*50%/i.test(code.css), message: '✓ Made image round (50%)' });
-            checks.push({ passed: /h1\s*\{[^}]*color/i.test(code.css), message: '✓ Styled h1 color' });
-            checks.push({ passed: /\.skill\s*\{[^}]*background/i.test(code.css), message: '✓ Added background to .skill' });
-            checks.push({ passed: /\.skill\s*\{[^}]*padding/i.test(code.css), message: '✓ Added padding to .skill' });
-            return checks;
-        }
-    },
-
-    // ==========================================
-    // LESSON 7: CSS Selectors & Pseudo-classes
-    // ==========================================
-    'css-selectors': {
-        title: 'CSS Selectors & Hover Effects',
-        subtitle: 'Learn advanced selectors and how to add interactive hover effects',
-        difficulty: 'Intermediate',
-        duration: '25 minutes',
-        theory: `
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-mouse-pointer"></i></div>
-                    <h2 class="section-title">Hover Effects</h2>
-                </div>
-                <p class="theory-text">Make elements change when users hover over them with the <code>:hover</code> pseudo-class:</p>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Hover Example</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>/* Normal state */
-.button {
-    background-color: blue;
-    color: white;
-}
-
-/* When mouse hovers over it */
-.button:hover {
-    background-color: darkblue;
-}</code></pre>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-arrows-alt"></i></div>
-                    <h2 class="section-title">Smooth Transitions</h2>
-                </div>
-                <p class="theory-text">Add smooth animations to hover effects with <code>transition</code>:</p>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Transition Example</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>.button {
-    background-color: blue;
-    transition: background-color 0.3s;  /* 0.3 second animation */
-}
-
-.button:hover {
-    background-color: darkblue;
-}</code></pre>
-                </div>
-                
-                <div class="tip-box">
-                    <div class="note-header">
-                        <div class="note-icon tip-icon"><i class="fas fa-magic"></i></div>
-                        <div class="note-title tip-title">Pro Tip</div>
-                    </div>
-                    <p class="theory-text">Use <code>transition: all 0.3s;</code> to animate ALL property changes at once!</p>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-list-ol"></i></div>
-                    <h2 class="section-title">Targeting Specific Items</h2>
-                </div>
-                <p class="theory-text">Select specific children with <code>:first-child</code>, <code>:last-child</code>, and <code>:nth-child()</code>:</p>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Child Selectors</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>/* First item in a list */
-li:first-child {
-    font-weight: bold;
-}
-
-/* Last item */
-li:last-child {
-    color: red;
-}
-
-/* Every even item (2nd, 4th, 6th...) */
-li:nth-child(even) {
-    background-color: #f5f5f5;
-}</code></pre>
-                </div>
-            </div>
-
-            <div class="exercise-box">
-                <div class="exercise-header">
-                    <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
-                    <div class="exercise-title">📝 Your Task: Style an Interactive Navigation</div>
-                </div>
-                <p class="theory-text">Add hover effects and styling to a navigation menu. Work in the <strong>CSS tab</strong>.</p>
-            </div>
-
-            <div class="step-by-step">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h4>Style the Nav Links</h4>
-                        <p>Find <code>.nav-link</code> and add:</p>
-                        <div class="code-inline">color: white;
-padding: 12px 20px;
-text-decoration: none;
-border-radius: 8px;
-transition: all 0.3s;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h4>Add Hover Effect</h4>
-                        <p>Find <code>.nav-link:hover</code> and add:</p>
-                        <div class="code-inline">background-color: rgba(255, 255, 255, 0.2);</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h4>Style the Active Link</h4>
-                        <p>Find <code>.nav-link.active</code> and add:</p>
-                        <div class="code-inline">background-color: white;
-color: #6366f1;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h4>Style First Link Differently</h4>
-                        <p>Find <code>.nav-link:first-child</code> and add:</p>
-                        <div class="code-inline">font-weight: bold;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">5</div>
-                    <div class="step-content">
-                        <h4>Add Hover Effect to Cards</h4>
-                        <p>Find <code>.card:hover</code> and add:</p>
-                        <div class="code-inline">transform: translateY(-5px);
-box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);</div>
-                    </div>
-                </div>
-            </div>
-        `,
-        initialCode: {
-            html: `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Navigation</title>
-</head>
-<body>
-    <nav>
-        <a href="#" class="nav-link active">Home</a>
-        <a href="#" class="nav-link">About</a>
-        <a href="#" class="nav-link">Services</a>
-        <a href="#" class="nav-link">Contact</a>
-    </nav>
-    
-    <main>
-        <div class="card">
-            <h3>Web Design</h3>
-            <p>Beautiful, responsive websites</p>
-        </div>
-        <div class="card">
-            <h3>Development</h3>
-            <p>Custom web applications</p>
-        </div>
-        <div class="card">
-            <h3>SEO</h3>
-            <p>Get found online</p>
-        </div>
-    </main>
-</body>
-</html>`,
-            css: `body {
-    font-family: 'Segoe UI', sans-serif;
-    margin: 0;
-    background-color: #f0f2f5;
-}
-
-nav {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    padding: 15px 30px;
-    display: flex;
-    gap: 10px;
-}
-
-/* STEP 1: Style nav links - add your CSS below */
-.nav-link {
-    
-}
-
-/* STEP 2: Add hover effect - add your CSS below */
-.nav-link:hover {
-    
-}
-
-/* STEP 3: Style active link - add your CSS below */
-.nav-link.active {
-    
-}
-
-/* STEP 4: Style first link - add your CSS below */
-.nav-link:first-child {
-    
-}
-
-main {
-    display: flex;
-    gap: 20px;
-    padding: 40px;
-    justify-content: center;
-}
-
-.card {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    text-align: center;
-    width: 200px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    transition: all 0.3s;
-}
-
-/* STEP 5: Add card hover effect - add your CSS below */
-.card:hover {
-    
-}
-
-.card h3 { color: #333; margin-bottom: 10px; }
-.card p { color: #666; font-size: 0.9rem; }`,
-            js: `// No JavaScript needed`
-        },
-        hints: [
-            "💡 Remember to click the CSS tab first!",
-            "💡 Step 1: Add color, padding, text-decoration: none, border-radius, and transition",
-            "💡 Step 2: Use rgba() for semi-transparent white: rgba(255,255,255,0.2)",
-            "💡 Step 3: .nav-link.active targets links with BOTH classes",
-            "💡 Step 5: transform: translateY(-5px) moves element up on hover"
-        ],
-        validation: (code) => {
-            const checks = [];
-            checks.push({ passed: /\.nav-link\s*\{[^}]*transition/i.test(code.css), message: '✓ Added transition to nav links' });
-            checks.push({ passed: /\.nav-link:hover\s*\{[^}]*background/i.test(code.css), message: '✓ Added hover background' });
-            checks.push({ passed: /\.nav-link\.active\s*\{[^}]*background/i.test(code.css), message: '✓ Styled active link' });
-            checks.push({ passed: /\.nav-link:first-child\s*\{[^}]*font-weight/i.test(code.css), message: '✓ Styled first link' });
-            checks.push({ passed: /\.card:hover\s*\{[^}]*transform/i.test(code.css), message: '✓ Added card hover transform' });
-            return checks;
-        }
-    },
-
-    // ==========================================
-    // LESSON 8: Box Model
-    // ==========================================
-    'css-box-model': {
-        title: 'The CSS Box Model',
-        subtitle: 'Understand padding, margin, and borders - the foundation of CSS layout',
-        difficulty: 'Intermediate',
-        duration: '25 minutes',
-        theory: `
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-cube"></i></div>
-                    <h2 class="section-title">Every Element is a Box</h2>
-                </div>
-                <p class="theory-text">In CSS, every element is treated as a rectangular box. The box has layers (from inside to outside):</p>
-                
-                <div class="box-model-visual">
-                    <div class="bm-margin">MARGIN (outside spacing)
-                        <div class="bm-border">BORDER
-                            <div class="bm-padding">PADDING (inside spacing)
-                                <div class="bm-content">CONTENT</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-expand"></i></div>
-                    <h2 class="section-title">Padding vs Margin</h2>
-                </div>
-                
-                <div class="comparison-box">
-                    <div class="compare-item">
-                        <h4>📦 Padding</h4>
-                        <p>Space <strong>inside</strong> the border<br>Background color fills this area</p>
-                    </div>
-                    <div class="compare-item">
-                        <h4>↔️ Margin</h4>
-                        <p>Space <strong>outside</strong> the border<br>Creates gap between elements</p>
-                    </div>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Padding & Margin</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>/* All sides same */
-padding: 20px;
-margin: 10px;
-
-/* Top/Bottom and Left/Right */
-padding: 10px 20px;     /* 10px top/bottom, 20px left/right */
-
-/* All four sides: top right bottom left */
-margin: 10px 20px 15px 25px;
-
-/* Center horizontally */
-margin: 0 auto;</code></pre>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-border-all"></i></div>
-                    <h2 class="section-title">Borders</h2>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Border Properties</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>/* Shorthand: width style color */
-border: 2px solid #333;
-border: 3px dashed blue;
-border: 1px dotted red;
-
-/* Individual sides */
-border-top: 2px solid black;
-border-bottom: 1px solid gray;
-
-/* Rounded corners */
-border-radius: 10px;      /* All corners */
-border-radius: 50%;       /* Makes circles */</code></pre>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-ruler-combined"></i></div>
-                    <h2 class="section-title">Box Sizing Fix</h2>
-                </div>
-                <p class="theory-text">By default, padding and border are <strong>added</strong> to width/height. This makes calculations difficult. Use this fix:</p>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Always Add This!</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>* {
-    box-sizing: border-box;
-}</code></pre>
-                </div>
-                
-                <div class="tip-box">
-                    <div class="note-header">
-                        <div class="note-icon tip-icon"><i class="fas fa-star"></i></div>
-                        <div class="note-title tip-title">What This Does</div>
-                    </div>
-                    <p class="theory-text">With <code>box-sizing: border-box</code>, if you set <code>width: 200px</code>, the element will be exactly 200px wide - padding and border are included!</p>
-                </div>
-            </div>
-
-            <div class="exercise-box">
-                <div class="exercise-header">
-                    <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
-                    <div class="exercise-title">📝 Your Task: Create Pricing Cards</div>
-                </div>
-                <p class="theory-text">Style pricing cards using the box model properties.</p>
-            </div>
-
-            <div class="step-by-step">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h4>Add the Box-Sizing Reset</h4>
-                        <p>Find the <code>*</code> selector at the top and add:</p>
-                        <div class="code-inline">box-sizing: border-box;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h4>Style the Card Base</h4>
-                        <p>Find <code>.card</code> and add:</p>
-                        <div class="code-inline">background: white;
-padding: 30px;
-margin: 10px;
-border-radius: 15px;
-border: 2px solid #e0e0e0;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h4>Add Shadow to Cards</h4>
-                        <p>Still in <code>.card</code>, add:</p>
-                        <div class="code-inline">box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h4>Style the Featured Card</h4>
-                        <p>Find <code>.card.featured</code> and add:</p>
-                        <div class="code-inline">border: 2px solid #6366f1;
-transform: scale(1.05);</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">5</div>
-                    <div class="step-content">
-                        <h4>Style the Price</h4>
-                        <p>Find <code>.price</code> and add:</p>
-                        <div class="code-inline">font-size: 2.5rem;
-color: #6366f1;
-margin: 20px 0;
-padding: 15px;
-border-top: 1px solid #eee;
-border-bottom: 1px solid #eee;</div>
-                    </div>
-                </div>
-            </div>
-        `,
-        initialCode: {
-            html: `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pricing Cards</title>
-</head>
-<body>
-    <h1>Choose Your Plan</h1>
-    
-    <div class="cards">
-        <div class="card">
-            <h2>Basic</h2>
-            <div class="price">$9</div>
-            <ul>
-                <li>5 Projects</li>
-                <li>10 GB Storage</li>
-                <li>Email Support</li>
-            </ul>
-            <button>Get Started</button>
-        </div>
-        
-        <div class="card featured">
-            <span class="badge">Popular</span>
-            <h2>Pro</h2>
-            <div class="price">$29</div>
-            <ul>
-                <li>Unlimited Projects</li>
-                <li>100 GB Storage</li>
-                <li>Priority Support</li>
-            </ul>
-            <button>Get Started</button>
-        </div>
-        
-        <div class="card">
-            <h2>Enterprise</h2>
-            <div class="price">$99</div>
-            <ul>
-                <li>Unlimited Everything</li>
-                <li>1 TB Storage</li>
-                <li>24/7 Support</li>
-            </ul>
-            <button>Get Started</button>
-        </div>
-    </div>
-</body>
-</html>`,
-            css: `/* STEP 1: Add box-sizing reset */
-* {
-    margin: 0;
-    padding: 0;
-    
-}
-
-body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #f5f7fa;
-    padding: 40px 20px;
-    text-align: center;
-}
-
-h1 {
-    color: #333;
-    margin-bottom: 40px;
-}
-
-.cards {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-/* STEPS 2 & 3: Style card base and shadow */
-.card {
-    width: 280px;
-    text-align: center;
-    position: relative;
-    
-}
-
-/* STEP 4: Style featured card */
-.card.featured {
-    
-}
-
-.badge {
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #6366f1;
-    color: white;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-}
-
-.card h2 {
-    color: #333;
-    font-size: 1.5rem;
-}
-
-/* STEP 5: Style price */
-.price {
-    font-weight: bold;
-    
-}
-
-.card ul {
-    list-style: none;
-    margin: 20px 0;
-}
-
-.card li {
-    padding: 10px 0;
-    color: #666;
-    border-bottom: 1px solid #eee;
-}
-
-.card button {
-    width: 100%;
-    padding: 12px;
-    background: #6366f1;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.card button:hover {
-    background: #4f46e5;
-}`,
-            js: `// No JavaScript needed`
-        },
-        hints: [
-            "💡 Step 1: Add box-sizing: border-box; after padding: 0; in the * selector",
-            "💡 Step 2: Add background, padding, margin, border-radius, and border to .card",
-            "💡 Step 3: box-shadow format: x-offset y-offset blur color",
-            "💡 Step 4: transform: scale(1.05) makes the card 5% larger",
-            "💡 Step 5: Use both border-top and border-bottom to create lines above and below"
-        ],
-        validation: (code) => {
-            const checks = [];
-            checks.push({ passed: /box-sizing\s*:\s*border-box/i.test(code.css), message: '✓ Added box-sizing: border-box' });
-            checks.push({ passed: /\.card\s*\{[^}]*padding/i.test(code.css), message: '✓ Added padding to cards' });
-            checks.push({ passed: /\.card\s*\{[^}]*border-radius/i.test(code.css), message: '✓ Added border-radius to cards' });
-            checks.push({ passed: /box-shadow/i.test(code.css), message: '✓ Added box-shadow' });
-            checks.push({ passed: /\.card\.featured\s*\{[^}]*border/i.test(code.css), message: '✓ Styled featured card border' });
-            checks.push({ passed: /\.price\s*\{[^}]*font-size/i.test(code.css), message: '✓ Styled price font-size' });
-            return checks;
-        }
-    },
-
-    // ==========================================
-    // LESSON 9: Flexbox
-    // ==========================================
-    'css-flexbox': {
-        title: 'Flexbox Layout',
-        subtitle: 'Create flexible, responsive layouts with CSS Flexbox',
-        difficulty: 'Intermediate',
-        duration: '30 minutes',
-        theory: `
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-columns"></i></div>
-                    <h2 class="section-title">What is Flexbox?</h2>
-                </div>
-                <p class="theory-text"><strong>Flexbox</strong> makes it easy to arrange elements in rows or columns. No more struggling with float or position!</p>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Enable Flexbox</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>.container {
-    display: flex;
-}
-/* Now all children become flex items! */</code></pre>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-arrows-alt-h"></i></div>
-                    <h2 class="section-title">Main Axis Alignment (justify-content)</h2>
-                </div>
-                <p class="theory-text">Controls horizontal alignment (left/right):</p>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> justify-content Values</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>justify-content: flex-start;    /* Left (default) */
-justify-content: center;        /* Center */
-justify-content: flex-end;      /* Right */
-justify-content: space-between; /* Spread with space between */
-justify-content: space-evenly;  /* Equal space everywhere */</code></pre>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-arrows-alt-v"></i></div>
-                    <h2 class="section-title">Cross Axis Alignment (align-items)</h2>
-                </div>
-                <p class="theory-text">Controls vertical alignment (top/bottom):</p>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> align-items Values</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>align-items: stretch;    /* Fill height (default) */
-align-items: flex-start; /* Top */
-align-items: center;     /* Middle */
-align-items: flex-end;   /* Bottom */</code></pre>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-magic"></i></div>
-                    <h2 class="section-title">Useful Flexbox Properties</h2>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> More Flexbox</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>/* Gap between items */
-gap: 20px;
-
-/* Wrap to new line when needed */
-flex-wrap: wrap;
-
-/* Change direction to column */
-flex-direction: column;
-
-/* Perfect centering trick! */
-display: flex;
-justify-content: center;
-align-items: center;</code></pre>
-                </div>
-            </div>
-
-            <div class="exercise-box">
-                <div class="exercise-header">
-                    <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
-                    <div class="exercise-title">📝 Your Task: Build a Dashboard Layout</div>
-                </div>
-                <p class="theory-text">Use Flexbox to create a navigation bar and card grid.</p>
-            </div>
-
-            <div class="step-by-step">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h4>Make the Navbar Flex</h4>
-                        <p>Find <code>nav</code> and add:</p>
-                        <div class="code-inline">display: flex;
-justify-content: space-between;
-align-items: center;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h4>Style Nav Links Container</h4>
-                        <p>Find <code>.nav-links</code> and add:</p>
-                        <div class="code-inline">display: flex;
-gap: 20px;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h4>Make Cards Wrap</h4>
-                        <p>Find <code>.cards</code> and add:</p>
-                        <div class="code-inline">display: flex;
-flex-wrap: wrap;
-gap: 20px;
-justify-content: center;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h4>Center Icon in Stat Cards</h4>
-                        <p>Find <code>.stat-icon</code> and add:</p>
-                        <div class="code-inline">display: flex;
-justify-content: center;
-align-items: center;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">5</div>
-                    <div class="step-content">
-                        <h4>Make Footer Links Flex</h4>
-                        <p>Find <code>footer</code> and add:</p>
-                        <div class="code-inline">display: flex;
-justify-content: center;
-gap: 30px;</div>
-                    </div>
-                </div>
-            </div>
-        `,
-        initialCode: {
-            html: `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-</head>
-<body>
-    <nav>
-        <div class="logo">📊 Dashboard</div>
-        <div class="nav-links">
-            <a href="#">Home</a>
-            <a href="#">Reports</a>
-            <a href="#">Settings</a>
-        </div>
-    </nav>
-    
-    <main>
-        <h1>Welcome Back!</h1>
-        
-        <div class="cards">
-            <div class="stat-card">
-                <div class="stat-icon">👥</div>
-                <div class="stat-info">
-                    <h3>2,543</h3>
-                    <p>Total Users</p>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon">💰</div>
-                <div class="stat-info">
-                    <h3>$12,500</h3>
-                    <p>Revenue</p>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon">📈</div>
-                <div class="stat-info">
-                    <h3>+24%</h3>
-                    <p>Growth</p>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon">⭐</div>
-                <div class="stat-info">
-                    <h3>4.9</h3>
-                    <p>Rating</p>
-                </div>
-            </div>
-        </div>
-    </main>
-    
-    <footer>
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-        <a href="#">Contact</a>
-    </footer>
-</body>
-</html>`,
-            css: `* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #f0f2f5;
-    min-height: 100vh;
-}
-
-/* STEP 1: Make navbar flex with space-between */
-nav {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    padding: 15px 30px;
-    color: white;
-    
-}
-
-.logo { font-size: 1.3rem; font-weight: bold; }
-
-/* STEP 2: Make nav-links flex */
-.nav-links {
-    
-}
-
-.nav-links a {
-    color: rgba(255,255,255,0.9);
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    transition: background 0.3s;
-}
-.nav-links a:hover { background: rgba(255,255,255,0.2); }
-
-main {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 40px 20px;
-}
-
-h1 { color: #333; margin-bottom: 30px; }
-
-/* STEP 3: Make cards flex and wrap */
-.cards {
-    
-}
-
-.stat-card {
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    width: 220px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-
-/* STEP 4: Center icon */
-.stat-icon {
-    width: 50px;
-    height: 50px;
-    background: #f0f2f5;
-    border-radius: 12px;
-    font-size: 1.5rem;
-    
-}
-
-.stat-info h3 { color: #333; font-size: 1.5rem; }
-.stat-info p { color: #888; font-size: 0.9rem; }
-
-/* STEP 5: Make footer flex */
-footer {
-    padding: 30px;
-    background: white;
-    margin-top: 40px;
-    
-}
-
-footer a {
-    color: #666;
-    text-decoration: none;
-}
-footer a:hover { color: #6366f1; }`,
-            js: `// No JavaScript needed`
-        },
-        hints: [
-            "💡 Step 1: Add display: flex, then justify-content: space-between, then align-items: center",
-            "💡 Step 2: display: flex and gap: 20px puts space between links",
-            "💡 Step 3: flex-wrap: wrap allows cards to go to next line on small screens",
-            "💡 Step 4: justify-content and align-items both set to center = perfect centering",
-            "💡 Step 5: Same pattern as step 4, but with gap for spacing"
-        ],
-        validation: (code) => {
-            const checks = [];
-            checks.push({ passed: /nav\s*\{[^}]*display\s*:\s*flex/i.test(code.css), message: '✓ Nav uses flexbox' });
-            checks.push({ passed: /justify-content\s*:\s*space-between/i.test(code.css), message: '✓ Used space-between' });
-            checks.push({ passed: /\.nav-links\s*\{[^}]*display\s*:\s*flex/i.test(code.css), message: '✓ Nav-links uses flexbox' });
-            checks.push({ passed: /\.cards\s*\{[^}]*flex-wrap\s*:\s*wrap/i.test(code.css), message: '✓ Cards wrap' });
-            checks.push({ passed: /\.stat-icon\s*\{[^}]*justify-content\s*:\s*center/i.test(code.css), message: '✓ Icon is centered' });
-            checks.push({ passed: /footer\s*\{[^}]*display\s*:\s*flex/i.test(code.css), message: '✓ Footer uses flexbox' });
-            return checks;
-        }
-    },
-
-    // ==========================================
-    // LESSON 10: CSS Grid
-    // ==========================================
-    'css-grid': {
-        title: 'CSS Grid Layout',
-        subtitle: 'Create two-dimensional layouts with the powerful CSS Grid',
-        difficulty: 'Intermediate',
-        duration: '30 minutes',
-        theory: `
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-th"></i></div>
-                    <h2 class="section-title">What is CSS Grid?</h2>
-                </div>
-                <p class="theory-text"><strong>CSS Grid</strong> is perfect for creating complex layouts with rows AND columns. Think of it like a spreadsheet!</p>
-                
-                <div class="comparison-box">
-                    <div class="compare-item">
-                        <h4>Flexbox</h4>
-                        <p>One direction (row OR column)</p>
-                    </div>
-                    <div class="compare-item">
-                        <h4>Grid</h4>
-                        <p>Two directions (rows AND columns)</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-code"></i></div>
-                    <h2 class="section-title">Creating a Grid</h2>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Basic Grid</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>.container {
-    display: grid;
-    grid-template-columns: 200px 200px 200px;  /* 3 columns */
-    gap: 20px;  /* Space between items */
-}</code></pre>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-expand-arrows-alt"></i></div>
-                    <h2 class="section-title">Flexible Columns with fr</h2>
-                </div>
-                <p class="theory-text">The <code>fr</code> unit means "fraction of available space":</p>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Fractional Units</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>/* Equal columns */
-grid-template-columns: 1fr 1fr 1fr;      /* 3 equal columns */
-
-/* Different sizes */
-grid-template-columns: 1fr 2fr 1fr;      /* Middle is twice as wide */
-
-/* Mix fixed and flexible */
-grid-template-columns: 250px 1fr;        /* Sidebar + main content */</code></pre>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-redo"></i></div>
-                    <h2 class="section-title">Repeat and Auto-fit</h2>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Responsive Grid</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>/* Repeat same column 4 times */
-grid-template-columns: repeat(4, 1fr);
-
-/* Responsive: fit as many 250px columns as possible */
-grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));</code></pre>
-                </div>
-                
-                <div class="tip-box">
-                    <div class="note-header">
-                        <div class="note-icon tip-icon"><i class="fas fa-star"></i></div>
-                        <div class="note-title tip-title">The Magic Formula!</div>
-                    </div>
-                    <p class="theory-text"><code>repeat(auto-fit, minmax(250px, 1fr))</code> creates a responsive grid that automatically adjusts the number of columns!</p>
-                </div>
-            </div>
-
-            <div class="theory-section">
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-expand"></i></div>
-                    <h2 class="section-title">Spanning Multiple Columns/Rows</h2>
-                </div>
-                
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="code-block-title"><i class="fas fa-code"></i> Grid Span</div>
-                        <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <pre><code>/* Make item span 2 columns */
-.wide-item {
-    grid-column: span 2;
-}
-
-/* Full width item */
-.full-width {
-    grid-column: 1 / -1;  /* From first to last column */
-}</code></pre>
-                </div>
-            </div>
-
-            <div class="exercise-box">
-                <div class="exercise-header">
-                    <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
-                    <div class="exercise-title">📝 Your Task: Create a Photo Gallery</div>
-                </div>
-                <p class="theory-text">Build a responsive photo gallery with a featured image that spans multiple columns.</p>
-            </div>
-
-            <div class="step-by-step">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h4>Enable Grid on Gallery</h4>
-                        <p>Find <code>.gallery</code> and add:</p>
-                        <div class="code-inline">display: grid;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h4>Create Responsive Columns</h4>
-                        <p>Still in <code>.gallery</code>, add:</p>
-                        <div class="code-inline">grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h4>Add Gap Between Items</h4>
-                        <p>Still in <code>.gallery</code>, add:</p>
-                        <div class="code-inline">gap: 20px;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h4>Make Featured Image Span 2 Columns</h4>
-                        <p>Find <code>.featured</code> and add:</p>
-                        <div class="code-inline">grid-column: span 2;</div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">5</div>
-                    <div class="step-content">
-                        <h4>Style the Card Height</h4>
-                        <p>Find <code>.card</code> and add:</p>
-                        <div class="code-inline">height: 250px;
-border-radius: 15px;
-overflow: hidden;</div>
-                    </div>
-                </div>
-            </div>
-        `,
-        initialCode: {
-            html: `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Gallery</title>
-</head>
-<body>
-    <h1>📸 My Gallery</h1>
-    
-    <div class="gallery">
-        <div class="card featured">
-            <img src="https://picsum.photos/800/400?1" alt="Featured photo">
-            <div class="caption">Featured Photo</div>
-        </div>
-        
-        <div class="card">
-            <img src="https://picsum.photos/400/400?2" alt="Photo">
-            <div class="caption">Nature</div>
-        </div>
-        
-        <div class="card">
-            <img src="https://picsum.photos/400/400?3" alt="Photo">
-            <div class="caption">City</div>
-        </div>
-        
-        <div class="card">
-            <img src="https://picsum.photos/400/400?4" alt="Photo">
-            <div class="caption">Portrait</div>
-        </div>
-        
-        <div class="card">
-            <img src="https://picsum.photos/400/400?5" alt="Photo">
-            <div class="caption">Abstract</div>
-        </div>
-        
-        <div class="card">
-            <img src="https://picsum.photos/400/400?6" alt="Photo">
-            <div class="caption">Travel</div>
-        </div>
-    </div>
-</body>
-</html>`,
-            css: `* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #1a1a2e;
-    color: white;
-    padding: 40px;
-    min-height: 100vh;
-}
-
-h1 {
-    text-align: center;
-    margin-bottom: 40px;
-    font-size: 2rem;
-}
-
-/* STEPS 1, 2, 3: Make gallery a responsive grid */
-.gallery {
-    max-width: 1200px;
-    margin: 0 auto;
-    
-}
-
-/* STEP 4: Make featured span 2 columns */
-.featured {
-    
-}
-
-/* STEP 5: Style cards */
-.card {
-    position: relative;
-    
-}
-
-.card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s;
-}
-
-.card:hover img {
-    transform: scale(1.1);
-}
-
-.caption {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 20px;
-    background: linear-gradient(transparent, rgba(0,0,0,0.8));
-    font-weight: 500;
-}`,
-            js: `// No JavaScript needed`
-        },
-        hints: [
-            "💡 Step 1: Just add display: grid; to .gallery",
-            "💡 Step 2: Copy exactly: grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));",
-            "💡 Step 3: gap: 20px; adds space between all grid items",
-            "💡 Step 4: grid-column: span 2; makes the featured card take 2 columns",
-            "💡 Step 5: overflow: hidden; prevents the image from going outside on hover"
-        ],
-        validation: (code) => {
-            const checks = [];
-            checks.push({ passed: /\.gallery\s*\{[^}]*display\s*:\s*grid/i.test(code.css), message: '✓ Gallery uses CSS Grid' });
-            checks.push({ passed: /grid-template-columns/i.test(code.css), message: '✓ Defined grid columns' });
-            checks.push({ passed: /repeat\s*\([^)]*auto-fit/i.test(code.css), message: '✓ Used repeat with auto-fit' });
-            checks.push({ passed: /minmax/i.test(code.css), message: '✓ Used minmax for responsive columns' });
-            checks.push({ passed: /\.featured\s*\{[^}]*grid-column\s*:\s*span\s*2/i.test(code.css), message: '✓ Featured spans 2 columns' });
-            checks.push({ passed: /\.card\s*\{[^}]*height/i.test(code.css), message: '✓ Set card height' });
-            return checks;
-        }
+    hints: [
+        "• Step 1: <label for=\"name\">Your Name:</label> then <input type=\"text\" id=\"name\" name=\"name\">",
+        "• Step 2: Same pattern but type=\"email\"",
+        "• Step 3: <select name=\"subject\"><option value=\"\">Pick one</option><option>General</option></select>",
+        "• Step 4: <textarea id=\"message\" rows=\"5\" placeholder=\"...\"></textarea>",
+        "• Step 5: <button type=\"submit\">Send Message</button>"
+    ],
+    validation: (code) => {
+        const checks = [];
+        checks.push({ passed: /<input[^>]+type=["']text["'][^>]*>/i.test(code.html), message: '✓ Added text input for name' });
+        checks.push({ passed: /<input[^>]+type=["']email["'][^>]*>/i.test(code.html), message: '✓ Added email input' });
+        checks.push({ passed: /<select[\s\S]*>[\s\S]*<option[\s\S]*>[\s\S]*<\/select>/i.test(code.html), message: '✓ Added select dropdown' });
+        checks.push({ passed: /<textarea[\s\S]*><\/textarea>/i.test(code.html), message: '✓ Added textarea' });
+        checks.push({ passed: /<button[^>]+type=["']submit["'][^>]*>/i.test(code.html), message: '✓ Added submit button' });
+        checks.push({ passed: (code.html.match(/<label/gi) || []).length >= 4, message: '✓ Added labels for accessibility' });
+        return checks;
     }
-};
+}
+
+}; // end LESSONS
 
 // ============================================
 // DOM ELEMENTS
@@ -3504,7 +1768,7 @@ const elements = {
 };
 
 // ============================================
-// STATE VARIABLES
+// STATE
 // ============================================
 let currentFile = 'html';
 let editorContent = { html: '', css: '', js: '' };
@@ -3512,7 +1776,7 @@ let autoRefreshTimer = null;
 let currentHintIndex = 0;
 
 // ============================================
-// UTILITY FUNCTIONS
+// UTILITIES
 // ============================================
 function showToast(message, type = 'info') {
     elements.toast.className = `toast toast-${type} show`;
@@ -3521,70 +1785,52 @@ function showToast(message, type = 'info') {
 }
 
 function copyCode(button) {
-    const codeBlock = button.closest('.code-block');
-    const code = codeBlock.querySelector('code').textContent;
+    const code = button.closest('.code-block').querySelector('code').textContent;
     navigator.clipboard.writeText(code).then(() => {
-        const originalText = button.innerHTML;
+        const orig = button.innerHTML;
         button.innerHTML = '<i class="fas fa-check"></i> Copied!';
-        setTimeout(() => button.innerHTML = originalText, 2000);
+        setTimeout(() => button.innerHTML = orig, 2000);
     });
 }
 
 // ============================================
-// PROGRESS TRACKING
+// PROGRESS
 // ============================================
 function updateProgress() {
-    const totalLessons = CONFIG.progress.overall.total;
-    const completedLessons = CONFIG.progress.overall.completed;
-    const percentage = Math.round((completedLessons / totalLessons) * 100);
-    
-    elements.progressFill.style.width = `${percentage}%`;
-    elements.progressValue.textContent = `${percentage}%`;
+    const pct = Math.round((CONFIG.progress.overall.completed / CONFIG.progress.overall.total) * 100);
+    elements.progressFill.style.width = `${pct}%`;
+    elements.progressValue.textContent = `${pct}%`;
     elements.htmlProgress.textContent = `${CONFIG.progress.html.completed}/${CONFIG.progress.html.total}`;
     elements.cssProgress.textContent = `${CONFIG.progress.css.completed}/${CONFIG.progress.css.total}`;
 }
 
 function markLessonCompleted(lessonId) {
-    const lessonItem = document.querySelector(`[data-lesson="${lessonId}"]`);
-    if (lessonItem && !lessonItem.classList.contains('completed')) {
-        lessonItem.classList.add('completed');
-        const statusIcon = lessonItem.querySelector('.lesson-status i');
-        if (statusIcon) statusIcon.className = 'fas fa-check-circle';
-        
-        if (lessonId.startsWith('html')) {
-            CONFIG.progress.html.completed++;
-        } else if (lessonId.startsWith('css')) {
-            CONFIG.progress.css.completed++;
-        }
+    const item = document.querySelector(`[data-lesson="${lessonId}"]`);
+    if (item && !item.classList.contains('completed')) {
+        item.classList.add('completed');
+        const icon = item.querySelector('.lesson-status i');
+        if (icon) icon.className = 'fas fa-check-circle';
+        if (lessonId.startsWith('html')) CONFIG.progress.html.completed++;
+        else if (lessonId.startsWith('css')) CONFIG.progress.css.completed++;
         CONFIG.progress.overall.completed++;
         updateProgress();
-        
-        // ✅ ДОБАВЬТЕ ЭТИ 4 СТРОКИ
-        const currentUser = localStorage.getItem('codecraft_current_user');
-        if (currentUser) {
-            saveProgress(currentUser);
-        }
+        const user = localStorage.getItem('codecraft_current_user');
+        if (user) saveProgress(user);
     }
 }
 
 // ============================================
-// EDITOR FUNCTIONS
+// EDITOR
 // ============================================
 function updateLineNumbers() {
     const lines = elements.codeEditor.value.split('\n').length;
-    const numbers = Array.from({ length: Math.max(lines, 25) }, (_, i) => i + 1).join('<br>');
-    elements.lineNumbers.innerHTML = numbers;
+    const nums = Array.from({ length: Math.max(lines, 25) }, (_, i) => i + 1).join('<br>');
+    elements.lineNumbers.innerHTML = nums;
     elements.lineNumbers.style.display = CONFIG.lineNumbers ? 'block' : 'none';
 }
 
-function saveCurrentFile() {
-    editorContent[currentFile] = elements.codeEditor.value;
-}
-
-function loadCurrentFile() {
-    elements.codeEditor.value = editorContent[currentFile];
-    updateLineNumbers();
-}
+function saveCurrentFile() { editorContent[currentFile] = elements.codeEditor.value; }
+function loadCurrentFile() { elements.codeEditor.value = editorContent[currentFile]; updateLineNumbers(); }
 
 function updateFileTabs() {
     document.querySelectorAll('.file-tab').forEach(tab => {
@@ -3594,20 +1840,15 @@ function updateFileTabs() {
 
 function runCode() {
     saveCurrentFile();
-    
-    const htmlContent = editorContent.html;
-    const cssContent = `<style>${editorContent.css}</style>`;
-    const jsContent = `<script>${editorContent.js}<\/script>`;
-    
-    let finalHtml = htmlContent;
-    if (!htmlContent.includes('</head>')) {
-        finalHtml = `<!DOCTYPE html><html><head>${cssContent}</head><body>${htmlContent}${jsContent}</body></html>`;
+    const css = `<style>${editorContent.css}</style>`;
+    const js  = `<script>${editorContent.js}<\/script>`;
+    let html = editorContent.html;
+    if (!html.includes('</head>')) {
+        html = `<!DOCTYPE html><html><head>${css}</head><body>${html}${js}</body></html>`;
     } else {
-        finalHtml = htmlContent.replace('</head>', `${cssContent}</head>`);
-        finalHtml = finalHtml.replace('</body>', `${jsContent}</body>`);
+        html = html.replace('</head>', `${css}</head>`).replace('</body>', `${js}</body>`);
     }
-    
-    const blob = new Blob([finalHtml], { type: 'text/html' });
+    const blob = new Blob([html], { type: 'text/html' });
     elements.previewFrame.src = URL.createObjectURL(blob);
 }
 
@@ -3624,9 +1865,8 @@ function resetCode() {
 
 function showHint() {
     const lesson = LESSONS[CONFIG.currentLesson];
-    if (lesson && lesson.hints && lesson.hints.length > 0) {
-        const hint = lesson.hints[currentHintIndex];
-        showToast(hint, 'info');
+    if (lesson?.hints?.length) {
+        showToast(lesson.hints[currentHintIndex], 'info');
         currentHintIndex = (currentHintIndex + 1) % lesson.hints.length;
     }
 }
@@ -3634,79 +1874,76 @@ function showHint() {
 function submitSolution() {
     saveCurrentFile();
     const lesson = LESSONS[CONFIG.currentLesson];
-    
-    if (lesson && lesson.validation) {
-        const results = lesson.validation(editorContent);
-        const passed = results.filter(r => r.passed).length;
-        const total = results.length;
-        const score = Math.round((passed / total) * 100);
-        
-        CONFIG.userScores[CONFIG.currentLesson] = score;
-        elements.lessonScore.textContent = `${score}%`;
-        
-        // Build feedback message
-        let feedback = results.map(r => r.passed ? r.message : `✗ ${r.message.replace('✓ ', '')}`).join('\n');
-        
-        if (score >= 75) {
-            markLessonCompleted(CONFIG.currentLesson);
-            elements.completionText.textContent = `Excellent! You scored ${score}% (${passed}/${total} checks passed)`;
-            elements.completionOverlay.classList.add('active');
-            showToast('🎉 Lesson completed! Great job!', 'success');
-        } else {
-            showToast(`Score: ${score}% - Keep trying! Check the hints for help.`, 'error');
-            console.log('Validation results:\n' + feedback);
-        }
+    if (!lesson?.validation) return;
+
+    const results = lesson.validation(editorContent);
+    const passed  = results.filter(r => r.passed).length;
+    const score   = Math.round((passed / results.length) * 100);
+
+    CONFIG.userScores[CONFIG.currentLesson] = score;
+    elements.lessonScore.textContent = `${score}%`;
+
+    if (score >= 75) {
+        markLessonCompleted(CONFIG.currentLesson);
+        elements.completionText.textContent = `Excellent! You scored ${score}% (${passed}/${results.length} checks passed)`;
+        elements.completionOverlay.classList.add('active');
+        showToast('<i class="fas fa-trophy"></i> Lesson completed! Great job!', 'success');
+    } else {
+        showToast(`Score: ${score}% — Keep trying! Use hints for help.`, 'error');
     }
 }
 
 // ============================================
 // LESSON LOADING
 // ============================================
+// Браузер игнорирует <script> внутри innerHTML — переисполняем их вручную
+function runEmbeddedScripts(container) {
+    container.querySelectorAll('script').forEach(oldScript => {
+        const newScript = document.createElement('script');
+        Array.from(oldScript.attributes).forEach(attr =>
+            newScript.setAttribute(attr.name, attr.value)
+        );
+        newScript.textContent = oldScript.textContent;
+        oldScript.parentNode.replaceChild(newScript, oldScript);
+    });
+}
+
 function loadLesson(lessonId) {
     const lesson = LESSONS[lessonId];
     if (!lesson) return;
-    
+
     CONFIG.currentLesson = lessonId;
     currentHintIndex = 0;
-    
-    elements.lessonTitle.textContent = lesson.title;
+
+    elements.lessonTitle.textContent    = lesson.title;
     elements.lessonSubtitle.textContent = lesson.subtitle;
-    elements.theoryContent.innerHTML = lesson.theory;
-    
+    elements.theoryContent.innerHTML    = lesson.theory;
+    runEmbeddedScripts(elements.theoryContent);
+
     editorContent = { ...lesson.initialCode };
-    currentFile = 'html';
+    currentFile   = 'html';
     loadCurrentFile();
     updateFileTabs();
-    
+
     elements.lessonItems.forEach(item => {
         item.classList.toggle('active', item.dataset.lesson === lessonId);
     });
-    
-    const currentScore = CONFIG.userScores[lessonId] || '--';
-    elements.lessonScore.textContent = currentScore === '--' ? '--' : `${currentScore}%`;
-    
-    if (window.innerWidth <= 992) {
-        elements.sidebar.classList.add('collapsed');
-    }
-    
+
+    const score = CONFIG.userScores[lessonId];
+    elements.lessonScore.textContent = score != null ? `${score}%` : '--';
+
+    if (window.innerWidth <= 992) elements.sidebar.classList.add('collapsed');
+
     setTimeout(runCode, 100);
-    
-    // ✅ ДОБАВЬТЕ ЭТИ 4 СТРОКИ
-    const currentUser = localStorage.getItem('codecraft_current_user');
-    if (currentUser) {
-        saveProgress(currentUser);
-    }
+
+    const user = localStorage.getItem('codecraft_current_user');
+    if (user) saveProgress(user);
 }
 
 function navigateToNextLesson() {
     const lessons = Array.from(elements.lessonItems);
-    const currentIndex = lessons.findIndex(item => item.dataset.lesson === CONFIG.currentLesson);
-    
-    if (currentIndex < lessons.length - 1) {
-        const nextLesson = lessons[currentIndex + 1].dataset.lesson;
-        loadLesson(nextLesson);
-    }
-    
+    const idx = lessons.findIndex(i => i.dataset.lesson === CONFIG.currentLesson);
+    if (idx < lessons.length - 1) loadLesson(lessons[idx + 1].dataset.lesson);
     elements.completionOverlay.classList.remove('active');
 }
 
@@ -3714,41 +1951,26 @@ function navigateToNextLesson() {
 // EVENT LISTENERS
 // ============================================
 function initializeEventListeners() {
-    elements.menuToggle?.addEventListener('click', () => {
-        elements.sidebar.classList.toggle('collapsed');
-    });
+    elements.menuToggle?.addEventListener('click', () => elements.sidebar.classList.toggle('collapsed'));
 
-    document.addEventListener('click', (event) => {
-        if (window.innerWidth <= 992 && 
-            !elements.sidebar.contains(event.target) && 
-            !elements.menuToggle.contains(event.target) &&
+    document.addEventListener('click', e => {
+        if (window.innerWidth <= 992 &&
+            !elements.sidebar.contains(e.target) &&
+            !elements.menuToggle.contains(e.target) &&
             !elements.sidebar.classList.contains('collapsed')) {
             elements.sidebar.classList.add('collapsed');
         }
     });
 
-    elements.lessonItems.forEach(item => {
-        item.addEventListener('click', () => loadLesson(item.dataset.lesson));
+    elements.lessonItems.forEach(item => item.addEventListener('click', () => loadLesson(item.dataset.lesson)));
+
+    elements.fileTabs?.addEventListener('click', e => {
+        const tab = e.target.closest('.file-tab');
+        if (tab) { saveCurrentFile(); currentFile = tab.dataset.file; loadCurrentFile(); updateFileTabs(); }
     });
 
-    elements.fileTabs?.addEventListener('click', (event) => {
-        const tab = event.target.closest('.file-tab');
-        if (tab) {
-            saveCurrentFile();
-            currentFile = tab.dataset.file;
-            loadCurrentFile();
-            updateFileTabs();
-        }
-    });
-
-    elements.autoRefresh?.addEventListener('change', () => {
-        CONFIG.autoRefresh = elements.autoRefresh.checked;
-    });
-
-    elements.lineNumbersToggle?.addEventListener('change', () => {
-        CONFIG.lineNumbers = elements.lineNumbersToggle.checked;
-        updateLineNumbers();
-    });
+    elements.autoRefresh?.addEventListener('change', () => { CONFIG.autoRefresh = elements.autoRefresh.checked; });
+    elements.lineNumbersToggle?.addEventListener('change', () => { CONFIG.lineNumbers = elements.lineNumbersToggle.checked; updateLineNumbers(); });
 
     elements.codeEditor?.addEventListener('input', () => {
         updateLineNumbers();
@@ -3758,13 +1980,13 @@ function initializeEventListeners() {
         }
     });
 
-    elements.codeEditor?.addEventListener('keydown', (event) => {
-        if (event.key === 'Tab') {
-            event.preventDefault();
-            const start = elements.codeEditor.selectionStart;
+    elements.codeEditor?.addEventListener('keydown', e => {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const s = elements.codeEditor.selectionStart;
             const end = elements.codeEditor.selectionEnd;
-            elements.codeEditor.value = elements.codeEditor.value.substring(0, start) + '    ' + elements.codeEditor.value.substring(end);
-            elements.codeEditor.selectionStart = elements.codeEditor.selectionEnd = start + 4;
+            elements.codeEditor.value = elements.codeEditor.value.substring(0, s) + '    ' + elements.codeEditor.value.substring(end);
+            elements.codeEditor.selectionStart = elements.codeEditor.selectionEnd = s + 4;
             updateLineNumbers();
         }
     });
@@ -3777,29 +1999,27 @@ function initializeEventListeners() {
     elements.reviewBtn?.addEventListener('click', () => elements.completionOverlay.classList.remove('active'));
     elements.nextLessonBtn?.addEventListener('click', navigateToNextLesson);
 
-    elements.theoryContent?.addEventListener('click', (event) => {
-        if (event.target.closest('.copy-code')) {
-            copyCode(event.target.closest('.copy-code'));
-        }
+    elements.theoryContent?.addEventListener('click', e => {
+        if (e.target.closest('.copy-code')) copyCode(e.target.closest('.copy-code'));
     });
 
     window.addEventListener('resize', () => {
-        if (window.innerWidth > 992) {
-            elements.sidebar.classList.remove('collapsed');
-        }
+        if (window.innerWidth > 992) elements.sidebar.classList.remove('collapsed');
     });
 }
 
 // ============================================
-// INITIALIZATION
+// INIT
 // ============================================
-function initializeApp() {
-    loadLesson('html-structure');
+function initializeAppWithLogin() {
     updateProgress();
     initializeEventListeners();
-    setTimeout(() => showToast('Welcome! Start with Lesson 1 and follow the steps.', 'success'), 1000);
     updateLineNumbers();
-    runCode();
+    setTimeout(showLoginModal, 100);
+    setInterval(() => {
+        const user = localStorage.getItem('codecraft_current_user');
+        if (user) saveProgress(user);
+    }, 30000);
 }
 
 document.addEventListener('DOMContentLoaded', initializeAppWithLogin);

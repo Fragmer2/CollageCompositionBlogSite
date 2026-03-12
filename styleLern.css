@@ -271,7 +271,8 @@ header {
     color: #c7baff;
     font-size: 11px;
 }
-.lesson-status { margin-left: auto; color: var(--success); }
+.lesson-status { margin-left: auto; color: rgba(255, 255, 255, 0.18); }
+.lesson-item.completed .lesson-status { color: var(--success); }
 
 /* исправление артефактов из неидеальной HTML-структуры */
 .lesson-list > .lesson-status {
