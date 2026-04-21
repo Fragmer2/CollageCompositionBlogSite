@@ -1744,15 +1744,15 @@ button[type="submit"] { width: 100%; padding: 14px; background: linear-gradient(
                 <div class="section-icon"><i class="fas fa-paint-brush"></i></div>
                 <h2 class="section-title">What is CSS and Why Do We Need It?</h2>
             </div>
-            <p class="theory-text">Remember your HTML pages from the last lessons? They worked, but they looked pretty plain — black text on a white background. That's because HTML only handles <strong>structure</strong>. CSS handles <strong>appearance</strong>.</p>
+            <p class="theory-text">Remember your HTML pages from the last lessons? They worked, but they looked plain — black text on a white background. That's because HTML handles <strong>structure</strong>. CSS handles <strong>appearance</strong>.</p>
             <p class="theory-text">CSS stands for <strong>Cascading Style Sheets</strong>. Think of it like this: if HTML is the skeleton of a person, CSS is the clothes, hair color, makeup, and accessories. Same skeleton, completely different look!</p>
-            <p class="theory-text">Without CSS, every website would look like a plain text document. With CSS, you get colors, fonts, spacing, animations — everything that makes the web visually beautiful.</p>
+            <p class="theory-text">Without CSS, every website would look like a plain text document. With CSS, you get colors, fonts, spacing, animations — everything that makes the web beautiful.</p>
             <div class="tip-box">
                 <div class="note-header">
                     <div class="note-icon tip-icon"><i class="fas fa-info-circle"></i></div>
                     <div class="note-title tip-title">How CSS connects to HTML</div>
                 </div>
-                <p class="theory-text">In this editor, CSS goes in the <strong>style.css</strong> tab. The HTML file links to it automatically in the preview. In a real project, you'd link them with: <code>&lt;link rel="stylesheet" href="style.css"&gt;</code> inside the <code>&lt;head&gt;</code>.</p>
+                <p class="theory-text">In this editor, CSS goes in the <strong>style.css</strong> tab. The HTML file links to it automatically in the preview. In a real project, you would link them with: <code>&lt;link rel="stylesheet" href="style.css"&gt;</code> inside the <code>&lt;head&gt;</code>.</p>
             </div>
         </div>
 
@@ -1761,7 +1761,7 @@ button[type="submit"] { width: 100%; padding: 14px; background: linear-gradient(
                 <div class="section-icon"><i class="fas fa-bullseye"></i></div>
                 <h2 class="section-title">The CSS Rule — The Only Pattern You Need</h2>
             </div>
-            <p class="theory-text">Every CSS rule follows the exact same pattern. Learn this once, and you can style literally anything:</p>
+            <p class="theory-text">Every CSS rule follows the exact same pattern. Learn this once, and you can style anything:</p>
             <div class="code-block">
                 <div class="code-block-header">
                     <div class="code-block-title"><i class="fas fa-code"></i> The CSS Rule Pattern</div>
@@ -1800,11 +1800,11 @@ button[type="submit"] { width: 100%; padding: 14px; background: linear-gradient(
                     <div class="code-block-title"><i class="fas fa-code"></i> Three Ways to Write Colors</div>
                     <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
                 </div>
-                <pre><code>color: red;                  /* Named color — simple! */
+                <pre><code>color: red;                  /* Named color — simple */
 color: #e74c3c;              /* Hex code — most common */
 color: rgb(231, 76, 60);     /* RGB — red, green, blue */</code></pre>
             </div>
-            <p class="theory-text">For now, use <strong>named colors</strong> — they're easy to remember. CSS knows 140+ color names: <code>tomato</code>, <code>steelblue</code>, <code>gold</code>, <code>mediumpurple</code>, <code>coral</code>... explore!</p>
+            <p class="theory-text">For now, use <strong>named colors</strong> — they are easy to remember. CSS knows 140+ color names: <code>tomato</code>, <code>steelblue</code>, <code>gold</code>, <code>mediumpurple</code>, <code>coral</code>... explore!</p>
             <p class="theory-text">There are two main color properties:</p>
             <p class="theory-text">• <code>color</code> — the text color</p>
             <p class="theory-text">• <code>background-color</code> — the background behind the element</p>
@@ -1813,7 +1813,7 @@ color: rgb(231, 76, 60);     /* RGB — red, green, blue */</code></pre>
         <div class="theory-section">
             <div class="section-header">
                 <div class="section-icon"><i class="fas fa-text-height"></i></div>
-                <h2 class="section-title">Fonts & Text Styling</h2>
+                <h2 class="section-title">Fonts and Text Styling</h2>
             </div>
             <p class="theory-text">You can control how text looks with these properties:</p>
             <div class="code-block">
@@ -1842,22 +1842,22 @@ color: rgb(231, 76, 60);     /* RGB — red, green, blue */</code></pre>
         <div class="theory-section">
             <div class="section-header">
                 <div class="section-icon"><i class="fas fa-border-all"></i></div>
-                <h2 class="section-title">Spacing: Padding & Margin</h2>
+                <h2 class="section-title">Spacing: Padding and Margin</h2>
             </div>
-            <p class="theory-text">Two properties control space — and beginners mix them up all the time, so read carefully:</p>
+            <p class="theory-text">Two properties control space — beginners often mix them up, so read carefully:</p>
             <p class="theory-text">• <code>padding</code> — space <strong>inside</strong> the element, between the content and the border. Like the stuffing inside a pillow.</p>
             <p class="theory-text">• <code>margin</code> — space <strong>outside</strong> the element, pushing other elements away. Like the gap between pillows on a couch.</p>
             <div class="code-block">
                 <div class="code-block-header">
-                    <div class="code-block-title"><i class="fas fa-code"></i> Padding & Margin</div>
+                    <div class="code-block-title"><i class="fas fa-code"></i> Padding and Margin</div>
                     <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
                 </div>
                 <pre><code>div {
-    padding: 20px;       /* 20px on ALL sides inside */
-    margin: 10px auto;   /* 10px top/bottom, auto left/right (centers it!) */
+    padding: 20px;       /* 20px on all sides inside */
+    margin: 10px auto;   /* 10px top/bottom, auto left/right (centers it) */
 }</code></pre>
             </div>
-            <p class="theory-text"><code>margin: 0 auto</code> is the classic trick to center a block element horizontally — you'll use this constantly!</p>
+            <p class="theory-text"><code>margin: 0 auto</code> is the classic trick to center a block element horizontally — you will use this constantly!</p>
         </div>
 
         <div class="exercise-box">
@@ -1940,7 +1940,7 @@ color: rgb(231, 76, 60);     /* RGB — red, green, blue */</code></pre>
                 <div class="note-icon tip-icon"><i class="fas fa-check-circle"></i></div>
                 <div class="note-title tip-title">Tip: Play Around!</div>
             </div>
-            <p class="theory-text">Try changing <code>steelblue</code> to <code>tomato</code> or <code>mediumpurple</code>. Try <code>font-size: 48px</code>. CSS is meant to be experimented with — nothing you break can't be reset!</p>
+            <p class="theory-text">Try changing <code>steelblue</code> to <code>tomato</code> or <code>mediumpurple</code>. Try <code>font-size: 48px</code>. CSS is meant to be experimented with — nothing you break cannot be reset!</p>
         </div>
     `,
     initialCode: {
@@ -1958,7 +1958,7 @@ color: rgb(231, 76, 60);     /* RGB — red, green, blue */</code></pre>
             <span class="tag">HTML</span>
             <span class="tag">CSS</span>
             <span class="tag">Design</span>
-            <span class="tag">Coffee ☕</span>
+            <span class="tag">Coffee</span>
         </div>
     </div>
 </body>
@@ -1980,31 +1980,31 @@ color: rgb(231, 76, 60);     /* RGB — red, green, blue */</code></pre>
         js: `// No JavaScript needed`
     },
     hints: [
-        "💡 Work in the CSS tab! Click 'style.css' at the top of the editor.",
-        "💡 Step 1: body { background-color: steelblue; font-family: Arial, sans-serif; }",
-        "💡 Step 2: .card { background-color: white; max-width: 500px; margin: 0 auto; padding: 40px; }",
-        "💡 Step 3: h1 { color: steelblue; font-size: 36px; text-align: center; }",
-        "💡 Step 4: p { color: #555; line-height: 1.8; text-align: center; }",
-        "💡 Step 5: .tag { background-color: steelblue; color: white; padding: 6px 14px; }"
+        "Work in the style.css tab. It is the second tab from the top in the editor.",
+        "Step 1: Add the following: body { background-color: steelblue; font-family: Arial, sans-serif; }",
+        "Step 2: For the .card class, set a white background, a max-width of 500px, and padding as shown in the example.",
+        "Step 3: Give the h1 heading a steelblue color, a font size of 36px, and center alignment.",
+        "Step 4: Set the p paragraph's text color to dark gray and its line-height to 1.8.",
+        "Step 5: Add a background to the .tag class, set the text color to white, and apply 6px 14px of padding."
     ],
     validation: (code) => {
         const checks = [];
-        checks.push({ passed: /background-color\s*:/i.test(code.css), message: '✓ Used background-color property' });
-        checks.push({ passed: /font-family\s*:/i.test(code.css), message: '✓ Set a font-family' });
-        checks.push({ passed: /color\s*:/i.test(code.css), message: '✓ Used color property' });
-        checks.push({ passed: /font-size\s*:/i.test(code.css), message: '✓ Set font-size' });
-        checks.push({ passed: /padding\s*:/i.test(code.css), message: '✓ Added padding somewhere' });
-        checks.push({ passed: /\.card\s*\{/i.test(code.css), message: '✓ Styled the .card class' });
-        checks.push({ passed: /\.tag\s*\{/i.test(code.css), message: '✓ Styled the .tag class' });
+        checks.push({ passed: /background-color\s*:/i.test(code.css), message: 'Used background-color property' });
+        checks.push({ passed: /font-family\s*:/i.test(code.css), message: 'Set a font-family' });
+        checks.push({ passed: /color\s*:/i.test(code.css), message: 'Used color property' });
+        checks.push({ passed: /font-size\s*:/i.test(code.css), message: 'Set font-size' });
+        checks.push({ passed: /padding\s*:/i.test(code.css), message: 'Added padding somewhere' });
+        checks.push({ passed: /\.card\s*\{/i.test(code.css), message: 'Styled the .card class' });
+        checks.push({ passed: /\.tag\s*\{/i.test(code.css), message: 'Styled the .tag class' });
         return checks;
     }
 },
 
 // ==========================================
-// LESSON 7: Selectors & Hover Effects
+// LESSON 7: Selectors and Hover Effects
 // ==========================================
 'css-selectors': {
-    title: 'Selectors & Hover Effects',
+    title: 'Selectors and Hover Effects',
     subtitle: 'Target exactly what you want and bring pages to life with interaction',
     difficulty: 'Intermediate',
     duration: '25 minutes',
@@ -2014,7 +2014,7 @@ color: rgb(231, 76, 60);     /* RGB — red, green, blue */</code></pre>
                 <div class="section-icon"><i class="fas fa-crosshairs"></i></div>
                 <h2 class="section-title">How CSS Finds What to Style</h2>
             </div>
-            <p class="theory-text">In the last lesson, you used <code>h1</code>, <code>p</code>, <code>.card</code> as selectors. But CSS selectors are incredibly powerful — you can target elements by their tag name, class, ID, or even their relationship to other elements.</p>
+            <p class="theory-text">In the last lesson, you used <code>h1</code>, <code>p</code>, <code>.card</code> as selectors. But CSS selectors are much more powerful — you can target elements by their tag name, class, ID, or even their relationship to other elements.</p>
             <p class="theory-text">Think of selectors like an address system. A tag selector is like saying "everyone on Earth named Tom." A class selector is like saying "everyone in building 7." An ID selector is like saying "apartment 4B specifically."</p>
         </div>
 
@@ -2080,7 +2080,7 @@ nav a {
     color: white;      /* Only links INSIDE a nav element */
 }</code></pre>
             </div>
-            <p class="theory-text">This is incredibly useful. You can have one style for links in the header and a completely different style for links in the footer — same tag, different context!</p>
+            <p class="theory-text">This is very useful. You can have one style for links in the header and a completely different style for links in the footer — same tag, different context!</p>
         </div>
 
         <div class="theory-section">
@@ -2088,7 +2088,7 @@ nav a {
                 <div class="section-icon"><i class="fas fa-hand-pointer"></i></div>
                 <h2 class="section-title">Pseudo-classes — Reacting to the User</h2>
             </div>
-            <p class="theory-text">Here's where CSS gets really fun. <strong>Pseudo-classes</strong> let you style elements based on what the user is doing — hovering, clicking, visiting a link. They use a colon <code>:</code> after the selector:</p>
+            <p class="theory-text">Here is where CSS gets really fun. <strong>Pseudo-classes</strong> let you style elements based on what the user is doing — hovering, clicking, visiting a link. They use a colon <code>:</code> after the selector:</p>
             <div class="code-block">
                 <div class="code-block-header">
                     <div class="code-block-title"><i class="fas fa-code"></i> :hover — When the mouse is over it</div>
@@ -2100,7 +2100,7 @@ nav a {
 }
 
 button:hover {
-    background-color: navy;  /* Changes when mouse hovers! */
+    background-color: navy;  /* Changes when mouse hovers */
 }</code></pre>
             </div>
             <p class="theory-text">Without any JavaScript, just pure CSS, you can make elements respond to the user. This is what makes navigation menus highlight, buttons darken on hover, and links change color.</p>
@@ -2118,12 +2118,12 @@ button:hover {
                     <pre><code>button {
     background-color: steelblue;
     color: white;
-    transition: all 0.3s ease;  /* ← smooth animation! */
+    transition: all 0.3s ease;  /* smooth animation */
 }
 
 button:hover {
     background-color: navy;
-    transform: scale(1.05);     /* ← slightly grows on hover! */
+    transform: scale(1.05);     /* slightly grows on hover */
 }</code></pre>
                 </div>
             </div>
@@ -2145,10 +2145,10 @@ button:hover {
 }
 
 .avatar {
-    border-radius: 50%;    /* Perfect circle! */
+    border-radius: 50%;    /* Perfect circle */
 }</code></pre>
             </div>
-            <p class="theory-text">Combined with a <code>box-shadow</code>, rounded corners make cards look incredibly polished:</p>
+            <p class="theory-text">Combined with a <code>box-shadow</code>, rounded corners make cards look very polished:</p>
             <div class="code-block">
                 <div class="code-block-header">
                     <div class="code-block-title"><i class="fas fa-code"></i> Box Shadow</div>
@@ -2167,7 +2167,7 @@ button:hover {
                 <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
                 <div class="exercise-title">Your Task: Build an Interactive Button Gallery</div>
             </div>
-            <p class="theory-text">You'll style 4 different buttons — each with a different hover effect. All in CSS, zero JavaScript! Work in the <strong>style.css</strong> tab.</p>
+            <p class="theory-text">You will style 4 different buttons — each with a different hover effect. All in CSS, zero JavaScript. Work in the <strong>style.css</strong> tab.</p>
         </div>
 
         <div class="step-by-step">
@@ -2269,12 +2269,14 @@ button:hover {
             <button class="btn-primary">Primary</button>
             <button class="btn-danger">Danger</button>
             <button class="btn-outline">Outline</button>
-            <button class="btn-pill">Pill ✨</button>
+            <button class="btn-pill">Pill</button>
         </div>
     </div>
 </body>
 </html>`,
-        css: `body {
+        css: `
+SCROLL DOWN FOR STEPS!
+        body {
     font-family: Arial, sans-serif;
     background: #f0f4f8;
     display: flex;
@@ -2319,23 +2321,23 @@ p { color: #888; margin-bottom: 35px; }
         js: `// No JavaScript — pure CSS interaction!`
     },
     hints: [
-        "💡 Work in the CSS tab. All styling goes there!",
-        "💡 Step 1: button { padding: 14px 32px; font-size: 16px; border: none; cursor: pointer; transition: all 0.3s ease; }",
-        "💡 Step 2: .btn-primary { background-color: steelblue; color: white; border-radius: 8px; } then .btn-primary:hover { background-color: navy; }",
-        "💡 Step 3: .btn-danger { background-color: tomato; color: white; border-radius: 8px; } then .btn-danger:hover { transform: scale(1.08); }",
-        "💡 Step 4: .btn-outline has no fill! background-color: transparent; border: 3px solid steelblue;",
-        "💡 Step 5: border-radius: 50px makes a pill shape. Try letter-spacing on hover!"
+        "Work in the CSS tab. All styling goes there.",
+        "Step 1: button { padding: 14px 32px; font-size: 16px; border: none; cursor: pointer; transition: all 0.3s ease; }",
+        "Step 2: .btn-primary { background-color: steelblue; color: white; border-radius: 8px; } then .btn-primary:hover { background-color: navy; }",
+        "Step 3: .btn-danger { background-color: tomato; color: white; border-radius: 8px; } then .btn-danger:hover { transform: scale(1.08); }",
+        "Step 4: .btn-outline has no fill: background-color: transparent; border: 3px solid steelblue;",
+        "Step 5: border-radius: 50px makes a pill shape. Try letter-spacing on hover."
     ],
     validation: (code) => {
         const checks = [];
-        checks.push({ passed: /button\s*\{/i.test(code.css), message: '✓ Styled base button with tag selector' });
-        checks.push({ passed: /transition\s*:/i.test(code.css), message: '✓ Added transition for smooth hover' });
-        checks.push({ passed: /\.btn-primary\s*\{/i.test(code.css), message: '✓ Styled .btn-primary class' });
-        checks.push({ passed: /\.btn-primary\s*:\s*hover/i.test(code.css), message: '✓ Added :hover effect to primary button' });
-        checks.push({ passed: /\.btn-danger\s*\{/i.test(code.css), message: '✓ Styled .btn-danger class' });
-        checks.push({ passed: /\.btn-outline\s*\{/i.test(code.css), message: '✓ Styled .btn-outline class' });
-        checks.push({ passed: /border-radius\s*:\s*50px/i.test(code.css), message: '✓ Created pill shape with border-radius: 50px' });
-        checks.push({ passed: /\.btn-pill\s*:\s*hover/i.test(code.css), message: '✓ Added hover effect to pill button' });
+        checks.push({ passed: /button\s*\{/i.test(code.css), message: 'Styled base button with tag selector' });
+        checks.push({ passed: /transition\s*:/i.test(code.css), message: 'Added transition for smooth hover' });
+        checks.push({ passed: /\.btn-primary\s*\{/i.test(code.css), message: 'Styled .btn-primary class' });
+        checks.push({ passed: /\.btn-primary\s*:\s*hover/i.test(code.css), message: 'Added :hover effect to primary button' });
+        checks.push({ passed: /\.btn-danger\s*\{/i.test(code.css), message: 'Styled .btn-danger class' });
+        checks.push({ passed: /\.btn-outline\s*\{/i.test(code.css), message: 'Styled .btn-outline class' });
+        checks.push({ passed: /border-radius\s*:\s*50px/i.test(code.css), message: 'Created pill shape with border-radius: 50px' });
+        checks.push({ passed: /\.btn-pill\s*:\s*hover/i.test(code.css), message: 'Added hover effect to pill button' });
         return checks;
     }
 },
@@ -2354,7 +2356,7 @@ p { color: #888; margin-bottom: 35px; }
                 <div class="section-icon"><i class="fas fa-box-open"></i></div>
                 <h2 class="section-title">Every Element is a Box</h2>
             </div>
-            <p class="theory-text">Here's the single most important concept in CSS layout: <strong>every HTML element is a rectangular box</strong>. Even circles are squares with rounded corners underneath. Even text sits in a box. Understanding this box changes how you see every website.</p>
+            <p class="theory-text">Here is the single most important concept in CSS layout: <strong>every HTML element is a rectangular box</strong>. Even circles are squares with rounded corners underneath. Even text sits in a box. Understanding this box changes how you see every website.</p>
             <p class="theory-text">This box has four layers, like an onion. From inside to outside:</p>
             
             <div style="background: #1a1a2e; border-radius: 16px; padding: 30px; margin: 20px 0; font-family: monospace; font-size: 0.9rem; text-align: center;">
@@ -2378,17 +2380,17 @@ p { color: #888; margin-bottom: 35px; }
                 <div class="section-icon"><i class="fas fa-compress-arrows-alt"></i></div>
                 <h2 class="section-title">Margin vs Padding — Once and For All</h2>
             </div>
-            <p class="theory-text">This trips up every beginner. Here's the clearest way to remember it:</p>
-            <p class="theory-text">🏠 Imagine a framed photo on a wall. The <strong>content</strong> is the photo itself. The <strong>padding</strong> is the white matte inside the frame — space between the photo and the frame edge. The <strong>border</strong> is the frame. The <strong>margin</strong> is the gap between your frame and the next frame on the wall.</p>
+            <p class="theory-text">This trips up every beginner. Here is the clearest way to remember it:</p>
+            <p class="theory-text">Imagine a framed photo on a wall. The <strong>content</strong> is the photo itself. The <strong>padding</strong> is the white matte inside the frame — space between the photo and the frame edge. The <strong>border</strong> is the frame. The <strong>margin</strong> is the gap between your frame and the next frame on the wall.</p>
             <div class="code-block">
                 <div class="code-block-header">
-                    <div class="code-block-title"><i class="fas fa-code"></i> Shorthand Margin & Padding</div>
+                    <div class="code-block-title"><i class="fas fa-code"></i> Shorthand Margin and Padding</div>
                     <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
                 </div>
                 <pre><code>div {
     margin: 20px;              /* all 4 sides = 20px */
     margin: 10px 20px;         /* top/bottom=10, left/right=20 */
-    margin: 10px 20px 5px 15px; /* top right bottom left (clockwise!) */
+    margin: 10px 20px 5px 15px; /* top right bottom left (clockwise) */
 
     padding: 20px;             /* same shorthand works */
     margin: 0 auto;            /* classic horizontal centering trick */
@@ -2397,9 +2399,9 @@ p { color: #888; margin-bottom: 35px; }
             <div class="note-box">
                 <div class="note-header">
                     <div class="note-icon"><i class="fas fa-lightbulb"></i></div>
-                    <div class="note-title">Remember clockwise: Top → Right → Bottom → Left</div>
+                    <div class="note-title">Remember clockwise: Top -> Right -> Bottom -> Left</div>
                 </div>
-                <p class="theory-text">When you write four values, go clockwise starting from the top: <strong>T</strong>rouble <strong>R</strong>emains <strong>B</strong>ut <strong>L</strong>essens. (Top Right Bottom Left). A weird sentence, but you'll never forget it!</p>
+                <p class="theory-text">When you write four values, go clockwise starting from the top. A reminder sentence: "Top Right Bottom Left" — just remember the order.</p>
             </div>
         </div>
 
@@ -2430,9 +2432,9 @@ p { color: #888; margin-bottom: 35px; }
         <div class="theory-section">
             <div class="section-header">
                 <div class="section-icon"><i class="fas fa-ruler-combined"></i></div>
-                <h2 class="section-title">Width, Height & box-sizing</h2>
+                <h2 class="section-title">Width, Height and box-sizing</h2>
             </div>
-            <p class="theory-text">You can set element dimensions with <code>width</code> and <code>height</code>. But there's a gotcha that confuses everyone:</p>
+            <p class="theory-text">You can set element dimensions with <code>width</code> and <code>height</code>. But there is a gotcha that confuses everyone:</p>
             <div class="code-block">
                 <div class="code-block-header">
                     <div class="code-block-title"><i class="fas fa-code"></i> The box-sizing Problem</div>
@@ -2444,7 +2446,7 @@ div {
     padding: 20px;
     border: 5px solid black;
 }
-/* Actual rendered width = 300 + 20+20 + 5+5 = 350px ← SURPRISE! */
+/* Actual rendered width = 300 + 20+20 + 5+5 = 350px — SURPRISE */
 
 /* WITH box-sizing: border-box */
 div {
@@ -2453,7 +2455,7 @@ div {
     padding: 20px;
     border: 5px solid black;
 }
-/* Actual rendered width = exactly 300px ← predictable! */</code></pre>
+/* Actual rendered width = exactly 300px — predictable */</code></pre>
             </div>
             <div class="tip-box">
                 <div class="note-header">
@@ -2491,7 +2493,7 @@ div {
                     <button class="copy-code" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
                 </div>
                 <pre><code>span {
-    display: inline-block;  /* now we can give it width/height! */
+    display: inline-block;  /* now we can give it width/height */
     width: 100px;
     padding: 8px;
     text-align: center;
@@ -2504,7 +2506,7 @@ div {
                 <div class="exercise-icon"><i class="fas fa-pencil-alt"></i></div>
                 <div class="exercise-title">Your Task: Build a Pricing Card</div>
             </div>
-            <p class="theory-text">You'll style a pricing card from scratch using everything you've learned: box model, borders, spacing, sizing. Work in the <strong>style.css</strong> tab. The HTML is ready — only CSS is needed!</p>
+            <p class="theory-text">You will style a pricing card from scratch using everything you have learned: box model, borders, spacing, sizing. Work in the <strong>style.css</strong> tab. The HTML is ready — only CSS is needed.</p>
         </div>
 
         <div class="step-by-step">
@@ -2630,11 +2632,11 @@ body {
         <p class="plan-name">PRO PLAN</p>
         <div class="price">$29<span>/mo</span></div>
         <ul class="features">
-            <li>✅ Unlimited Projects</li>
-            <li>✅ 100GB Storage</li>
-            <li>✅ Priority Support</li>
-            <li>✅ Custom Domain</li>
-            <li>❌ White Label</li>
+            <li>+ Unlimited Projects</li>
+            <li>+ 100GB Storage</li>
+            <li>+ Priority Support</li>
+            <li>+ Custom Domain</li>
+            <li>- White Label</li>
         </ul>
         <button class="cta-btn">Get Started Today</button>
     </div>
@@ -2657,22 +2659,22 @@ body {
         js: `// No JavaScript needed`
     },
     hints: [
-        "💡 Start with: * { margin: 0; padding: 0; box-sizing: border-box; }",
-        "💡 Step 2: .pricing-card { background-color: white; width: 320px; padding: 40px; border-radius: 20px; }",
-        "💡 Step 3: .price { font-size: 56px; font-weight: bold; color: #1a1a2e; }",
-        "💡 Step 4: .features { list-style: none; border-top: 1px solid #eee; padding: 20px 0; }",
-        "💡 Step 5: .cta-btn { display: block; width: 100%; background-color: steelblue; color: white; border: none; border-radius: 12px; cursor: pointer; }"
+        "Start with: * { margin: 0; padding: 0; box-sizing: border-box; }",
+        "Step 2: .pricing-card { background-color: white; width: 320px; padding: 40px; border-radius: 20px; }",
+        "Step 3: .price { font-size: 56px; font-weight: bold; color: #1a1a2e; }",
+        "Step 4: .features { list-style: none; border-top: 1px solid #eee; padding: 20px 0; }",
+        "Step 5: .cta-btn { display: block; width: 100%; background-color: steelblue; color: white; border: none; border-radius: 12px; cursor: pointer; }"
     ],
     validation: (code) => {
         const checks = [];
-        checks.push({ passed: /\*\s*\{[\s\S]*box-sizing\s*:\s*border-box/i.test(code.css), message: '✓ Applied universal box-sizing: border-box reset' });
-        checks.push({ passed: /\.pricing-card\s*\{/i.test(code.css), message: '✓ Styled the .pricing-card container' });
-        checks.push({ passed: /border-radius\s*:/i.test(code.css), message: '✓ Used border-radius for rounded corners' });
-        checks.push({ passed: /box-shadow\s*:/i.test(code.css), message: '✓ Added a box-shadow' });
-        checks.push({ passed: /\.features\s*\{/i.test(code.css), message: '✓ Styled the .features list' });
-        checks.push({ passed: /list-style\s*:\s*none/i.test(code.css), message: '✓ Removed default list bullets' });
-        checks.push({ passed: /\.cta-btn\s*\{/i.test(code.css), message: '✓ Styled the .cta-btn button' });
-        checks.push({ passed: /\.cta-btn\s*:\s*hover/i.test(code.css), message: '✓ Added :hover effect to the button' });
+        checks.push({ passed: /\*\s*\{[\s\S]*box-sizing\s*:\s*border-box/i.test(code.css), message: 'Applied universal box-sizing: border-box reset' });
+        checks.push({ passed: /\.pricing-card\s*\{/i.test(code.css), message: 'Styled the .pricing-card container' });
+        checks.push({ passed: /border-radius\s*:/i.test(code.css), message: 'Used border-radius for rounded corners' });
+        checks.push({ passed: /box-shadow\s*:/i.test(code.css), message: 'Added a box-shadow' });
+        checks.push({ passed: /\.features\s*\{/i.test(code.css), message: 'Styled the .features list' });
+        checks.push({ passed: /list-style\s*:\s*none/i.test(code.css), message: 'Removed default list bullets' });
+        checks.push({ passed: /\.cta-btn\s*\{/i.test(code.css), message: 'Styled the .cta-btn button' });
+        checks.push({ passed: /\.cta-btn\s*:\s*hover/i.test(code.css), message: 'Added :hover effect to the button' });
         return checks;
     }
 },
