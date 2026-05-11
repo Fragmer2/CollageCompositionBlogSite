@@ -2679,6 +2679,504 @@ body {
     }
 },
 
+
+// ==========================================
+// LESSON 9: Final Project — Personal Portfolio Page
+// ==========================================
+'final-personal-page': {
+    title: 'Final Project: Personal Portfolio Page',
+    subtitle: 'Build a complete page using everything you\'ve learned — HTML structure, CSS styling, and hover effects',
+    difficulty: 'All Levels',
+    duration: '35 minutes',
+    theory: `
+
+<!-- ═══════════════ INTRO ═══════════════ -->
+<div class="theory-section">
+    <div class="section-header">
+        <div class="section-icon"><i class="fas fa-trophy"></i></div>
+        <h2 class="section-title">You Made It to the Final Project!</h2>
+    </div>
+    <p class="theory-text">Over the last 8 lessons you've learned a lot. Let's quickly recap what you know:</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:18px 0; font-size:0.9rem;">
+        <div style="background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.35); border-radius:10px; padding:12px;">
+            <strong style="color:#a5b4fc;">HTML Lessons</strong>
+            <ul style="margin:8px 0 0 16px; color:#cbd5e1; line-height:1.9;">
+                <li>Lesson 1 — Headings &amp; paragraphs</li>
+                <li>Lesson 2 — Lists &amp; bold / italic text</li>
+                <li>Lesson 3 — Links &amp; images</li>
+                <li>Lesson 4 — Semantic tags (header, nav, main…)</li>
+                <li>Lesson 5 — Forms &amp; inputs</li>
+            </ul>
+        </div>
+        <div style="background:rgba(14,165,233,0.15); border:1px solid rgba(14,165,233,0.35); border-radius:10px; padding:12px;">
+            <strong style="color:#7dd3fc;">CSS Lessons</strong>
+            <ul style="margin:8px 0 0 16px; color:#cbd5e1; line-height:1.9;">
+                <li>Lesson 6 — Colors, fonts, padding</li>
+                <li>Lesson 7 — Selectors &amp; :hover effects</li>
+                <li>Lesson 8 — The box model</li>
+            </ul>
+        </div>
+    </div>
+
+    <p class="theory-text">This project puts it all together. You will build a <strong>personal portfolio page</strong> with four sections: a header with navigation, an "About Me" section, a skills list, and a contact form. The HTML scaffold is already there — you fill in the content and write all the CSS yourself.</p>
+
+    <div class="tip-box">
+        <div class="note-header">
+            <div class="note-icon tip-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="note-title tip-title">How this lesson works</div>
+        </div>
+        <p class="theory-text">There are <strong>two phases</strong>. Phase A is HTML — add your content in the editor. Phase B is CSS — write styles in the <strong>style.css</strong> tab. Read one phase, do it, then move on.</p>
+    </div>
+</div>
+
+<!-- ═══════════════ PHASE A — HTML ═══════════════ -->
+<div style="background:rgba(99,102,241,0.12); border:1px solid rgba(99,102,241,0.3); border-radius:16px; padding:24px; margin:24px 0;">
+    <h2 style="color:#a5b4fc; margin:0 0 16px; font-size:1.2rem;"><i class="fas fa-code"></i> Phase A — HTML Content (index.html tab)</h2>
+
+    <div class="step-by-step">
+
+        <div class="step">
+            <div class="step-number">A1</div>
+            <div class="step-content">
+                <h4>Header — your name + navigation <small style="color:#94a3b8;">(Lessons 1 &amp; 4)</small></h4>
+                <p>Find <code>&lt;!-- A1 --&gt;</code>. The <code>&lt;header&gt;</code> and <code>&lt;nav&gt;</code> tags are already there. Just fill in:</p>
+                <div class="code-inline">&lt;h1&gt;Your Name&lt;/h1&gt;
+&lt;p&gt;Web Developer in Training&lt;/p&gt;</div>
+                <p>The navigation links are already written — leave them as they are.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">A2</div>
+            <div class="step-content">
+                <h4>About Me — image + bio <small style="color:#94a3b8;">(Lessons 1, 3)</small></h4>
+                <p>Find <code>&lt;!-- A2 --&gt;</code> and add your profile picture and a short bio paragraph:</p>
+                <div class="code-inline">&lt;img src="https://picsum.photos/150" alt="Photo of me"&gt;
+&lt;p&gt;Hi! I am learning web development. I enjoy building things and solving problems.&lt;/p&gt;</div>
+                <p><em>Use any image URL you like, or keep the placeholder from picsum.photos.</em></p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">A3</div>
+            <div class="step-content">
+                <h4>Skills — unordered list <small style="color:#94a3b8;">(Lesson 2)</small></h4>
+                <p>Find <code>&lt;!-- A3 --&gt;</code>. Add an unordered list with at least 4 skills:</p>
+                <div class="code-inline">&lt;ul&gt;
+    &lt;li&gt;HTML&lt;/li&gt;
+    &lt;li&gt;CSS&lt;/li&gt;
+    &lt;li&gt;Problem Solving&lt;/li&gt;
+    &lt;li&gt;Learning Fast&lt;/li&gt;
+&lt;/ul&gt;</div>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">A4</div>
+            <div class="step-content">
+                <h4>Contact form — inputs + button <small style="color:#94a3b8;">(Lesson 5)</small></h4>
+                <p>Find <code>&lt;!-- A4 --&gt;</code>. The <code>&lt;form&gt;</code> tag is already there. Add three fields and a button inside it:</p>
+                <div class="code-inline">&lt;label for="name"&gt;Your Name:&lt;/label&gt;
+&lt;input type="text" id="name" name="name" placeholder="John Doe"&gt;
+
+&lt;label for="email"&gt;Email:&lt;/label&gt;
+&lt;input type="email" id="email" name="email" placeholder="you@example.com"&gt;
+
+&lt;label for="message"&gt;Message:&lt;/label&gt;
+&lt;textarea id="message" name="message" rows="4" placeholder="Write your message..."&gt;&lt;/textarea&gt;
+
+&lt;button type="submit"&gt;Send Message&lt;/button&gt;</div>
+            </div>
+        </div>
+
+    </div><!-- end step-by-step -->
+</div><!-- end Phase A box -->
+
+<!-- ═══════════════ PHASE B — CSS ═══════════════ -->
+<div style="background:rgba(14,165,233,0.1); border:1px solid rgba(14,165,233,0.3); border-radius:16px; padding:24px; margin:24px 0;">
+    <h2 style="color:#7dd3fc; margin:0 0 16px; font-size:1.2rem;"><i class="fas fa-paint-brush"></i> Phase B — CSS Styling (style.css tab)</h2>
+    <p style="color:#94a3b8; margin-bottom:20px; font-size:0.9rem;">Click the <strong>style.css</strong> tab in the editor. Each step has a comment showing where to write your code.</p>
+
+    <div class="step-by-step">
+
+        <div class="step">
+            <div class="step-number">B1</div>
+            <div class="step-content">
+                <h4>Reset + body <small style="color:#94a3b8;">(Lesson 8)</small></h4>
+                <p>Find <code>/* B1 */</code> and add the universal reset plus body styling:</p>
+                <div class="code-inline">* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+}</div>
+                <p><em>Try changing <code>background-color</code> and <code>color</code> to something you like!</em></p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">B2</div>
+            <div class="step-content">
+                <h4>Header styles + nav hover <small style="color:#94a3b8;">(Lessons 6 &amp; 7)</small></h4>
+                <p>Find <code>/* B2 */</code>:</p>
+                <div class="code-inline">header {
+    background-color: #1e293b;
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 8px;
+}
+
+header p {
+    color: #94a3b8;
+    font-size: 1.1rem;
+    margin-bottom: 24px;
+}
+
+nav a {
+    color: #94a3b8;
+    text-decoration: none;
+    margin: 0 14px;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: white;
+}</div>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">B3</div>
+            <div class="step-content">
+                <h4>Section cards — box model in action <small style="color:#94a3b8;">(Lessons 6 &amp; 8)</small></h4>
+                <p>Find <code>/* B3 */</code>. Style the <code>.section-card</code> class used on each content section:</p>
+                <div class="code-inline">.section-card {
+    background-color: white;
+    max-width: 700px;
+    margin: 30px auto;
+    padding: 36px 40px;
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+}
+
+.section-card h2 {
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 10px;
+}</div>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">B4</div>
+            <div class="step-content">
+                <h4>Profile image + skills list <small style="color:#94a3b8;">(Lessons 6 &amp; 7)</small></h4>
+                <p>Find <code>/* B4 */</code>:</p>
+                <div class="code-inline">.section-card img {
+    border-radius: 50%;
+    border: 4px solid #e2e8f0;
+    display: block;
+    margin: 0 auto 20px;
+}
+
+.section-card ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0;
+}
+
+.section-card ul li {
+    background-color: #e0f2fe;
+    color: #0369a1;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease;
+}
+
+.section-card ul li:hover {
+    background-color: #0369a1;
+    color: white;
+}</div>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">B5</div>
+            <div class="step-content">
+                <h4>Form inputs + submit button with hover <small style="color:#94a3b8;">(Lessons 7 &amp; 8)</small></h4>
+                <p>Find <code>/* B5 */</code>:</p>
+                <div class="code-inline">form label {
+    display: block;
+    font-weight: 600;
+    margin-top: 16px;
+    margin-bottom: 6px;
+    color: #475569;
+}
+
+form input,
+form textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+form input:focus,
+form textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+form button {
+    margin-top: 20px;
+    padding: 12px 28px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+form button:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.35);
+}</div>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">B6</div>
+            <div class="step-content">
+                <h4>Footer <small style="color:#94a3b8;">(Lesson 6)</small></h4>
+                <p>Find <code>/* B6 */</code> — simple footer at the bottom:</p>
+                <div class="code-inline">footer {
+    text-align: center;
+    padding: 24px;
+    background-color: #1e293b;
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-top: 40px;
+}</div>
+            </div>
+        </div>
+
+    </div><!-- end step-by-step -->
+</div><!-- end Phase B box -->
+
+<!-- ═══════════════ FINAL CHECK ═══════════════ -->
+<div class="tip-box" style="margin-top:1.5rem;">
+    <div class="note-header">
+        <div class="note-icon tip-icon"><i class="fas fa-check-circle"></i></div>
+        <div class="note-title tip-title">Before you submit — quick checklist</div>
+    </div>
+    <p class="theory-text">Look at the preview and confirm:</p>
+    <p class="theory-text">✓ Your name appears as a big heading in the header</p>
+    <p class="theory-text">✓ A photo is visible in the About section</p>
+    <p class="theory-text">✓ The skills section shows a list of at least 4 items</p>
+    <p class="theory-text">✓ The contact form has a name field, email field, message area, and a button</p>
+    <p class="theory-text">✓ Hovering over nav links changes their colour</p>
+    <p class="theory-text">✓ Hovering over the Send button makes it move slightly</p>
+    <p class="theory-text">When everything looks good, click the green <strong>Submit Solution</strong> button!</p>
+</div>
+
+<div class="note-box" style="margin-top:1.5rem;">
+    <div class="note-header">
+        <div class="note-icon"><i class="fas fa-graduation-cap"></i></div>
+        <div class="note-title">What's next?</div>
+    </div>
+    <p class="theory-text">Once this is done, you can save your code as <strong>index.html</strong> and <strong>style.css</strong> in the same folder on your computer and open it in a browser — it will look exactly like the preview. That is your first real website!</p>
+    <p class="theory-text" style="margin-top:8px;">From here, the next big topics to explore are <strong>CSS Flexbox</strong> (for advanced layouts), <strong>Google Fonts</strong> (for beautiful typography), and eventually <strong>JavaScript</strong> (to make pages interactive). Keep going — you're building real skills!</p>
+</div>
+    `,
+
+    // ─── Initial code ────────────────────────────────────────────────
+    initialCode: {
+        html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+</head>
+<body>
+
+    <header>
+        <!-- A1: Add your h1 name and a short tagline paragraph below -->
+
+
+        <nav>
+            <a href="#about">About</a>
+            <a href="#skills">Skills</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <section id="about" class="section-card">
+            <h2>About Me</h2>
+            <!-- A2: Add your image and a bio paragraph below -->
+
+
+        </section>
+
+        <section id="skills" class="section-card">
+            <h2>My Skills</h2>
+            <!-- A3: Add an unordered list with at least 4 skills below -->
+
+
+        </section>
+
+        <section id="contact" class="section-card">
+            <h2>Contact Me</h2>
+            <form action="#" method="POST">
+                <!-- A4: Add name input, email input, textarea, and submit button below -->
+
+
+            </form>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 My Portfolio. Built with HTML &amp; CSS.</p>
+    </footer>
+
+</body>
+</html>`,
+
+        css: `/* B1: Universal reset + body */
+
+
+/* B2: Header, header h1, header p, nav a, nav a:hover */
+
+
+/* B3: .section-card container and .section-card h2 */
+
+
+/* B4: Profile image, skills ul and li, li:hover */
+
+
+/* B5: Form labels, inputs, textarea, button, button:hover */
+
+
+/* B6: Footer */
+`,
+        js: `// No JavaScript needed for this project.`
+    },
+
+    // ─── Hints ───────────────────────────────────────────────────────
+    hints: [
+        "💡 A1: Inside <header>, type <h1>Your Name</h1> and a <p> with your job title.",
+        "💡 A2: Add <img src=\"https://picsum.photos/150\" alt=\"Photo of me\"> and a <p> bio paragraph.",
+        "💡 A3: Start with <ul>, add at least 4 <li>items</li>, close with </ul>.",
+        "💡 A4: Add label+input for name, label+input (type email) for email, label+textarea for message, then a <button type='submit'>.",
+        "🎨 B1: Start with * { margin:0; padding:0; box-sizing:border-box; } then style body.",
+        "🎨 B2: header { background-color: #1e293b; color: white; padding: 40px 20px; } — then add nav a:hover { color: white; }",
+        "🎨 B3: .section-card { background-color: white; max-width: 700px; margin: 30px auto; padding: 36px 40px; border-radius: 16px; }",
+        "🎨 B4: Make the image circular with border-radius: 50%; — make list items look like pills with border-radius: 20px;",
+        "🎨 B5: form button:hover { background-color: #1d4ed8; transform: translateY(-2px); } — add transition: all 0.3s ease; to the normal button too!"
+    ],
+
+    // ─── Validation ──────────────────────────────────────────────────
+    validation: (code) => {
+        const checks = [];
+
+        // HTML checks
+        checks.push({
+            passed: /<h1>(?!Your Name)[\s\S]+<\/h1>/i.test(code.html),
+            message: '✓ Added your name in an h1 heading'
+        });
+        checks.push({
+            passed: /<img[^>]+src=["'][^"']+["'][^>]*>/i.test(code.html),
+            message: '✓ Added a profile image with src'
+        });
+        checks.push({
+            passed: /<img[^>]+alt=["'][^"']+["'][^>]*>/i.test(code.html),
+            message: '✓ Image has alt text (accessibility!)'
+        });
+        checks.push({
+            passed: (code.html.match(/<li>/gi) || []).length >= 4,
+            message: '✓ Skills list has at least 4 items'
+        });
+        checks.push({
+            passed: /<input[^>]+type=["']text["'][^>]*>/i.test(code.html),
+            message: '✓ Contact form has a text input'
+        });
+        checks.push({
+            passed: /<input[^>]+type=["']email["'][^>]*>/i.test(code.html),
+            message: '✓ Contact form has an email input'
+        });
+        checks.push({
+            passed: /<textarea[\s\S]*><\/textarea>/i.test(code.html),
+            message: '✓ Contact form has a textarea'
+        });
+        checks.push({
+            passed: /<button[^>]+type=["']submit["'][^>]*>/i.test(code.html),
+            message: '✓ Form has a submit button'
+        });
+
+        // CSS checks
+        checks.push({
+            passed: /\*\s*\{[\s\S]*box-sizing\s*:\s*border-box/i.test(code.css),
+            message: '✓ Applied box-sizing: border-box reset'
+        });
+        checks.push({
+            passed: /font-family\s*:/i.test(code.css),
+            message: '✓ Set a font-family on body'
+        });
+        checks.push({
+            passed: /\.section-card\s*\{/i.test(code.css),
+            message: '✓ Styled the .section-card class'
+        });
+        checks.push({
+            passed: /border-radius\s*:/i.test(code.css),
+            message: '✓ Used border-radius for rounded corners'
+        });
+        checks.push({
+            passed: /box-shadow\s*:/i.test(code.css),
+            message: '✓ Added a box-shadow to the cards'
+        });
+        checks.push({
+            passed: /nav a\s*:\s*hover/i.test(code.css),
+            message: '✓ Added hover effect to navigation links'
+        });
+        checks.push({
+            passed: /transition\s*:/i.test(code.css),
+            message: '✓ Used transition for smooth hover animations'
+        });
+        checks.push({
+            passed: /button\s*:\s*hover/i.test(code.css) || /form button\s*:\s*hover/i.test(code.css),
+            message: '✓ Added hover effect to the submit button'
+        });
+
+        return checks;
+    }
+},
+
 }; // end LESSONS
 
 // ============================================
